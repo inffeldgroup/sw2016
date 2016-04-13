@@ -17,36 +17,52 @@
         android:weightSum="1"
         android:minHeight="300dp"
         android:nestedScrollingEnabled="true"
-        android:background="#ff0000">
+        android:background="@color/dailypic_red">
 
         <ImageButton
             android:layout_width="10dp"
             android:layout_height="fill_parent"
             android:id="@+id/but_delete"
             android:layout_weight="0.25"
-            android:src="@android:drawable/ic_menu_delete" />
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="@string/act_main_but_delete_desc"
+            android:background="@color/dailypic_red"
+            android:clickable="false"
+            android:alpha="1" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="DailyPic"
+            android:text="@string/app_name"
             android:id="@+id/txt_AppName"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.5"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:textIsSelectable="false"
+            android:layout_gravity="center"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
 
         <ImageButton
             android:layout_width="10dp"
             android:layout_height="fill_parent"
             android:id="@+id/but_share"
             android:layout_weight="0.25"
-            android:src="@android:drawable/ic_menu_share" />
+            android:src="@android:drawable/ic_menu_share"
+            android:contentDescription="@string/act_main_but_share_desc"
+            android:background="@color/dailypic_red"
+            android:clickable="false"
+            android:baselineAlignBottom="false" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/dailypic_background">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -55,16 +71,16 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/img_1"
                 android:layout_gravity="left|top"
                 android:src="@drawable/android_robot_100"
                 android:layout_weight="1" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/img_2"
                 android:src="@drawable/android_robot_100"
                 android:layout_weight="1" />
@@ -78,16 +94,16 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/img_3"
                 android:layout_gravity="left|top"
                 android:src="@drawable/android_robot_100"
                 android:layout_weight="1" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/img_4"
                 android:src="@drawable/android_robot_100"
                 android:layout_weight="1" />
@@ -101,16 +117,16 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/img_5"
                 android:layout_gravity="left|top"
                 android:src="@drawable/android_robot_100"
                 android:layout_weight="1" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/img_6"
                 android:src="@drawable/android_robot_100"
                 android:layout_weight="1" />
@@ -122,28 +138,48 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:minHeight="300dp"
-        android:focusableInTouchMode="false">
+        android:focusableInTouchMode="false"
+        android:gravity="bottom">
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="back"
+            android:layout_height="match_parent"
+            android:text="@string/act_main_but_back"
             android:id="@+id/but_back"
-            android:layout_weight="0.33" />
+            android:layout_weight="0.33"
+            style="@android:style/MediaButton.Next"
+            android:background="@color/dailypic_darkred"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:clickable="false" />
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="fav"
+            android:layout_height="60dp"
+            android:text="@string/act_main_but_fav"
             android:id="@+id/but_fav"
-            android:layout_weight="0.33" />
+            android:layout_weight="0.66"
+            android:src="@android:drawable/btn_star_big_on"
+            android:visibility="visible"
+            style="@android:style/MediaButton.Next"
+            android:clickable="false"
+            android:contentDescription="@string/act_main_but_fav_desc"
+            android:layout_gravity="bottom|right"
+            android:background="@color/dailypic_red" />
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="next"
+            android:layout_height="match_parent"
+            android:text="@string/act_main_but_next"
             android:id="@+id/but_next"
-            android:layout_weight="0.33" />
+            android:layout_weight="0.33"
+            style="@android:style/MediaButton.Next"
+            android:background="@color/dailypic_darkred"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:clickable="false" />
     </LinearLayout>
 
 </LinearLayout>
