@@ -69,3 +69,4 @@ public class MainActivity extends AppCompatActivity {
         setImages(rand_img, this.image_view);
     }
 }
+
