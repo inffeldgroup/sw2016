@@ -25,7 +25,8 @@ public class FullscreenImageTest extends ActivityInstrumentationTestCase2 {
 
     }
 
-    public void testButton() {
+    public void testCloseButton() {
         mySolo.clickOnButton("Close");
     }
+
 }

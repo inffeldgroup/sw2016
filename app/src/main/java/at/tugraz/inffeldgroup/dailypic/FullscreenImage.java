@@ -22,8 +22,8 @@ public class FullscreenImage extends Activity {
 
         setContentView(R.layout.activity_fullscreen_image);
         Bundle extras = getIntent().getExtras();
-        ImageView imgDisplay;
-        imgDisplay = (ImageView) findViewById(R.id.imgDisplay);
+        ZoomableImageView imgDisplay;
+        imgDisplay = (ZoomableImageView) findViewById(R.id.imgDisplay);
         if(extras != null) {
             Bitmap bmp = (Bitmap) extras.getParcelable("imagebitmap");
             imgDisplay.setImageBitmap(bmp);
