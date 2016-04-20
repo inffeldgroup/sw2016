@@ -18,13 +18,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         super(MainActivity.class);
     }
 
-    public void testArrayNotNull(){
-        ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
-
-        ArrayList<Uri> image_paths = img_fetcher.getNextRandomImagePaths();
-        Assert.assertTrue(image_paths != null);
-    }
-
     public void testPreviousFunction() {
         ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
 

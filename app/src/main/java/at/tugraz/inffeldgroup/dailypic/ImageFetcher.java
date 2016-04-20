@@ -61,7 +61,7 @@ public class ImageFetcher {
         return image_paths;
     }
 
-    public ArrayList<Uri> getRandomImagePaths(int seed) {
+    private ArrayList<Uri> getRandomImagePaths(int seed) {
 
         // Get picture directory
         Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -92,6 +92,10 @@ public class ImageFetcher {
         }
 
         cursor.close();
+
+        if (paths_specific.size() == 0) {
+            return null;
+        }
 
         return paths_specific;
     }
