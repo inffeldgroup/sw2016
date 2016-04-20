@@ -21,15 +21,18 @@ public class FullscreenImage extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen_image);
-
         Bundle extras = getIntent().getExtras();
-        Bitmap bmp = (Bitmap) extras.getParcelable("imagebitmap");
-
         ImageView imgDisplay;
+        imgDisplay = (ImageView) findViewById(R.id.imgDisplay);
+        if(extras != null) {
+            Bitmap bmp = (Bitmap) extras.getParcelable("imagebitmap");
+            imgDisplay.setImageBitmap(bmp);
+        }
+
         Button btnClose;
 
 
-        imgDisplay = (ImageView) findViewById(R.id.imgDisplay);
+
         btnClose = (Button) findViewById(R.id.btnClose);
 
 
@@ -40,7 +43,7 @@ public class FullscreenImage extends Activity {
         });
 
 
-        imgDisplay.setImageBitmap(bmp );
+
 
     }
 
