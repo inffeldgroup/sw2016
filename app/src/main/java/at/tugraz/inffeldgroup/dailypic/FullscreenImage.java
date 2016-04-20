@@ -42,10 +42,9 @@ public class FullscreenImage extends Activity {
             }
         });
 
-
-
-
     }
 
-
+    public void onFullScreenClick(View v) {
+        FullscreenImage.this.finish();
+    }
 }
