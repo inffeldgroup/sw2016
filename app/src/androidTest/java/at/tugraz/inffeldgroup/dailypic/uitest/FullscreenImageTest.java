@@ -1,10 +1,12 @@
-package at.tugraz.inffeldgroup.dailypic;
+package at.tugraz.inffeldgroup.dailypic.uitest;
 
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
 
 import junit.framework.TestCase;
+
+import at.tugraz.inffeldgroup.dailypic.FullscreenImage;
 
 /**
  * Created by christian on 20.04.16.
