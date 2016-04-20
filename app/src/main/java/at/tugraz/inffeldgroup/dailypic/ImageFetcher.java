@@ -1,12 +1,9 @@
 package at.tugraz.inffeldgroup.dailypic;
 
 import android.app.*;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.*;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import java.util.*;
 import java.io.*;
@@ -20,22 +17,14 @@ public class ImageFetcher {
     private int history_size;
     private ArrayList<Integer> seeds;
     private int current_seed_index;
-    public void init(Activity activity){
+
+    public ImageFetcher(Activity activity){
         this.activity = activity;
         this.view_size = 6;
         this.history_size = 3;
 
         this.current_seed_index = -1;
         this.seeds = new ArrayList<Integer>();
-    }
-
-    private static ImageFetcher ourInstance = new ImageFetcher();
-
-    public static ImageFetcher getInstance() {
-        return ourInstance;
-    }
-
-    private ImageFetcher() {
     }
 
     public ArrayList<Uri> getPreviousRandomImagePaths() {

@@ -1,9 +1,7 @@
 package at.tugraz.inffeldgroup.dailypic.test;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.ActivityTestCase;
 import junit.framework.Assert;
 import at.tugraz.inffeldgroup.dailypic.MainActivity;
 
@@ -21,30 +19,30 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     public void testArrayNotNull(){
-        ImageFetcher.getInstance().init(this.getActivity());
+        ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
 
-        ArrayList<Uri> image_paths = ImageFetcher.getInstance().getNextRandomImagePaths();
+        ArrayList<Uri> image_paths = img_fetcher.getNextRandomImagePaths();
         Assert.assertTrue(image_paths != null);
     }
 
     public void testPreviousFunction() {
-        ImageFetcher.getInstance().init(this.getActivity());
+        ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
 
-        ArrayList<Uri> image_paths_01 = ImageFetcher.getInstance().getNextRandomImagePaths();
-        ArrayList<Uri> image_paths_02 = ImageFetcher.getInstance().getNextRandomImagePaths();
-        ArrayList<Uri> image_paths_03 = ImageFetcher.getInstance().getPreviousRandomImagePaths();
+        ArrayList<Uri> image_paths_01 = img_fetcher.getNextRandomImagePaths();
+        ArrayList<Uri> image_paths_02 = img_fetcher.getNextRandomImagePaths();
+        ArrayList<Uri> image_paths_03 = img_fetcher.getPreviousRandomImagePaths();
 
 
         Assert.assertTrue(image_paths_03.equals(image_paths_01) == true);
     }
 
     public void testNextFunction() {
-        ImageFetcher.getInstance().init(this.getActivity());
+        ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
 
-        ArrayList<Uri> image_paths_01 = ImageFetcher.getInstance().getNextRandomImagePaths();
-        ArrayList<Uri> image_paths_02 = ImageFetcher.getInstance().getNextRandomImagePaths();
-        ArrayList<Uri> image_paths_03 = ImageFetcher.getInstance().getPreviousRandomImagePaths();
-        ArrayList<Uri> image_paths_04 = ImageFetcher.getInstance().getNextRandomImagePaths();
+        ArrayList<Uri> image_paths_01 = img_fetcher.getNextRandomImagePaths();
+        ArrayList<Uri> image_paths_02 = img_fetcher.getNextRandomImagePaths();
+        ArrayList<Uri> image_paths_03 = img_fetcher.getPreviousRandomImagePaths();
+        ArrayList<Uri> image_paths_04 = img_fetcher.getNextRandomImagePaths();
 
 
         Assert.assertTrue(image_paths_04.equals(image_paths_02) == true);

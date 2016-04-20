@@ -11,22 +11,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d("[DEBUG]", "App starting.");
-
-        ImageFetcher.getInstance().init(MainActivity.this);
-
-        Log.d("[DEBUG]", "PREVIOUS:");
-        ImageFetcher.getInstance().getPreviousRandomImagePaths();
-        Log.d("[DEBUG]", "NEXT:");
-        ImageFetcher.getInstance().getNextRandomImagePaths();
-        Log.d("[DEBUG]", "NEXT:");
-        ImageFetcher.getInstance().getNextRandomImagePaths();
-        Log.d("[DEBUG]", "NEXT:");
-        ImageFetcher.getInstance().getNextRandomImagePaths();
-        Log.d("[DEBUG]", "PREVIOUS:");
-        ImageFetcher.getInstance().getPreviousRandomImagePaths();
-        Log.d("[DEBUG]", "NEXT:");
-        ImageFetcher.getInstance().getNextRandomImagePaths();
+        // create image fetcher for current activity
+        ImageFetcher img_fetcher = new ImageFetcher(MainActivity.this);
 
     }
 }
