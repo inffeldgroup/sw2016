@@ -2,6 +2,7 @@ package at.tugraz.inffeldgroup.dailypic.uitest;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
+import android.widget.ImageButton;
 
 import com.robotium.solo.Solo;
 
