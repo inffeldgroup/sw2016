@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final ImageView im = (ImageView)findViewById(R.id.imageView);
+   /*     final ImageView im = (ImageView)findViewById(R.id.imageView);
         im.setImageResource(R.mipmap.ic_launcher);
 
         im.setOnClickListener(new View.OnClickListener() {
@@ -36,5 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     });
+
+    */
 }}
