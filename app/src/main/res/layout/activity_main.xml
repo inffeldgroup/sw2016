@@ -54,7 +54,8 @@
             android:contentDescription="@string/act_main_but_share_desc"
             android:background="@color/dailypic_red"
             android:clickable="false"
-            android:baselineAlignBottom="false" />
+            android:baselineAlignBottom="false"
+            android:onClick="sharebuttonOnClick" />
     </LinearLayout>
 
     <LinearLayout
