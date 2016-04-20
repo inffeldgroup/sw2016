@@ -4,6 +4,7 @@ package at.tugraz.inffeldgroup.dailypic;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,13 +22,9 @@ public class FullscreenImage extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen_image);
-        Bundle extras = getIntent().getExtras();
         ZoomableImageView imgDisplay;
         imgDisplay = (ZoomableImageView) findViewById(R.id.imgDisplay);
-        if(extras != null) {
-            Bitmap bmp = (Bitmap) extras.getParcelable("imagebitmap");
-            imgDisplay.setImageBitmap(bmp);
-        }
+            imgDisplay.setImageURI(getIntent().getData());
 
         Button btnClose;
 

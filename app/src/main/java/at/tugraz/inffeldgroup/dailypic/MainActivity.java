@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             ((ImageView) views.get(i)).setImageURI(uris.get(i));
         }
     }
-
+    private List<Uri> img_list;
 
 
     @Override
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         this.image_view.add(findViewById(R.id.img_6));
 
         setImages(rand_img, this.image_view);
+        img_list = rand_img;
     }
 
     public void sharebuttonOnClick(View v)
@@ -62,88 +63,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void backButtonOnClick(View v) {
-
         List<Uri> rand_img = this.img_fetcher.getPreviousRandomImagePaths();
+        if(rand_img != null) {
+            img_list.clear();
+            img_list = rand_img;
+        }
         setImages(rand_img, this.image_view);
     }
 
     public void nextButtonOnClick(View v) {
-
-        List<Uri> rand_img = this.img_fetcher.getNextRandomImagePaths();
+        img_list.clear();
+        List<Uri>rand_img = this.img_fetcher.getNextRandomImagePaths();
+        img_list = rand_img;
         setImages(rand_img, this.image_view);
     }
 
     public void onImg1Click(View v) {
         Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-
-        ImageView img = ((ImageView) this.image_view.get(0));
-        img.buildDrawingCache();
-        Bitmap bmp = img.getDrawingCache();
-
-        Bundle extras = new Bundle();
-        extras.putParcelable("imagebitmap", bmp);
-        intent.putExtras(extras);
+        intent.setData(img_list.get(0));
         startActivity(intent);
     }
     public void onImg2Click(View v) {
         Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-
-        ImageView img = ((ImageView) this.image_view.get(1));
-        img.buildDrawingCache();
-        Bitmap bmp = img.getDrawingCache();
-
-        Bundle extras = new Bundle();
-        extras.putParcelable("imagebitmap", bmp);
-        intent.putExtras(extras);
+        intent.setData(img_list.get(1));
         startActivity(intent);
     }
     public void onImg3Click(View v) {
         Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-
-        ImageView img = ((ImageView) this.image_view.get(2));
-        img.buildDrawingCache();
-        Bitmap bmp = img.getDrawingCache();
-
-        Bundle extras = new Bundle();
-        extras.putParcelable("imagebitmap", bmp);
-        intent.putExtras(extras);
+        intent.setData(img_list.get(2));
         startActivity(intent);
     }
     public void onImg4Click(View v) {
         Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-
-        ImageView img = ((ImageView) this.image_view.get(3));
-        img.buildDrawingCache();
-        Bitmap bmp = img.getDrawingCache();
-
-        Bundle extras = new Bundle();
-        extras.putParcelable("imagebitmap", bmp);
-        intent.putExtras(extras);
+        intent.setData(img_list.get(3));
         startActivity(intent);
     }
     public void onImg5Click(View v) {
         Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-
-        ImageView img = ((ImageView) this.image_view.get(4));
-        img.buildDrawingCache();
-        Bitmap bmp = img.getDrawingCache();
-
-        Bundle extras = new Bundle();
-        extras.putParcelable("imagebitmap", bmp);
-        intent.putExtras(extras);
+        intent.setData(img_list.get(4));
         startActivity(intent);
     }
     public void onImg6Click(View v) {
         Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-
-        ImageView img = ((ImageView) this.image_view.get(5));
-        img.buildDrawingCache();
-        Bitmap bmp = img.getDrawingCache();
-
-        Bundle extras = new Bundle();
-        extras.putParcelable("imagebitmap", bmp);
-        intent.putExtras(extras);
+        intent.setData(img_list.get(5));
         startActivity(intent);
+
+
     }
 
 }
