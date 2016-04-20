@@ -13,6 +13,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ImageFetcher img_fetcher;
+    private ArrayList<View> image_view;
+
     private void setImages(List<Uri> uris, List<View> views) {
         if (uris == null || views == null) {
             Log.d("[DALYPIC - ERROR]", "MainActivity.setImages: uris or views == null!");
@@ -30,19 +33,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // create image fetcher for current activity
-        ImageFetcher img_fetcher = new ImageFetcher(MainActivity.this);
+        this.img_fetcher = new ImageFetcher(MainActivity.this);
 
-        List<Uri> rand_img = img_fetcher.getNextRandomImagePaths();
+        List<Uri> rand_img = this.img_fetcher.getNextRandomImagePaths();
 
-        List<View> imgv = new ArrayList<View>();
-        imgv.add(findViewById(R.id.img_1));
-        imgv.add(findViewById(R.id.img_2));
-        imgv.add(findViewById(R.id.img_3));
-        imgv.add(findViewById(R.id.img_4));
-        imgv.add(findViewById(R.id.img_5));
-        imgv.add(findViewById(R.id.img_6));
+        this.image_view = new ArrayList<View>();
+        this.image_view.add(findViewById(R.id.img_1));
+        this.image_view.add(findViewById(R.id.img_2));
+        this.image_view.add(findViewById(R.id.img_3));
+        this.image_view.add(findViewById(R.id.img_4));
+        this.image_view.add(findViewById(R.id.img_5));
+        this.image_view.add(findViewById(R.id.img_6));
 
-        setImages(rand_img, imgv);
+        setImages(rand_img, this.image_view);
 
     }
     public void sharebuttonOnClick(View v)
@@ -52,5 +55,17 @@ public class MainActivity extends AppCompatActivity {
         sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
+    }
+
+    public void backButtonOnClick(View v) {
+
+        List<Uri> rand_img = this.img_fetcher.getPreviousRandomImagePaths();
+        setImages(rand_img, this.image_view);
+    }
+
+    public void nextButtonOnClick(View v) {
+
+        List<Uri> rand_img = this.img_fetcher.getNextRandomImagePaths();
+        setImages(rand_img, this.image_view);
     }
 }
