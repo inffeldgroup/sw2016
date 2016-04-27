@@ -1,49 +1,52 @@
 package at.tugraz.inffeldgroup.dailypic;
 
-import java.util.ArrayList;
-import android.app.Activity;
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-public class FavouriteGridViewAdapter extends ArrayAdapter {
-    private Context context;
-    private int layoutResourceId;
-    private ArrayList data = new ArrayList();
+import java.util.ArrayList;
 
-    public FavouriteGridViewAdapter(Context context, int layoutResourceId, ArrayList data) {
-        super(context, layoutResourceId, data);
-        this.layoutResourceId = layoutResourceId;
-        this.context = context;
-        this.data = data;
+public class FavouriteGridViewAdapter extends BaseAdapter {
+    private Context mContext;
+    private ArrayList<Uri> imgUri;
+
+    public FavouriteGridViewAdapter(Context c, ArrayList<Uri> imgUri){
+        mContext = c;
+        this.imgUri = imgUri;
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        ViewHolder holder = null;
+    public int getCount() {
+        return imgUri.size();
+    }
 
-        if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
-            holder = new ViewHolder();
-            holder.image = (ImageView) row.findViewById(R.id.image);
-            row.setTag(holder);
+    public Object getItem(int position) {
+        return imgUri.get(position);
+    }
+
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    // create a new ImageView for each item referenced by the Adapter
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ImageView imageView;
+        if (convertView == null) {
+            int h = mContext.getResources().getDisplayMetrics().widthPixels;
+            // if it's not recycled, initialize some attributes
+            imageView = new ImageView(mContext);
+            //imageView.setLayoutParams(new GridView.LayoutParams(400, 400));
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setLayoutParams(new GridView.LayoutParams(h/2, h/2));
+            //imageView.setPadding(8, 8, 8, 8);
         } else {
-            holder = (ViewHolder) row.getTag();
+            imageView = (ImageView) convertView;
         }
 
-        ImageItem item = (ImageItem) data.get(position);
-        holder.image.setImageBitmap(item.getImage());
-        return row;
-    }
-
-    static class ViewHolder {
-        TextView imageTitle;
-        ImageView image;
+        imageView.setImageURI(imgUri.get(position));
+        return imageView;
     }
 }

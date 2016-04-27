@@ -10,9 +10,7 @@ public class ImageItem {
         this.image = image;
     }
 
-    public Bitmap getImage() {
-        return image;
-    }
+    public Bitmap getImage() { return image; }
 
     public void setImage(Bitmap image) {
         this.image = image;

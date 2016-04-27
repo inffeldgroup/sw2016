@@ -23,21 +23,17 @@
         android:textColor="#ffffff"
         android:textIsSelectable="false"
         android:textSize="30sp"
-        android:textStyle="bold"
-        android:layout_weight="1" />
+        android:textStyle="bold" />
 
         <GridView
         android:id="@+id/gridView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:columnWidth="100dp"
-        android:drawSelectorOnTop="true"
+        android:layout_height="fill_parent"
+            android:drawSelectorOnTop="true"
         android:gravity="center"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp"
         android:focusable="true"
         android:clickable="true"
-            android:layout_weight="1" />
+            android:background="#ffffff" />
 </LinearLayout>
