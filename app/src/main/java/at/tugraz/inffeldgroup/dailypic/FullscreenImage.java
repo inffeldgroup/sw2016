@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+
 public class FullscreenImage extends Activity {
 
 
@@ -22,10 +25,9 @@ public class FullscreenImage extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen_image);
-        ZoomableImageView imgDisplay;
-        imgDisplay = (ZoomableImageView) findViewById(R.id.imgDisplay);
-            imgDisplay.setImageURI(getIntent().getData());
-
+        SubsamplingScaleImageView imgDisplay;
+        imgDisplay = (SubsamplingScaleImageView) findViewById(R.id.imgDisplay);
+        imgDisplay.setImage(ImageSource.uri(getIntent().getData()));
         Button btnClose;
 
 
