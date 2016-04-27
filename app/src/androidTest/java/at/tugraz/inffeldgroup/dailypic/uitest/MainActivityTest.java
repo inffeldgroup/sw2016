@@ -31,30 +31,24 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void tearDown() throws Exception {
         super.tearDown();
     }
-    public void testButtons(){
+    public void testGarbageButton(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImageButton(0);//Garbage
         assertTrue(true);
-        mySolo.clickOnImageButton(1);//Share
-        mySolo.sleep(300);
+    }
+
+    public void testShareButton(){
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnImageButton(1);//ShareButton
         assertTrue(true);
+    }
+
+    public void testFavButton(){
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnImageButton(3);//Fav Button
+        mySolo.waitForActivity("Favourite");
         mySolo.goBack();
-        mySolo.sleep(200);
-        KeyEvent back = new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_BACK);
-        getActivity().dispatchKeyEvent(back);
-        /*mySolo.clickOnImageButton(2);//fav
+        mySolo.waitForActivity("MainActivity");
         assertTrue(true);
-        mySolo.clickOnButton("back");
-        assertTrue(true);
-        mySolo.clickOnButton("next");
-        assertTrue(true);*/
-
-
-
-
-
-        mySolo.sleep(50000);
-
-        //while (true);
     }
 }

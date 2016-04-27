@@ -1,14 +1,12 @@
 package at.tugraz.inffeldgroup.dailypic;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
             img_list = rand_img;
         }
         setImages(rand_img, this.image_view);
+    }
+
+    public void favButtonOnClick(View v){
+        Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
+        startActivity(intent);
     }
 
     public void nextButtonOnClick(View v) {

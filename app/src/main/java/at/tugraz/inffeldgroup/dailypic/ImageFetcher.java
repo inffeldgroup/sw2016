@@ -100,4 +100,39 @@ public class ImageFetcher {
         return paths_specific;
     }
 
+
+    public ArrayList<Uri> getFavouriteImages(){
+        Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = new String[] {MediaStore.Images.Media.DATA};
+        Cursor cursor = this.activity.getContentResolver().query(images, projection, "", null, "");
+
+        ArrayList<String> paths_all = new ArrayList<String>();
+        ArrayList<Uri> paths_specific = new ArrayList<Uri>();
+
+        if(cursor.moveToFirst()) {
+            int data_column = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+
+            String path_string;
+            do {
+                path_string = cursor.getString(data_column);
+                paths_all.add(path_string);
+            } while (cursor.moveToNext());
+
+            Uri path_uri;
+            for(int i = 0; i < cursor.getCount(); i++){
+                path_uri = Uri.fromFile(new File(paths_all.get(i)));
+                paths_specific.add(path_uri);
+            }
+
+        }
+        cursor.close();
+
+        if (paths_specific.size() == 0) {
+            return null;
+        }
+        return paths_specific;
+
+    }
+
+
 }

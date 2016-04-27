@@ -9,7 +9,8 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     tools:context="at.tugraz.inffeldgroup.dailypic.MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:onClick="favButtonOnClick">
 
     <LinearLayout
         android:orientation="horizontal"
