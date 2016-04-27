@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <at.tugraz.inffeldgroup.dailypic.ZoomableImageView
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
         android:id="@+id/imgDisplay"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

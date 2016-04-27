@@ -1,13 +1,21 @@
 package at.tugraz.inffeldgroup.dailypic;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +23,66 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageFetcher img_fetcher;
     private ArrayList<View> image_view;
+    private Bitmap getDownsampledBitmap(Uri uri, int targetWidth, int targetHeight) {
+        Bitmap bitmap = null;
+        try {
+            BitmapFactory.Options outDimens = getBitmapDimensions(uri);
+
+            int sampleSize = calculateSampleSize(outDimens.outWidth, outDimens.outHeight, targetWidth, targetHeight);
+
+            bitmap = downsampleBitmap(uri, sampleSize);
+
+        } catch (Exception e) {
+            //handle the exception(s)
+        }
+
+        return bitmap;
+    }
+
+    private BitmapFactory.Options getBitmapDimensions(Uri uri) throws FileNotFoundException, IOException {
+        BitmapFactory.Options outDimens = new BitmapFactory.Options();
+        outDimens.inJustDecodeBounds = true; // the decoder will return null (no bitmap)
+
+        InputStream is= getContentResolver().openInputStream(uri);
+        // if Options requested only the size will be returned
+        BitmapFactory.decodeStream(is, null, outDimens);
+        is.close();
+
+        return outDimens;
+    }
+
+    private int calculateSampleSize(int width, int height, int targetWidth, int targetHeight) {
+        int inSampleSize = 1;
+
+        if (height > targetHeight || width > targetWidth) {
+
+            // Calculate ratios of height and width to requested height and
+            // width
+            final int heightRatio = Math.round((float) height
+                    / (float) targetHeight);
+            final int widthRatio = Math.round((float) width / (float) targetWidth);
+
+            // Choose the smallest ratio as inSampleSize value, this will
+            // guarantee
+            // a final image with both dimensions larger than or equal to the
+            // requested height and width.
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        return inSampleSize;
+    }
+
+    private Bitmap downsampleBitmap(Uri uri, int sampleSize) throws FileNotFoundException, IOException {
+        Bitmap resizedBitmap;
+        BitmapFactory.Options outBitmap = new BitmapFactory.Options();
+        outBitmap.inJustDecodeBounds = false; // the decoder will return a bitmap
+        outBitmap.inSampleSize = sampleSize;
+
+        InputStream is = getContentResolver().openInputStream(uri);
+        resizedBitmap = BitmapFactory.decodeStream(is, null, outBitmap);
+        is.close();
+
+        return resizedBitmap;
+    }
 
     private void setImages(List<Uri> uris, List<View> views) {
         if (uris == null || views == null) {
@@ -22,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         for (int i = 0; i < 6; i++) {
-            ((ImageView) views.get(i)).setImageURI(uris.get(i));
+            ((ImageView) views.get(i)).setImageBitmap(getDownsampledBitmap(uris.get(i), 200, 200));
         }
     }
     private List<Uri> img_list;
