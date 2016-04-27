@@ -5,9 +5,10 @@ import android.test.ActivityInstrumentationTestCase2;
 import junit.framework.Assert;
 import at.tugraz.inffeldgroup.dailypic.MainActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 
-import at.tugraz.inffeldgroup.dailypic.ImageFetcher;
+import at.tugraz.inffeldgroup.dailypic.ImageHandler;
 
 /**
  * Created by marco on 13/04/16.
@@ -19,7 +20,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     public void testPreviousFunction() {
-        ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
+        ImageHandler img_fetcher = new ImageHandler(this.getActivity());
 
         ArrayList<Uri> image_paths_01 = img_fetcher.getNextRandomImagePaths();
         ArrayList<Uri> image_paths_02 = img_fetcher.getNextRandomImagePaths();
@@ -30,7 +31,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     public void testNextFunction() {
-        ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
+        ImageHandler img_fetcher = new ImageHandler(this.getActivity());
 
         ArrayList<Uri> image_paths_01 = img_fetcher.getNextRandomImagePaths();
         ArrayList<Uri> image_paths_02 = img_fetcher.getNextRandomImagePaths();
@@ -39,6 +40,27 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
 
         Assert.assertTrue(image_paths_04.equals(image_paths_02) == true);
+    }
+
+    public void testDeleteFunction() {
+
+        //Assert.assertTrue(blabla == true);
+    }
+
+    public void testReplaceFunction() {
+
+        //Assert.assertTrue(blabla == true);
+    }
+
+    public void testReturnedPaths() {
+        ImageHandler ih = new ImageHandler(this.getActivity());
+        ArrayList<Uri> uris = ih.getNextRandomImagePaths();
+        Assert.assertTrue(uris == null);
+        Assert.assertTrue(uris.size() == 6);
+        for (Uri u : uris) {
+            String path = u.toString();
+            Assert.assertTrue(new File(path).exists() == true);
+        }
     }
 
 }

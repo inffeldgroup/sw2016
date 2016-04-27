@@ -1,29 +1,113 @@
 package at.tugraz.inffeldgroup.dailypic;
 
-import android.Manifest;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+class ImageGenerator extends AsyncTask<Void,Void,Void>
+{
+    public Activity activity;
+
+    // -------------------- START IMAGE GENERATION
+    private Bitmap getBitmapFromURL(String src) {
+        try {
+            java.net.URL url = new java.net.URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            Log.d("NETWORK ERROR", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private  File getOutputMediaFile(){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
+                //+ "/Android/data/"
+                + "/Download/");
+                //+ activity.getApplicationContext().getPackageName()
+                //+ "/Files/");
+        //File mediaStorageDir = new File(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString());
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+        Log.d("TAG", "path to save to: " + mediaStorageDir.getAbsolutePath());
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName="MI_"+ timeStamp +".jpeg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
+    }
+
+    public void storeRandomBitmap(int nr_of_images_to_create) {
+        for (int i = 0; i < nr_of_images_to_create; i++) {
+            Bitmap b = getBitmapFromURL("https://www.random.org/bitmaps/?format=png&width=300&height=300&zoom=1");
+            File pictureFile = getOutputMediaFile();
+            if (pictureFile == null) {
+                Log.d("TAG",
+                        "Error creating media file, check storage permissions: ");// e.getMessage());
+                return;
+            }
+            try {
+                FileOutputStream fos = new FileOutputStream(pictureFile);
+                b.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+                fos.close();
+            } catch (FileNotFoundException e) {
+                Log.d("TAG", "File not found: " + e.getMessage());
+            } catch (IOException e) {
+                Log.d("TAG", "Error accessing file: " + e.getMessage());
+            }
+        }
+    }
+    // -------------------- END IMAGE GENERATION
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+        this.storeRandomBitmap(2);
+        return null;
+    }
+}
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageFetcher img_fetcher;
+    private ImageHandler img_fetcher;
     private ArrayList<View> image_view;
+    private List<Uri> img_list;
+
     private Bitmap getDownsampledBitmap(Uri uri, int targetWidth, int targetHeight) {
         Bitmap bitmap = null;
         try {
@@ -92,10 +176,9 @@ public class MainActivity extends AppCompatActivity {
         }
         for (int i = 0; i < 6; i++) {
             ((ImageView) views.get(i)).setImageBitmap(getDownsampledBitmap(uris.get(i), 200, 200));
+            ((ImageView) views.get(i)).setTag(uris.get(i).toString());
         }
     }
-    private List<Uri> img_list;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +186,12 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        ImageGenerator ig = new ImageGenerator();
+        ig.activity = this;
+        ig.execute();
+
         // create image fetcher for current activity
-        this.img_fetcher = new ImageFetcher(MainActivity.this);
+        this.img_fetcher = new ImageHandler(MainActivity.this);
 
         List<Uri> rand_img = this.img_fetcher.getNextRandomImagePaths();
 
