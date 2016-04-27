@@ -46,7 +46,7 @@ public class FavouriteGridViewAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageURI(imgUri.get(position));
+        imageView.setImageBitmap(ImageTools.getDownsampledBitmap(mContext, imgUri.get(position), 100, 100));
         return imageView;
     }
 }

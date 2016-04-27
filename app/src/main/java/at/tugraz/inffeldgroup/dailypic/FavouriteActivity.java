@@ -2,6 +2,8 @@ package at.tugraz.inffeldgroup.dailypic;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.app.Activity;
@@ -11,6 +13,8 @@ import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 public class FavouriteActivity extends AppCompatActivity {
@@ -22,9 +26,21 @@ public class FavouriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
 
-        gridAdapter = new FavouriteGridViewAdapter(this, getImgUri());
+        final ArrayList<Uri> uriList = getImgUri();
+
+        gridAdapter = new FavouriteGridViewAdapter(this, uriList);
         gridView = (GridView) findViewById(R.id.gridView);
         gridView.setAdapter(gridAdapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(FavouriteActivity.this, FullscreenImage.class);
+                intent.setData(uriList.get(position));
+                startActivity(intent);
+            }
+        });
+
     }
 
     private ArrayList<Uri> getImgUri() {
