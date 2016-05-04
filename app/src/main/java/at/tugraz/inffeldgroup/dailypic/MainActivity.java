@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
+import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +44,15 @@ public class MainActivity extends AppCompatActivity {
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
 
                 Log.d("xD", Integer.toString(position) + " " + Boolean.toString(gridView.isItemChecked(position)));
+                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
                 if(!gridView.isItemChecked(position)){
                     gridView.setItemChecked(position, true);
-
-                    gridView.setAlpha(0.5f);
+                    item.checked.setVisibility(View.VISIBLE);
+                    item.image.setAlpha(0.5f);
                 }
                 else {
-                    gridView.setAlpha(1);
+                    item.checked.setVisibility(View.INVISIBLE);
+                    item.image.setAlpha(1f);
                     gridView.setItemChecked(position, false);
                 }
             }
@@ -60,13 +62,15 @@ public class MainActivity extends AppCompatActivity {
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
                         if(!gridView.isItemChecked(position)){
                             gridView.setItemChecked(position, true);
-
-                            view.setAlpha(0.5f);
+                            item.checked.setVisibility(View.VISIBLE);
+                            item.image.setAlpha(0.5f);
                         }
                         else {
-                            view.setAlpha(1);
+                            item.checked.setVisibility(View.INVISIBLE);
+                            item.image.setAlpha(1f);
                             gridView.setItemChecked(position, false);
                         }
                     }
@@ -81,17 +85,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                if(!item.isChecked()){
-                    item.setChecked(true);
-                    item.getActionView().setAlpha(0.5f);
-                }
-                else {
-                    item.getActionView().setAlpha(1);
-                    item.setChecked(false);
-                }
-                return false;
-            }
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) { return false; }
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
@@ -122,13 +116,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 gridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
                 Log.d("xD", Integer.toString(position) + " " + Boolean.toString(gridView.isItemChecked(position)));
+                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
                 if(!gridView.isItemChecked(position)){
                     gridView.setItemChecked(position, true);
-
-                    view.setAlpha(0.5f);
+                    item.checked.setVisibility(View.VISIBLE);
+                    item.image.setAlpha(0.5f);
                 }
                 else {
-                    view.setAlpha(1);
+
+                    item.checked.setVisibility(View.INVISIBLE);
+                    item.image.setAlpha(1f);
                     gridView.setItemChecked(position, false);
                 }
                 return true;
@@ -215,7 +212,8 @@ public class MainActivity extends AppCompatActivity {
     public void clearSelection(){
         if(gridView.getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE_MODAL) {
             for (int i = 0; i < gridView.getCount(); i++) {
-                gridView.getChildAt(i).setAlpha(1);
+                ((ViewHolder) gridView.getChildAt(i).getTag()).image.setAlpha(1f);
+                ((ViewHolder) gridView.getChildAt(i).getTag()).checked.setVisibility(View.INVISIBLE);
                 gridView.setItemChecked(i, false);
             }
             gridView.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
@@ -227,7 +225,13 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-        }    }
+        }
+    }
+    /*class ViewHolder {
+        ImageView image;
+        ImageView checked;
+        ImageView fav;
+    }*/
 }
 
 
