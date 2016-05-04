@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Uri> img_list;
     private GridView gridView;
     private ImageGridViewAdapter gridAdapter;
+    private FavouriteHandler favhandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.img_fetcher = new ImageFetcher(MainActivity.this);
         final ArrayList<Uri> uriList = img_fetcher.getNextRandomImages(numberOfItems);
+
+        this.favhandler = new FavouriteHandler();
 
         gridAdapter = new ImageGridViewAdapter(this, uriList);
         gridView = (GridView) findViewById(R.id.mainGridView);
@@ -77,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void favButtonOnClick(View v){
+        // TODO: remove this and add doubleclick listener!
+        this.favhandler.moveImgsToFavFolder(this, this.img_fetcher.getNextRandomImages(1));
+
         Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
         startActivity(intent);
     }

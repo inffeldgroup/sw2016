@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,21 +21,26 @@ public class ImageTools {
 
             bitmap = downsampleBitmap(context, uri, sampleSize);
 
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            Log.e("E - getDownsampledBitma", e.getMessage());
             //handle the exception(s)
         }
 
         return bitmap;
     }
 
-    private static BitmapFactory.Options getBitmapDimensions(Context context, Uri uri) throws FileNotFoundException, IOException {
+    private static BitmapFactory.Options getBitmapDimensions(Context context, Uri uri) throws FileNotFoundException {
         BitmapFactory.Options outDimens = new BitmapFactory.Options();
         outDimens.inJustDecodeBounds = true; // the decoder will return null (no bitmap)
+        try {
+            InputStream is= context.getContentResolver().openInputStream(uri);
+            // if Options requested only the size will be returned
+            BitmapFactory.decodeStream(is, null, outDimens);
+            is.close();
+        } catch (IOException e) {
+            Log.e("E - getBitmapDimensions", e.getMessage());
+        }
 
-        InputStream is= context.getContentResolver().openInputStream(uri);
-        // if Options requested only the size will be returned
-        BitmapFactory.decodeStream(is, null, outDimens);
-        is.close();
 
         return outDimens;
     }
@@ -59,15 +65,19 @@ public class ImageTools {
         return inSampleSize;
     }
 
-    private static Bitmap downsampleBitmap(Context context, Uri uri, int sampleSize) throws FileNotFoundException, IOException {
-        Bitmap resizedBitmap;
+    private static Bitmap downsampleBitmap(Context context, Uri uri, int sampleSize) throws FileNotFoundException {
+        Bitmap resizedBitmap = null;
         BitmapFactory.Options outBitmap = new BitmapFactory.Options();
-        outBitmap.inJustDecodeBounds = false; // the decoder will return a bitmap
-        outBitmap.inSampleSize = sampleSize;
+        try {
+            outBitmap.inJustDecodeBounds = false; // the decoder will return a bitmap
+            outBitmap.inSampleSize = sampleSize;
 
-        InputStream is = context.getContentResolver().openInputStream(uri);
-        resizedBitmap = BitmapFactory.decodeStream(is, null, outBitmap);
-        is.close();
+            InputStream is = context.getContentResolver().openInputStream(uri);
+            resizedBitmap = BitmapFactory.decodeStream(is, null, outBitmap);
+            is.close();
+        } catch (IOException e) {
+            Log.e("E - downsampleBitmap", e.getMessage());
+        }
 
         return resizedBitmap;
     }

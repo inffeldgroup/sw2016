@@ -17,6 +17,8 @@ public class ImageFetcher{
     private Stack<Integer> seedHistory;
     private Random seed_gen = new Random();
 
+    // TODO: handle files from DailyPicFavs folder in a different way, since they should be marked with a star in the usual view!
+
     private Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
     private ArrayList<String> imgPaths;
     private String[] projection;

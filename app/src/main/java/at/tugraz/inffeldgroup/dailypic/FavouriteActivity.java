@@ -9,9 +9,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 public class FavouriteActivity extends AppCompatActivity {
     private GridView gridView;
@@ -23,7 +25,10 @@ public class FavouriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favourite);
 
         final ArrayList<Uri> uriList = getImgUri();
-
+        if (uriList == null) {
+            Toast.makeText(this, "No favourite pictures selected.", Toast.LENGTH_LONG).show();
+            return;
+        }
         gridAdapter = new ImageGridViewAdapter(this, uriList);
         gridView = (GridView) findViewById(R.id.favGridView);
         gridView.setAdapter(gridAdapter);
@@ -39,45 +44,29 @@ public class FavouriteActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * TODO: Add correct paths for folder
-     *
-     * @return
-     */
     private ArrayList<Uri> getImgUri() {
-        Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = new String[] {MediaStore.Images.Media.DATA};
-        Cursor cursor = this.getContentResolver().query(images, projection, "", null, "");
+        String folder = FavouriteHandler.fav_folder_path;
 
-        ArrayList<String> paths_all = new ArrayList<String>();
         ArrayList<Uri> paths_specific = new ArrayList<Uri>();
 
-        if(cursor.moveToFirst()) {
-            int data_column = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-
-            String path_string;
-            do {
-                path_string = cursor.getString(data_column);
-                paths_all.add(path_string);
-            } while (cursor.moveToNext());
-
-            Uri path_uri;
-            for(int i = 0; i < cursor.getCount(); i++){
-                path_uri = Uri.fromFile(new File(paths_all.get(i)));
-                paths_specific.add(path_uri);
-            }
-
+        File f = new File(folder);
+        if (!f.exists()) {
+            return null;
         }
-        cursor.close();
+
+        for (File img : f.listFiles()) {
+            if (img.isFile()) {
+                paths_specific.add(Uri.fromFile(img));
+            }
+        }
+        if (paths_specific.size() == 0) {
+            return null;
+        }
 
         if (paths_specific.size() == 0) {
             return null;
         }
         return paths_specific;
-
     }
-
-
-
 
 }
