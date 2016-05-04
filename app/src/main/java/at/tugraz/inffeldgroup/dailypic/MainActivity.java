@@ -118,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
 
         setImages(rand_img, this.image_view);
         img_list = rand_img;
+
+        
     }
 
 
