@@ -6,20 +6,16 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.app.Activity;
 import android.os.Bundle;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
 public class FavouriteActivity extends AppCompatActivity {
     private GridView gridView;
-    private FavouriteGridViewAdapter gridAdapter;
+    private ImageGridViewAdapter gridAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +24,8 @@ public class FavouriteActivity extends AppCompatActivity {
 
         final ArrayList<Uri> uriList = getImgUri();
 
-        gridAdapter = new FavouriteGridViewAdapter(this, uriList);
-        gridView = (GridView) findViewById(R.id.gridView);
+        gridAdapter = new ImageGridViewAdapter(this, uriList);
+        gridView = (GridView) findViewById(R.id.favGridView);
         gridView.setAdapter(gridAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

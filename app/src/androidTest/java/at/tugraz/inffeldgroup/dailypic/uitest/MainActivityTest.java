@@ -34,21 +34,25 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testGarbageButton(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImageButton(0);//Garbage
+        mySolo.sleep(1000);
         assertTrue(true);
     }
 
     public void testShareButton(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImageButton(1);//ShareButton
+        mySolo.sleep(1000);
         assertTrue(true);
     }
 
     public void testFavButton(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImageButton(3);//Fav Button
-        mySolo.waitForActivity("Favourite");
+        mySolo.sleep(1000);
+        mySolo.waitForActivity("Favourites");
         mySolo.goBack();
         mySolo.waitForActivity("MainActivity");
+        mySolo.sleep(1000);
         assertTrue(true);
     }
 }

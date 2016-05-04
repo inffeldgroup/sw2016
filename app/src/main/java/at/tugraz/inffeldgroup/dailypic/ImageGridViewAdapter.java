@@ -10,13 +10,17 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
-public class FavouriteGridViewAdapter extends BaseAdapter {
+public class ImageGridViewAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Uri> imgUri;
 
-    public FavouriteGridViewAdapter(Context c, ArrayList<Uri> imgUri){
+    public ImageGridViewAdapter(Context c, ArrayList<Uri> imgUri){
         mContext = c;
         this.imgUri = imgUri;
+    }
+
+    public void setNewImages(ArrayList<Uri> arrayList){
+        this.imgUri = arrayList;
     }
 
     public int getCount() {
@@ -31,17 +35,13 @@ public class FavouriteGridViewAdapter extends BaseAdapter {
         return 0;
     }
 
-    // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
             int h = mContext.getResources().getDisplayMetrics().widthPixels;
-            // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            //imageView.setLayoutParams(new GridView.LayoutParams(400, 400));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setLayoutParams(new GridView.LayoutParams(h/2, h/2));
-            //imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (ImageView) convertView;
         }

@@ -6,48 +6,39 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    private int numberOfItems = 6;
     private ImageFetcher img_fetcher;
-    private ArrayList<View> image_view;
     private List<Uri> img_list;
-
-    private void setImages(List<Uri> uris, List<View> views) {
-        if (uris == null || views == null) {
-            Log.d("[DALYPIC - ERROR]", "MainActivity.setImages: uris or views == null!");
-            return;
-        }
-        for (int i = 0; i < 6; i++) {
-            ((ImageView) views.get(i)).setImageBitmap(ImageTools.getDownsampledBitmap(this, uris.get(i), 200, 200));
-        }
-    }
+    private GridView gridView;
+    private ImageGridViewAdapter gridAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
-        // create image fetcher for current activity
         this.img_fetcher = new ImageFetcher(MainActivity.this);
+        final ArrayList<Uri> uriList = img_fetcher.getNextRandomImages(numberOfItems);
 
-        List<Uri> rand_img = this.img_fetcher.getNextRandomImagePaths();
+        gridAdapter = new ImageGridViewAdapter(this, uriList);
+        gridView = (GridView) findViewById(R.id.mainGridView);
+        gridView.setAdapter(gridAdapter);
 
-        this.image_view = new ArrayList<View>();
-        this.image_view.add(findViewById(R.id.img_1));
-        this.image_view.add(findViewById(R.id.img_2));
-        this.image_view.add(findViewById(R.id.img_3));
-        this.image_view.add(findViewById(R.id.img_4));
-        this.image_view.add(findViewById(R.id.img_5));
-        this.image_view.add(findViewById(R.id.img_6));
-
-        setImages(rand_img, this.image_view);
-        img_list = rand_img;
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
+                intent.setData(uriList.get(position));
+                startActivity(intent);
+            }
+        });
     }
 
     public void sharebuttonOnClick(View v)
@@ -60,12 +51,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void backButtonOnClick(View v) {
-        List<Uri> rand_img = this.img_fetcher.getPreviousRandomImagePaths();
-        if(rand_img != null) {
-            img_list.clear();
-            img_list = rand_img;
-        }
-        setImages(rand_img, this.image_view);
+        ArrayList<Uri> uriList = this.img_fetcher.getPrevRandomImages(numberOfItems);
+        gridAdapter.setNewImages(uriList);
+        gridAdapter.notifyDataSetChanged();
     }
 
     public void favButtonOnClick(View v){
@@ -73,44 +61,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void nextButtonOnClick(View v) {
-        img_list.clear();
-        List<Uri>rand_img = this.img_fetcher.getNextRandomImagePaths();
-        img_list = rand_img;
-        setImages(rand_img, this.image_view);
+    public void nextButtonOnClick(View v) {;
+        ArrayList<Uri> uriList = this.img_fetcher.getNextRandomImages(numberOfItems);
+        gridAdapter.setNewImages(uriList);
+        gridAdapter.notifyDataSetChanged();
     }
-
-    public void onImg1Click(View v) {
-        Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-        intent.setData(img_list.get(0));
-        startActivity(intent);
-    }
-    public void onImg2Click(View v) {
-        Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-        intent.setData(img_list.get(1));
-        startActivity(intent);
-    }
-    public void onImg3Click(View v) {
-        Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-        intent.setData(img_list.get(2));
-        startActivity(intent);
-    }
-    public void onImg4Click(View v) {
-        Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-        intent.setData(img_list.get(3));
-        startActivity(intent);
-    }
-    public void onImg5Click(View v) {
-        Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-        intent.setData(img_list.get(4));
-        startActivity(intent);
-    }
-    public void onImg6Click(View v) {
-        Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-        intent.setData(img_list.get(5));
-        startActivity(intent);
-    }
-
 }
 
 

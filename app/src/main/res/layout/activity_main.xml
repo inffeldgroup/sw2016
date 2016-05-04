@@ -60,108 +60,12 @@
             android:onClick="sharebuttonOnClick" />
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/mainGridView"
         android:layout_weight="1"
-        android:background="@color/dailypic_background">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:scaleType="centerCrop"
-                android:id="@+id/img_1"
-                android:layout_gravity="left|top"
-                android:src="@drawable/blau"
-                android:layout_weight="1"
-                android:layout_marginRight="0.75dp"
-                android:layout_marginBottom="0.75dp"
-                android:onClick="onImg1Click" />
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:scaleType="centerCrop"
-                android:id="@+id/img_2"
-                android:src="@drawable/blau"
-                android:layout_weight="1"
-                android:layout_marginLeft="0.75dp"
-                android:layout_marginBottom="0.75dp"
-                android:onClick="onImg2Click" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:scaleType="centerCrop"
-                android:id="@+id/img_3"
-                android:layout_gravity="left|top"
-
-                android:src="@drawable/blau"
-                android:layout_weight="1"
-                android:layout_marginTop="0.75dp"
-                android:layout_marginRight="0.75dp"
-                android:layout_marginBottom="0.75dp"
-                android:onClick="onImg3Click" />
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:scaleType="centerCrop"
-                android:id="@+id/img_4"
-                android:src="@drawable/blau"
-                android:layout_weight="1"
-                android:layout_marginTop="0.75dp"
-                android:layout_marginBottom="0.75dp"
-                android:layout_marginLeft="0.75dp"
-                android:onClick="onImg4Click" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:scaleType="centerCrop"
-                android:id="@+id/img_5"
-                android:layout_gravity="left|top"
-                android:src="@drawable/blau"
-                android:layout_weight="1"
-                android:layout_marginRight="0.75dp"
-                android:layout_marginTop="0.75dp"
-                android:onClick="onImg5Click" />
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:scaleType="centerCrop"
-                android:id="@+id/img_6"
-                android:src="@drawable/blau"
-                android:layout_weight="1"
-                android:layout_marginTop="0.75dp"
-                android:layout_marginLeft="0.75dp"
-                android:onClick="onImg6Click" />
-        </LinearLayout>
-    </LinearLayout>
+        android:numColumns="2" />
 
     <LinearLayout
         android:orientation="horizontal"

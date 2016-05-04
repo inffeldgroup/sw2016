@@ -11,94 +11,65 @@ import java.io.*;
 /**
  * Created by markus on 13/04/16.
  */
-public class ImageFetcher {
+
+public class ImageFetcher{
     private Activity activity;
-    private int view_size;
-    private int history_size;
-    private ArrayList<Integer> seeds;
-    private int current_seed_index;
+    private Stack<Integer> seedHistory;
+    private Random seed_gen = new Random();
+
+    private Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    private ArrayList<String> imgPaths;
+    private String[] projection;
 
     public ImageFetcher(Activity activity){
         this.activity = activity;
-        this.view_size = 6;
-        this.history_size = 3;
+        this.seedHistory = new Stack<Integer>();
+        this.projection = new String[]{MediaStore.Images.Media.DATA};
+        this.imgPaths = new ArrayList<String>();
 
-        this.current_seed_index = -1;
-        this.seeds = new ArrayList<Integer>();
-    }
-
-    public ArrayList<Uri> getPreviousRandomImagePaths() {
-        if(this.seeds.size() <= 0) {
-            return null;
-        }
-        if(this.current_seed_index <= 0) {
-            return null;
-        }
-        if(this.current_seed_index <= (this.seeds.size() - this.history_size)) {
-            return null;
-        }
-
-        this.current_seed_index--;
-        int seed = this.seeds.get(this.current_seed_index);
-        ArrayList<Uri> image_paths = getRandomImagePaths(seed);
-        return image_paths;
-    }
-
-    public ArrayList<Uri> getNextRandomImagePaths() {
-
-        int seed;
-        this.current_seed_index++;
-        if(this.current_seed_index > this.seeds.size() - 1) {
-            Random rand_gen = new Random();
-            seed = rand_gen.nextInt();
-            this.seeds.add(seed);
-        }
-        else {
-            seed = this.seeds.get(this.current_seed_index);
-        }
-
-        ArrayList<Uri> image_paths = getRandomImagePaths(seed);
-        return image_paths;
-    }
-
-    private ArrayList<Uri> getRandomImagePaths(int seed) {
-
-        // Get picture directory
-        Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = new String[] { MediaStore.Images.Media.DATA };
         Cursor cursor = this.activity.getContentResolver().query(images, projection, "", null, "");
-
-        ArrayList<String> paths_all = new ArrayList<String>();
-        ArrayList<Uri> paths_specific = new ArrayList<Uri>();
-
-        if(cursor.moveToFirst()) {
+        if(cursor.moveToFirst()){
             int data_column = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
 
-            String path_string;
-            do {
-                path_string = cursor.getString(data_column);
-                paths_all.add(path_string);
-            } while(cursor.moveToNext());
-
-            Random rand_gen = new Random(seed);
-            int image_index;
-            Uri path_uri;
-            for(int i = 0; i < this.view_size; i++) {
-                image_index = Math.abs(rand_gen.nextInt()) % paths_all.size();
-                path_uri = Uri.fromFile(new File(paths_all.get(image_index)));
-                paths_specific.add(path_uri);
-            }
-
+            do{
+                imgPaths.add(cursor.getString(data_column));
+            }while(cursor.moveToNext());
         }
-
-        cursor.close();
-
-        if (paths_specific.size() == 0) {
-            return null;
-        }
-
-        return paths_specific;
     }
 
+    public ArrayList<Uri> getNextRandomImages(int size){
+        ArrayList<Uri> ret = new ArrayList<Uri>();
+        int seed = seed_gen.nextInt();
+        int image_index;
+        Random rand_gen = new Random(seed);
 
+        this.seedHistory.push(seed);
+        for(int i = 0; i < size; i++){
+            image_index = Math.abs(rand_gen.nextInt()) % imgPaths.size();
+            ret.add(Uri.fromFile(new File(imgPaths.get(image_index))));
+        }
+
+        return ret;
+    }
+
+    public ArrayList<Uri> getPrevRandomImages(int size){
+        ArrayList<Uri> ret = new ArrayList<Uri>();
+        int seed;
+        int image_index;
+
+        if(seedHistory.size() > 1){
+            this.seedHistory.pop();
+            seed = this.seedHistory.lastElement();
+        }else{
+            seed = this.seedHistory.get(0);
+        }
+        Random rand_gen = new Random(seed);
+
+        for(int i = 0; i < size; i++){
+            image_index = Math.abs(rand_gen.nextInt()) % imgPaths.size();
+            ret.add(Uri.fromFile(new File(imgPaths.get(image_index))));
+        }
+
+        return ret;
+    }
 }

@@ -21,9 +21,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testPreviousFunction() {
         ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
 
-        ArrayList<Uri> image_paths_01 = img_fetcher.getNextRandomImagePaths();
-        ArrayList<Uri> image_paths_02 = img_fetcher.getNextRandomImagePaths();
-        ArrayList<Uri> image_paths_03 = img_fetcher.getPreviousRandomImagePaths();
+        ArrayList<Uri> image_paths_01 = img_fetcher.getNextRandomImages(6);
+        ArrayList<Uri> image_paths_02 = img_fetcher.getNextRandomImages(6);
+        ArrayList<Uri> image_paths_03 = img_fetcher.getPrevRandomImages(6);
 
 
         Assert.assertTrue(image_paths_03.equals(image_paths_01) == true);
@@ -32,13 +32,14 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testNextFunction() {
         ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
 
-        ArrayList<Uri> image_paths_01 = img_fetcher.getNextRandomImagePaths();
-        ArrayList<Uri> image_paths_02 = img_fetcher.getNextRandomImagePaths();
-        ArrayList<Uri> image_paths_03 = img_fetcher.getPreviousRandomImagePaths();
-        ArrayList<Uri> image_paths_04 = img_fetcher.getNextRandomImagePaths();
+        ArrayList<Uri> image_paths_01 = img_fetcher.getNextRandomImages(6);
+        ArrayList<Uri> image_paths_02 = img_fetcher.getNextRandomImages(6);
+        ArrayList<Uri> image_paths_03 = img_fetcher.getPrevRandomImages(6);
+        ArrayList<Uri> image_paths_04 = img_fetcher.getNextRandomImages(6);
 
 
         Assert.assertTrue(image_paths_04.equals(image_paths_02) == true);
     }
+
 
 }
