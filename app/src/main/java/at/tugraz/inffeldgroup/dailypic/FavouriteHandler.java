@@ -20,17 +20,18 @@ public class FavouriteHandler {
 
     }
 
-    public void moveImgsToFavFolder(Context context, List<Uri> favs) {
+    public boolean moveImgsToFavFolder(Context context, List<Uri> favs) {
 
         File f = new File(FavouriteHandler.base_path);
 
         if (f.exists() == false) {
             if (f.mkdir() == false) {
                 Log.e("[DAYLIPIC]", "Creating directory failed");
-                return;
+                return false;
             }
         }
 
+        boolean ret = true;
         for (Uri uri : favs) {
 
             //Log.d("[DAYLIPIC]", "Environment path: " + FavouriteHandler.base_path);
@@ -41,11 +42,12 @@ public class FavouriteHandler {
 
             if (src.renameTo(dest) == false) {
                 Log.e("[DAYLIPIC]", "Error moving file to favourites folder: " + src.getAbsolutePath());
+                ret = false;
             } else {
                 Log.d("[DAYLIPIC]", "Moved image to favourites folder: " + src.getName());
             }
         }
-
+        return ret;
     }
 
 }

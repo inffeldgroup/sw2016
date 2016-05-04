@@ -3,6 +3,8 @@ package at.tugraz.inffeldgroup.dailypic.test;
 import android.net.Uri;
 import android.test.ActivityInstrumentationTestCase2;
 import junit.framework.Assert;
+
+import at.tugraz.inffeldgroup.dailypic.FavouriteHandler;
 import at.tugraz.inffeldgroup.dailypic.MainActivity;
 
 import java.util.ArrayList;
@@ -41,5 +43,12 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         Assert.assertTrue(image_paths_04.equals(image_paths_02) == true);
     }
 
+    public void testFavouriteHandler() {
 
+        ImageFetcher imageFetcher = new ImageFetcher(getActivity());
+        final ArrayList<Uri> uriList = imageFetcher.getNextRandomImages(MainActivity.numberOfItems);
+
+        FavouriteHandler fh = new FavouriteHandler();
+        Assert.assertTrue(fh.moveImgsToFavFolder(getActivity(), uriList));
+    }
 }
