@@ -39,6 +39,11 @@ public class FavouriteActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * TODO: Add correct paths for folder
+     *
+     * @return
+     */
     private ArrayList<Uri> getImgUri() {
         Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = new String[] {MediaStore.Images.Media.DATA};
