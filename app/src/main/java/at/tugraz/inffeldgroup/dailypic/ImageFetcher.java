@@ -40,7 +40,13 @@ public class ImageFetcher{
     }
 
     public ArrayList<Uri> getNextRandomImages(int size){
+
         ArrayList<Uri> ret = new ArrayList<Uri>();
+
+        if (imgPaths.isEmpty()) {
+            return ret;
+        }
+
         int seed = seed_gen.nextInt();
         int image_index;
         Random rand_gen = new Random(seed);
