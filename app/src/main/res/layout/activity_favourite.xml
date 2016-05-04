@@ -35,5 +35,7 @@
         android:stretchMode="columnWidth"
         android:focusable="true"
         android:clickable="true"
-            android:background="#ffffff" />
+            android:background="#ffffff"
+            android:verticalSpacing="2dp"
+            android:horizontalSpacing="4dp" />
 </LinearLayout>

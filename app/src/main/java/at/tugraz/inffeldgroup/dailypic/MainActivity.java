@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -39,17 +38,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.setData(uriList.get(position));
                 startActivity(intent);
             }
-        });
-        gridView.setOnTouchListener(new View.OnTouchListener(){
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_MOVE){
-                    return true;
-                }
-                return false;
-            }
-
         });
     }
 
