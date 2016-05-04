@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -19,7 +20,12 @@
         android:weightSum="1"
         android:minHeight="300dp"
         android:nestedScrollingEnabled="true"
-        android:background="@color/dailypic_red">
+        android:background="@color/dailypic_darkred"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:id="@+id/topPanel">
 
         <ImageButton
             android:layout_width="10dp"
@@ -28,9 +34,9 @@
             android:layout_weight="0.25"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="@string/act_main_but_delete_desc"
-            android:background="@color/dailypic_red"
             android:clickable="false"
-            android:alpha="1" />
+            android:alpha="1"
+            android:background="@color/dailypic_red" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,7 +51,8 @@
             android:layout_gravity="center"
             android:gravity="center_vertical|center_horizontal"
             android:textColor="#ffffff"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:background="@color/dailypic_red" />
 
         <ImageButton
             android:layout_width="10dp"
@@ -54,10 +61,10 @@
             android:layout_weight="0.25"
             android:src="@android:drawable/ic_menu_share"
             android:contentDescription="@string/act_main_but_share_desc"
-            android:background="@color/dailypic_red"
             android:clickable="false"
             android:baselineAlignBottom="false"
-            android:onClick="sharebuttonOnClick" />
+            android:onClick="sharebuttonOnClick"
+            android:background="@color/dailypic_red" />
     </LinearLayout>
 
     <GridView
@@ -65,7 +72,13 @@
         android:layout_height="fill_parent"
         android:id="@+id/mainGridView"
         android:layout_weight="1"
-        android:numColumns="2" />
+        android:numColumns="2"
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="4dp"
+        android:background="@color/dailypic_background"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/adView"
+        android:layout_above="@+id/bottomPanel" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -73,14 +86,20 @@
         android:layout_height="50dp"
         android:minHeight="300dp"
         android:focusableInTouchMode="false"
-        android:gravity="bottom">
+        android:alpha="1"
+        android:layout_marginLeft="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/bottomPanel"
+        android:gravity="bottom"
+        android:layout_alignParentTop="false">
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:text="@string/act_main_but_back"
             android:id="@+id/but_back"
-            android:layout_weight="0.33"
+            android:layout_weight="1"
             style="@android:style/MediaButton.Next"
             android:background="@color/dailypic_darkred"
             android:textColor="#ffffff"
@@ -91,24 +110,26 @@
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="fill_parent"
             android:text="@string/act_main_but_fav"
             android:id="@+id/but_fav"
-            android:layout_weight="0.66"
-            android:src="@android:drawable/btn_star_big_on"
+            android:layout_weight="2"
+            android:src="@drawable/abc_btn_rating_star_on_mtrl_alpha"
             android:visibility="visible"
-            style="@android:style/MediaButton.Next"
             android:clickable="false"
             android:contentDescription="@string/act_main_but_fav_desc"
             android:layout_gravity="bottom|right"
-            android:background="@color/dailypic_red" />
+            android:background="@color/dailypic_red"
+            android:onClick="favButtonOnClick"
+            style="@android:style/MediaButton.Next"
+            android:scaleType="fitCenter" />
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:text="@string/act_main_but_next"
             android:id="@+id/but_next"
-            android:layout_weight="0.33"
+            android:layout_weight="1"
             style="@android:style/MediaButton.Next"
             android:background="@color/dailypic_darkred"
             android:textColor="#ffffff"
@@ -118,4 +139,14 @@
             android:onClick="nextButtonOnClick" />
     </LinearLayout>
 
-</LinearLayout>
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        android:foreground="#2caf2a"
+        android:layout_below="@+id/topPanel"
+        android:layout_alignParentStart="true">
+    </com.google.android.gms.ads.AdView>
+</RelativeLayout>
