@@ -20,7 +20,7 @@
         android:weightSum="1"
         android:minHeight="300dp"
         android:nestedScrollingEnabled="true"
-        android:background="@color/dailypic_red"
+        android:background="@color/dailypic_darkred"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
@@ -34,9 +34,9 @@
             android:layout_weight="0.25"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="@string/act_main_but_delete_desc"
-            android:background="@color/dailypic_red"
             android:clickable="false"
-            android:alpha="1" />
+            android:alpha="1"
+            android:background="@color/dailypic_red" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,7 +51,8 @@
             android:layout_gravity="center"
             android:gravity="center_vertical|center_horizontal"
             android:textColor="#ffffff"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:background="@color/dailypic_red" />
 
         <ImageButton
             android:layout_width="10dp"
@@ -60,10 +61,10 @@
             android:layout_weight="0.25"
             android:src="@android:drawable/ic_menu_share"
             android:contentDescription="@string/act_main_but_share_desc"
-            android:background="@color/dailypic_red"
             android:clickable="false"
             android:baselineAlignBottom="false"
-            android:onClick="sharebuttonOnClick" />
+            android:onClick="sharebuttonOnClick"
+            android:background="@color/dailypic_red" />
     </LinearLayout>
 
     <GridView
