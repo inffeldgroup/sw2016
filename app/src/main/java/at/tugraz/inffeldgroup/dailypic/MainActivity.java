@@ -51,9 +51,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void backButtonOnClick(View v) {
-        ArrayList<Uri> uriList = this.img_fetcher.getPrevRandomImages(numberOfItems);
+        final ArrayList<Uri> uriList = this.img_fetcher.getPrevRandomImages(numberOfItems);
         gridAdapter.setNewImages(uriList);
         gridAdapter.notifyDataSetChanged();
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
+                intent.setData(uriList.get(position));
+                startActivity(intent);
+            }
+        });
     }
 
     public void favButtonOnClick(View v){
@@ -61,10 +69,19 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void nextButtonOnClick(View v) {;
-        ArrayList<Uri> uriList = this.img_fetcher.getNextRandomImages(numberOfItems);
+    public void nextButtonOnClick(View v) {
+        final ArrayList<Uri> uriList = this.img_fetcher.getNextRandomImages(numberOfItems);
+
         gridAdapter.setNewImages(uriList);
         gridAdapter.notifyDataSetChanged();
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
+                intent.setData(uriList.get(position));
+                startActivity(intent);
+            }
+        });
     }
 }
 
