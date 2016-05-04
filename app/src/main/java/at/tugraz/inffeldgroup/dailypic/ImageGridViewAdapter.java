@@ -39,9 +39,10 @@ public class ImageGridViewAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             int h = mContext.getResources().getDisplayMetrics().widthPixels;
+            int v = mContext.getResources().getDisplayMetrics().heightPixels;
             imageView = new ImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setLayoutParams(new GridView.LayoutParams(h/2, h/2));
+            imageView.setLayoutParams(new GridView.LayoutParams(h/2, (v/4)-30));
         } else {
             imageView = (ImageView) convertView;
         }
