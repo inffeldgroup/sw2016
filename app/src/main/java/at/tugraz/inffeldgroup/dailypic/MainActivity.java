@@ -1,6 +1,8 @@
 package at.tugraz.inffeldgroup.dailypic;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,6 +11,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -119,7 +122,33 @@ public class MainActivity extends AppCompatActivity {
         setImages(rand_img, this.image_view);
         img_list = rand_img;
 
-        
+        Log.i("NextActivity", "startNotification");
+
+        // Sets an ID for the notification
+        int mNotificationId = 001;
+
+        // Build Notification , setOngoing keeps the notification always in status bar
+        NotificationCompat.Builder mBuilder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.icon_notification)
+                        .setContentTitle("DailyPic")
+                        .setContentText("Check out your new Pics!")
+                        .setOngoing(true);
+
+        // Create pending intent, mention the Activity which needs to be
+        //triggered when user clicks on notification(StopScript.class in this case)
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder.setContentIntent(contentIntent);
+
+        // Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        // Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
 
