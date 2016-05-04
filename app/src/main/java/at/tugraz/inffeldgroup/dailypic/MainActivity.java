@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private int numberOfItems = 6;
+    public static final int numberOfItems = 6;
     private ImageFetcher img_fetcher;
     private List<Uri> img_list;
     private GridView gridView;

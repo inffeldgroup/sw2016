@@ -21,29 +21,31 @@ public class FavouriteHandler {
 
     }
 
-    public void moveImgsToFavFolder(Context context, List<Uri> favs) {
+    public boolean moveImgsToFavFolder(Context context, List<Uri> favs) {
 
         File f = new File(FavouriteHandler.fav_folder_path);
 
         if (f.exists() == false) {
             if (f.mkdir() == false) {
                 Log.e("[DAYLIPIC]", "Creating directory failed");
-                return;
+                return false;
             }
         }
 
+        boolean ret = true;
         for (Uri uri : favs) {
             File src = new File(uri.getPath());
             File dest = new File(FavouriteHandler.fav_folder_path + src.getName());
 
             if (src.renameTo(dest) == false) {
                 Log.e("[DAYLIPIC]", "Error moving file to favourites folder: " + src.getAbsolutePath());
+                ret = false;
             } else {
                 Log.d("[DAYLIPIC]", "Moved image to favourites folder: " + src.getName());
                 Toast.makeText(context, "Moved image to DailyPicFavs foler: " + src.getName(), Toast.LENGTH_LONG);
             }
         }
-
+        return ret;
     }
 
 }
