@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".FullscreenImage"></activity>
+        <activity android:name=".PushUpNotification"></activity>
     </application>
 
 </manifest>

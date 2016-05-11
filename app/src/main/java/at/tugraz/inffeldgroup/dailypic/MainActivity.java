@@ -1,6 +1,7 @@
 package at.tugraz.inffeldgroup.dailypic;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -21,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -122,37 +124,18 @@ public class MainActivity extends AppCompatActivity {
         setImages(rand_img, this.image_view);
         img_list = rand_img;
 
-        Log.i("NextActivity", "startNotification");
+        Intent myIntent = new Intent(MainActivity.this, PushUpNotification.class);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        PendingIntent PendI = PendingIntent.getActivity(this, 101, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // Sets an ID for the notification
-        int mNotificationId = 001;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 15);
+        calendar.set(Calendar.MINUTE, 57);
+        calendar.set(Calendar.SECOND, 0);
 
-        // Build Notification , setOngoing keeps the notification always in status bar
-        NotificationCompat.Builder mBuilder =
-                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.icon_notification)
-                        .setContentTitle("DailyPic")
-                        .setContentText("Check out your new Pics!")
-                        .setOngoing(true);
-
-        // Create pending intent, mention the Activity which needs to be
-        //triggered when user clicks on notification(StopScript.class in this case)
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-
-        mBuilder.setContentIntent(contentIntent);
-
-        // Gets an instance of the NotificationManager service
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        // Builds the notification and issues it.
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        //set repeating every 24 hours
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, PendI);
     }
-
-
-
 
     public void sharebuttonOnClick(View v)
     {
@@ -208,8 +191,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
         intent.setData(img_list.get(5));
         startActivity(intent);
-
-
     }
 
 }
