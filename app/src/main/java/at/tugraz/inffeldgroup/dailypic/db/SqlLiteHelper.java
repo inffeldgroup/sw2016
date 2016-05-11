@@ -23,16 +23,13 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 	public static final String					DATABASE_NAME								= "MainDatabase.db";
 
 	public static final String					TABLE_FAVORITES									= "Favorites";
-	public static final String					COLUMN_FAVORITE_ID					= "favID";
 	public static final String					COLUMN_URI								= "URI";
 
 	public static final String					TABLE_CREATE_FAVORITES					= "CREATE TABLE "
 																												+ TABLE_FAVORITES
 																												+ "("
-																												+ COLUMN_FAVORITE_ID
-																												+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 																												+ COLUMN_URI
-																												+ " TEXT NOT NULL);";
+																												+ " TEXT PRIMARY KEY);";
 
 
 	/**
