@@ -56,6 +56,8 @@ public class ImageGridViewAdapter extends BaseAdapter {
             row.setTag(holder);
             int h = mContext.getResources().getDisplayMetrics().widthPixels;
             int v = mContext.getResources().getDisplayMetrics().heightPixels;
+            holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(v/4)-30));
         } else {
             holder = (ViewHolder) row.getTag();
         }
