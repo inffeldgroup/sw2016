@@ -19,17 +19,58 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final int numberOfItems = 6;
     private ImageFetcher img_fetcher;
-    private ArrayList<Uri> uriList;
+    public ArrayList<Uri> uriList;
     private GridView gridView;
     private ImageGridViewAdapter gridAdapter;
     private FavouriteHandler favhandler;
+
+    abstract class DoubleClickListener implements AdapterView.OnItemClickListener {
+        private static final long DOUBLE_CLICK_TIME_DELTA = 500; //milliseconds
+
+        private CountDownTimer timer;
+        long lastClickTime = 0;
+
+        private void startSingleClickTimer(final View view, final int position) {
+            lastClickTime = System.currentTimeMillis();
+            timer = new CountDownTimer(DOUBLE_CLICK_TIME_DELTA, DOUBLE_CLICK_TIME_DELTA) {
+                @Override
+                public void onTick(long l) {}
+
+                @Override
+                public void onFinish() {
+                    onSingleClick(view, position);
+                }
+            };
+            timer.start();
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+
+            if (lastClickTime == 0) {
+                startSingleClickTimer(view, position);
+            } else {
+                if (System.currentTimeMillis() - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
+                    timer.cancel();
+                    lastClickTime = 0;
+                    onDoubleClick(view, position);
+                } else {
+                    if (timer != null) {
+                        timer.cancel();
+                    }
+                    startSingleClickTimer(view, position);
+                }
+            }
+        }
+
+        public abstract void onSingleClick(View v, int position);
+        public abstract void onDoubleClick(View v, int position);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,49 +85,6 @@ public class MainActivity extends AppCompatActivity {
         gridView = (GridView) findViewById(R.id.mainGridView);
         gridView.setAdapter(gridAdapter);
 
-        abstract class DoubleClickListener implements AdapterView.OnItemClickListener {
-            private static final long DOUBLE_CLICK_TIME_DELTA = 500; //milliseconds
-
-            private CountDownTimer timer;
-            long lastClickTime = 0;
-
-            private void startSingleClickTimer(final View view, final int position) {
-                lastClickTime = System.currentTimeMillis();
-                timer = new CountDownTimer(DOUBLE_CLICK_TIME_DELTA, DOUBLE_CLICK_TIME_DELTA) {
-                    @Override
-                    public void onTick(long l) {}
-
-                    @Override
-                    public void onFinish() {
-                        onSingleClick(view, position);
-                    }
-                };
-                timer.start();
-            }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-
-                if (lastClickTime == 0) {
-                    startSingleClickTimer(view, position);
-                } else {
-                    if (System.currentTimeMillis() - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
-                        timer.cancel();
-                        lastClickTime = 0;
-                        onDoubleClick(view, position);
-                    } else {
-                        if (timer != null) {
-                            timer.cancel();
-                        }
-                        startSingleClickTimer(view, position);
-                    }
-                }
-            }
-
-            public abstract void onSingleClick(View v, int position);
-            public abstract void onDoubleClick(View v, int position);
-        }
-
         gridView.setOnItemClickListener(new DoubleClickListener() {
             @Override
             public void onDoubleClick(View v, int position) {
@@ -100,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
                 intent.setData(uriList.get(position));
                 startActivity(intent);
-
+            }
+        });
         gridView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
@@ -196,10 +195,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-//for advertisement
+        //for advertisement
         AdView mAdView = (AdView) findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     public void sharebuttonOnClick(View v)
@@ -213,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < gridView.getCount(); i++)
                 if (checked.get(i)) {
                     Log.d("asdf", "test" + checked.toString());
-                    shareList.add(img_list.get(i));
+                    shareList.add(uriList.get(i));
                 }
             sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareList);
             startActivity(sendIntent);
@@ -221,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void backButtonOnClick(View v) {
-        uriList = this.img_fetcher.getPrevRandomImages(numberOfItems);
+        uriList = img_fetcher.getPrevRandomImages(numberOfItems);
         clearSelection();
         gridAdapter.setNewImages(uriList);
         gridAdapter.notifyDataSetChanged();
@@ -233,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void nextButtonOnClick(View v) {
-        uriList = this.img_fetcher.getNextRandomImages(numberOfItems);
+        uriList = img_fetcher.getNextRandomImages(numberOfItems);
         clearSelection();
 
         gridAdapter.setNewImages(uriList);
@@ -256,21 +255,23 @@ public class MainActivity extends AppCompatActivity {
                 gridView.setItemChecked(i, false);
             }
             gridView.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            gridView.setOnItemClickListener(new DoubleClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onDoubleClick(View v, int position) {
+                    Uri uri = uriList.get(position);
+                    MainActivity.this.favhandler.moveImgsToFavFolder(getApplicationContext(), uri);
+                    Toast.makeText(getApplicationContext(), "Added to favourites: " + uri.getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onSingleClick(View v, int position) {
                     Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-                    intent.setData(img_list.get(position));
+                    intent.setData(uriList.get(position));
                     startActivity(intent);
                 }
             });
         }
     }
-    /*class ViewHolder {
-        ImageView image;
-        ImageView checked;
-        ImageView fav;
-    }*/
 }
 
 
