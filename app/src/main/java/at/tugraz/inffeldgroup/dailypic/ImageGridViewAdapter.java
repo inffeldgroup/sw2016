@@ -56,7 +56,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
             holder.image=(ImageView)row.findViewById(R.id.image);
             holder.checked=(ImageView)row.findViewById(R.id.checked);
             holder.fav = (ImageView)row.findViewById(R.id.fav);
-            if (imgUri.get(position).isFav()) {
+            if (!imgUri.isEmpty() && imgUri.get(position).isFav()) {
                 holder.fav.setVisibility(View.VISIBLE);
             }
             row.setTag(holder);

@@ -20,20 +20,24 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 	private static final String TAG = SqlLiteHelper.class.getSimpleName();
 
 	/** Instance of the database */
-	private static volatile SqlLiteHelper	instance										= null;
+	private static volatile SqlLiteHelper instance = null;
 
 
-	private static final int					DATABASE_VERSION							= 1;
-	public static final String					DATABASE_NAME								= "MainDatabase.db";
+	private static final int DATABASE_VERSION = 4;
+	public static final String	DATABASE_NAME = "MainDatabase.db";
 
-	public static final String					TABLE_FAVORITES									= "Favorites";
-	public static final String					COLUMN_URI								= "URI";
+	public static final String	TABLE_IMAGES  = "Images";
+	public static final String	COLUMN_URI	= "URI";
+	public static final String	COLUMN_IS_FAVORITE = "isFavorite";
 
-	public static final String					TABLE_CREATE_FAVORITES					= "CREATE TABLE "
-																												+ TABLE_FAVORITES
-																												+ "("
-																												+ COLUMN_URI
-																												+ " TEXT PRIMARY KEY);";
+	public static final String	TABLE_CREATE_IMAGES	= "CREATE TABLE "
+			+ TABLE_IMAGES
+			+ "("
+			+ COLUMN_URI
+			+ " TEXT PRIMARY KEY, "
+			+ COLUMN_IS_FAVORITE
+			+ " INTEGER NOT NULL"
+			+ ");";
 
 
 	/**
@@ -79,7 +83,7 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase database)
 	{
 		try {
-			database.execSQL(TABLE_CREATE_FAVORITES);
+			database.execSQL(TABLE_CREATE_IMAGES);
 		}
 		catch (SQLException e) {
 			Log.e(TAG, "Creation of database failed.");
@@ -114,7 +118,7 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
 		try {
-			db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
 		}
 		catch (SQLException e) {
 			Log.e(TAG, "Upgrade to new database version failed.");

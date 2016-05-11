@@ -17,7 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class DbDatasource
 {
 	private static final String TAG = DbDatasource.class.getSimpleName();
-	private final String[]	allColumnsFavorites				= {SqlLiteHelper.COLUMN_URI};
+	private final String[]	allColumnsFavorites				= {SqlLiteHelper.COLUMN_URI, SqlLiteHelper.COLUMN_IS_FAVORITE};
 
 	/** Instance of the database */
 	private SQLiteDatabase			database;
@@ -79,19 +79,20 @@ public class DbDatasource
 		UriWrapper ret = null;
 		try {
 			Cursor cursor = database.rawQuery(
-					"Select * from " + SqlLiteHelper.TABLE_FAVORITES + " where " + SqlLiteHelper.COLUMN_URI
+					"Select * from " + SqlLiteHelper.TABLE_IMAGES + " where " + SqlLiteHelper.COLUMN_URI
 							+ " = '" + uri.toString() + "'", null);
 
 			cursor.moveToFirst();
-			ret = cursorToUriWrapper(cursor);
+			if (!cursor.isAfterLast()) {
+				ret = cursorToUriWrapper(cursor);
+			}
+			else {
+				ret = new UriWrapper(uri, false);
+			}
 			cursor.close();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		if (ret == null) {
-			ret = new UriWrapper(uri, false);
 		}
 		return ret;
 
@@ -101,9 +102,10 @@ public class DbDatasource
 	{
 		ContentValues values = new ContentValues();
 		values.put(SqlLiteHelper.COLUMN_URI, uriWrapper.getUri().toString());
+		values.put(SqlLiteHelper.COLUMN_IS_FAVORITE, uriWrapper.isFav());
 
 		try {
-			database.insert(SqlLiteHelper.TABLE_FAVORITES, null, values);
+			database.insert(SqlLiteHelper.TABLE_IMAGES, null, values);
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Failed to insert uriWrapper into database.");
@@ -113,7 +115,7 @@ public class DbDatasource
 	public int delete(UriWrapper uriWrapper)
 	{
 		try {
-			return database.delete(SqlLiteHelper.TABLE_FAVORITES,
+			return database.delete(SqlLiteHelper.TABLE_IMAGES,
 					SqlLiteHelper.COLUMN_URI + " = '" + uriWrapper.getUri() + "'", null);
 		}
 		catch (Exception e) {
@@ -127,7 +129,7 @@ public class DbDatasource
 		ArrayList<UriWrapper> favorites = new ArrayList<UriWrapper>();
 
 		try {
-			Cursor cursor = database.query(SqlLiteHelper.TABLE_FAVORITES,
+			Cursor cursor = database.query(SqlLiteHelper.TABLE_IMAGES,
 					allColumnsFavorites, null, null, null, null, null);
 
 			cursor.moveToFirst();
@@ -151,10 +153,11 @@ public class DbDatasource
 		if (cursor != null)
 		{
 			try {
-				uriWrapper = new UriWrapper(Uri.parse(cursor.getString(0)), true);
+				uriWrapper = new UriWrapper(Uri.parse(cursor.getString(0)), cursor.getInt(1) != 0);
 			}
 			catch (Exception e) {
 				Log.e(TAG, "Failed to convert cursor to UriWrapper.");
+				e.printStackTrace();
 			}
 		}
 		return uriWrapper;
