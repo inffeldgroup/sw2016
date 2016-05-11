@@ -62,11 +62,13 @@ public class ImageGridViewAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
         holder.image.setImageBitmap(ImageTools.getDownsampledBitmap(mContext, imgUri.get(position), 100, 100));
+        holder.uri = imgUri.get(position);
         return row;
     }
     static class ViewHolder {
         ImageView image;
         ImageView checked;
         ImageView fav;
+        Uri uri;
     }
 }

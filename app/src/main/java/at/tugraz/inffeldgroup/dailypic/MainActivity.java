@@ -1,5 +1,7 @@
 package at.tugraz.inffeldgroup.dailypic;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -20,6 +22,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     public static final int numberOfItems = 6;
@@ -217,6 +220,50 @@ public class MainActivity extends AppCompatActivity {
             sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareList);
             startActivity(sendIntent);
         }
+    }
+
+    public void deleteButtonOnClick(View v) {
+        if(gridView.getCheckedItemPositions() != null) {
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Delete Images")
+                    .setMessage("Are you sure you want to delete the selected images?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteImages();
+                        }
+
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            clearSelection();
+                        }
+
+                    })
+                    .show();
+        } else {
+            Toast.makeText(this, "No images for deletion selected!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    private void deleteImages() {
+        SparseBooleanArray checked = gridView.getCheckedItemPositions();
+        HashMap<Integer, ImageGridViewAdapter.ViewHolder> del_map = new HashMap<Integer, ViewHolder>();
+        for (int i = 0; i < gridView.getCount(); i++) {
+            if (checked.get(i)) {
+                del_map.put(i, (ViewHolder) gridView.getChildAt(i).getTag());
+            }
+        }
+
+        // call delete image function
+        this.img_fetcher.deleteImages(del_map);
+        // replace deleted pictures
+        this.img_fetcher.replaceDeletedImages(del_map);
+        clearSelection();
     }
 
     public void backButtonOnClick(View v) {
