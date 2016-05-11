@@ -22,6 +22,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 import at.tugraz.inffeldgroup.dailypic.db.AndroidDatabaseManager;
+import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
+import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,41 +31,23 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     public static final int numberOfItems = 6;
     private ImageFetcher img_fetcher;
-    public ArrayList<Uri> uriList;
+    public ArrayList<UriWrapper> uriList;
     private GridView gridView;
     private ImageGridViewAdapter gridAdapter;
-    private FavouriteHandler favhandler;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.img_fetcher = new ImageFetcher(MainActivity.this);
-        this.uriList = img_fetcher.getNextRandomImages(numberOfItems);
-
-        this.favhandler = new FavouriteHandler();
+        this.uriList = img_fetcher.getNextRandomImages(numberOfItems, this);
 
         gridAdapter = new ImageGridViewAdapter(this, uriList);
         gridView = (GridView) findViewById(R.id.mainGridView);
         gridView.setAdapter(gridAdapter);
 
-        gridView.setOnItemClickListener(new DoubleClickListener() {
-            @Override
-            public void onDoubleClick(View v, int position) {
-                Uri uri = uriList.get(position);
-                MainActivity.this.favhandler.moveImgsToFavorites(MainActivity.this, uri);
-                Toast.makeText(getApplicationContext(), "Added to favourites: " + uri.getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
-            }
+        setGridViewClickListener();
 
-            @Override
-            public void onSingleClick(View v, int position) {
-                Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-                intent.setData(uriList.get(position));
-                startActivity(intent);
-            }
-        });
         gridView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
@@ -118,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-                        intent.setData(uriList.get(position));
+                        intent.setData(uriList.get(position).getUri());
                         startActivity(intent);
                     }
                 });
@@ -185,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < gridView.getCount(); i++)
                 if (checked.get(i)) {
                     Log.d("asdf", "test" + checked.toString());
-                    shareList.add(uriList.get(i));
+                    shareList.add(uriList.get(i).getUri());
                 }
             sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareList);
             startActivity(sendIntent);
@@ -232,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         // call delete image function
         this.img_fetcher.deleteImages(del_map);
         // replace deleted pictures
-        this.img_fetcher.replaceDeletedImages(del_map);
+        this.img_fetcher.replaceDeletedImages(del_map, this);
         clearSelection();
     }
 
@@ -249,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void nextButtonOnClick(View v) {
-        uriList = img_fetcher.getNextRandomImages(numberOfItems);
+        uriList = img_fetcher.getNextRandomImages(numberOfItems, this);
         clearSelection();
 
         gridAdapter.setNewImages(uriList);
@@ -272,22 +256,35 @@ public class MainActivity extends AppCompatActivity {
                 gridView.setItemChecked(i, false);
             }
             gridView.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-            gridView.setOnItemClickListener(new DoubleClickListener() {
-                @Override
-                public void onDoubleClick(View v, int position) {
-                    Uri uri = uriList.get(position);
-                    MainActivity.this.favhandler.moveImgsToFavorites(MainActivity.this, uri);
-                    Toast.makeText(getApplicationContext(), "Added to favourites: " + uri.getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onSingleClick(View v, int position) {
-                    Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-                    intent.setData(uriList.get(position));
-                    startActivity(intent);
-                }
-            });
+            setGridViewClickListener();
         }
+    }
+
+    private void setGridViewClickListener() {
+        gridView.setOnItemClickListener(new DoubleClickListener() {
+            @Override
+            public void onDoubleClick(View v, int position) {
+                Uri uri = uriList.get(position).getUri();
+                DbDatasource.getInstance(MainActivity.this).insert(new UriWrapper(uri, true));
+                Toast.makeText(getApplicationContext(), "Added to favourites: " + uri.getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
+
+                // Update grid view with favorite stars
+                ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
+                for (UriWrapper uriWrapper : uriList) {
+                    uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
+                }
+                uriList = uriListNew;
+                gridAdapter.setNewImages(uriList);
+                gridAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onSingleClick(View v, int position) {
+                Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
+                intent.setData(uriList.get(position).getUri());
+                startActivity(intent);
+            }
+        });
     }
 }
 

@@ -13,20 +13,22 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
+import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
+
 public class ImageGridViewAdapter extends BaseAdapter {
     private Context mContext;
     private int layoutResourceId = R.layout.image_item;
-    private ArrayList<Uri> imgUri;
+    private ArrayList<UriWrapper> imgUri;
     private ViewHolder holder = null;
 
-    public ImageGridViewAdapter(Context c, ArrayList<Uri> imgUri){
+    public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> imgUri){
         mContext = c;
         this.imgUri = imgUri;
     }
     public ViewHolder getHolder(){
         return holder;
     }
-    public void setNewImages(ArrayList<Uri> arrayList){
+    public void setNewImages(ArrayList<UriWrapper> arrayList){
         this.imgUri = arrayList;
     }
 
@@ -54,6 +56,9 @@ public class ImageGridViewAdapter extends BaseAdapter {
             holder.image=(ImageView)row.findViewById(R.id.image);
             holder.checked=(ImageView)row.findViewById(R.id.checked);
             holder.fav = (ImageView)row.findViewById(R.id.fav);
+            if (imgUri.get(position).isFav()) {
+                holder.fav.setVisibility(View.VISIBLE);
+            }
             row.setTag(holder);
 
             holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -63,9 +68,9 @@ public class ImageGridViewAdapter extends BaseAdapter {
         }
         //holder.image.setImageURI(imgUri.get(position));
         BitmapWorkerTask task = new BitmapWorkerTask(holder.image, mContext);
-        task.execute(imgUri.get(position));
+        task.execute(imgUri.get(position).getUri());
         //holder.image.setImageBitmap(ImageTools.getDownsampledBitmap(mContext, imgUri.get(position), h/2, (v-350)/3));
-        holder.uri = imgUri.get(position);
+        holder.uri = imgUri.get(position).getUri();
         return row;
     }
     static class ViewHolder {

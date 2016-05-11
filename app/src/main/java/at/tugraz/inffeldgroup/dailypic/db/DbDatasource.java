@@ -75,19 +75,38 @@ public class DbDatasource
 		}
 	}
 
+	public UriWrapper getUriWrapper(Uri uri) {
+		UriWrapper ret = null;
+		try {
+			Cursor cursor = database.rawQuery(
+					"Select * from " + SqlLiteHelper.TABLE_FAVORITES + " where " + SqlLiteHelper.COLUMN_URI
+							+ " = '" + uri.toString() + "'", null);
+
+			cursor.moveToFirst();
+			ret = cursorToUriWrapper(cursor);
+			cursor.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (ret == null) {
+			ret = new UriWrapper(uri, false);
+		}
+		return ret;
+
+	}
+
 	public void insert(UriWrapper uriWrapper)
 	{
-		if (database != null)
-		{
-			ContentValues values = new ContentValues();
-			values.put(SqlLiteHelper.COLUMN_URI, uriWrapper.getUri().toString());
+		ContentValues values = new ContentValues();
+		values.put(SqlLiteHelper.COLUMN_URI, uriWrapper.getUri().toString());
 
-			try {
-				database.insert(SqlLiteHelper.TABLE_FAVORITES, null, values);
-			}
-			catch (Exception e) {
-				Log.e(TAG, "Failed to insert uriWrapper into database.");
-			}
+		try {
+			database.insert(SqlLiteHelper.TABLE_FAVORITES, null, values);
+		}
+		catch (Exception e) {
+			Log.e(TAG, "Failed to insert uriWrapper into database.");
 		}
 	}
 
@@ -103,9 +122,9 @@ public class DbDatasource
 		return 0;
 	}
 
-	public ArrayList<Uri> getAllFavorites()
+	public ArrayList<UriWrapper> getAllFavorites()
 	{
-		ArrayList<Uri> favorites = new ArrayList<Uri>();
+		ArrayList<UriWrapper> favorites = new ArrayList<UriWrapper>();
 
 		try {
 			Cursor cursor = database.query(SqlLiteHelper.TABLE_FAVORITES,
@@ -114,7 +133,7 @@ public class DbDatasource
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast())
 			{
-				favorites.add(cursorToUriWrapper(cursor).getUri());
+				favorites.add(cursorToUriWrapper(cursor));
 				cursor.moveToNext();
 			}
 			cursor.close();

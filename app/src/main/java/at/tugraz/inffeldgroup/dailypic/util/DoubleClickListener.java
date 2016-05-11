@@ -11,7 +11,7 @@ import android.widget.AdapterView;
  * other more complicated containers.
  */
 public abstract class DoubleClickListener implements AdapterView.OnItemClickListener {
-    private static final long DOUBLE_CLICK_TIME_DELTA = 500; //milliseconds
+    private static final long DOUBLE_CLICK_TIME_DELTA = 400; //milliseconds
 
     private CountDownTimer timer;
     long lastClickTime = 0;

@@ -5,11 +5,14 @@ import android.database.Cursor;
 import android.net.*;
 import android.provider.MediaStore;
 import android.widget.Toast;
+import android.content.Context;
 
 import java.util.*;
 import java.io.*;
 
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
+import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
+import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 
 /**
  * Created by markus on 13/04/16.
@@ -42,9 +45,9 @@ public class ImageFetcher{
         }
     }
 
-    public ArrayList<Uri> getNextRandomImages(int size){
+    public ArrayList<UriWrapper> getNextRandomImages(int size, Context context){
 
-        ArrayList<Uri> ret = new ArrayList<Uri>();
+        ArrayList<UriWrapper> ret = new ArrayList<UriWrapper>();
 
         if (imgPaths.isEmpty()) {
             return ret;
@@ -57,14 +60,16 @@ public class ImageFetcher{
         this.seedHistory.push(seed);
         for(int i = 0; i < size; i++){
             image_index = Math.abs(rand_gen.nextInt()) % imgPaths.size();
-            ret.add(Uri.fromFile(new File(imgPaths.get(image_index))));
+            Uri uri = Uri.fromFile(new File(imgPaths.get(image_index)));
+            ret.add(DbDatasource.getInstance(context).getUriWrapper(uri));
         }
 
         return ret;
     }
 
-    public ArrayList<Uri> getPrevRandomImages(int size){
-        ArrayList<Uri> ret = new ArrayList<Uri>();
+    public ArrayList<UriWrapper> getPrevRandomImages(int size){
+        ArrayList<UriWrapper> ret = new ArrayList<UriWrapper>();
+        ArrayList<Uri> raw_uris = new ArrayList<Uri>();
         int seed;
         int image_index;
 
@@ -78,8 +83,10 @@ public class ImageFetcher{
 
         for(int i = 0; i < size; i++){
             image_index = Math.abs(rand_gen.nextInt()) % imgPaths.size();
-            ret.add(Uri.fromFile(new File(imgPaths.get(image_index))));
+            raw_uris.add(Uri.fromFile(new File(imgPaths.get(image_index))));
         }
+
+
 
         return ret;
     }
@@ -97,13 +104,13 @@ public class ImageFetcher{
         }
     }
 
-    public void replaceDeletedImages(Map<Integer, ViewHolder> vh) {
+    public void replaceDeletedImages(Map<Integer, ViewHolder> vh, Context context) {
         int size = vh.size();
-        ArrayList<Uri> new_imgs = getNextRandomImages(size);
+        ArrayList<UriWrapper> new_imgs = getNextRandomImages(size, context);
         int i = 0;
         for (Map.Entry<Integer, ViewHolder> kvp : vh.entrySet()) {
             ViewHolder v = kvp.getValue();
-            v.image.setImageURI(new_imgs.get(i++));
+            v.image.setImageURI(new_imgs.get(i++).getUri());
         }
     }
 }

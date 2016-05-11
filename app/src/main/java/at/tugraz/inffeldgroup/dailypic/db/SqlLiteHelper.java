@@ -78,12 +78,10 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 	@Override
 	public void onCreate(SQLiteDatabase database)
 	{
-		try
-		{
+		try {
 			database.execSQL(TABLE_CREATE_FAVORITES);
 		}
-		catch (SQLException e)
-		{
+		catch (SQLException e) {
 			Log.e(TAG, "Creation of database failed.");
 		}
 	}
@@ -115,12 +113,10 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
-		try
-		{
+		try {
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
 		}
-		catch (SQLException e)
-		{
+		catch (SQLException e) {
 			Log.e(TAG, "Upgrade to new database version failed.");
 		}
 		onCreate(db);
