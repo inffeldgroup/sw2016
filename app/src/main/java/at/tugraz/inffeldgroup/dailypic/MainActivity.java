@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDoubleClick(View v, int position) {
                 Uri uri = uriList.get(position);
-                MainActivity.this.favhandler.moveImgsToFavFolder(getApplicationContext(), uri);
+                MainActivity.this.favhandler.moveImgsToFavorites(MainActivity.this, uri);
                 Toast.makeText(getApplicationContext(), "Added to favourites: " + uri.getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
             }
 
@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDoubleClick(View v, int position) {
                     Uri uri = uriList.get(position);
-                    MainActivity.this.favhandler.moveImgsToFavFolder(getApplicationContext(), uri);
+                    MainActivity.this.favhandler.moveImgsToFavorites(MainActivity.this, uri);
                     Toast.makeText(getApplicationContext(), "Added to favourites: " + uri.getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
                 }
 

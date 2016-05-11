@@ -49,6 +49,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         final ArrayList<Uri> uriList = imageFetcher.getNextRandomImages(MainActivity.numberOfItems);
 
         FavouriteHandler fh = new FavouriteHandler();
-        Assert.assertTrue(fh.moveImgsToFavFolder(getActivity(), uriList));
+        Assert.assertTrue(fh.moveImgsToFavorites(getActivity(), uriList.get(0)));
     }
 }

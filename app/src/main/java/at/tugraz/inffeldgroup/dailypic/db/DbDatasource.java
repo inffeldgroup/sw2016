@@ -60,7 +60,8 @@ public class DbDatasource
 			{
 				if (instance == null)
 				{
-					instance = new DbDatasource(context);
+					// Use application context to avoid memory-leaking activity context!
+					instance = new DbDatasource(context.getApplicationContext());
 				}
 			}
 		}
