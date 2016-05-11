@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:background="#ffffff"
+    android:padding="1dp"
+    android:visibility="visible">
 
     <ImageView
         android:id="@+id/image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:textSize="12sp" />
+    <ImageView
+        android:id="@+id/checked"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="false"
+        android:layout_marginTop="75dp"
+        android:visibility="invisible"
+        android:src="@drawable/check"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="false"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/fav"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="false"
+        android:layout_marginLeft="75dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:visibility="invisible"
+        android:src="@drawable/favourite"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentRight="true"
+        android:paddingTop="7dp"
+        android:paddingRight="7dp" />
+
+
+</RelativeLayout>
