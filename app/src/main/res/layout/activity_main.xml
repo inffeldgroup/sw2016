@@ -35,6 +35,7 @@
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="@string/act_main_but_delete_desc"
             android:clickable="false"
+            android:onClick="deleteButtonOnClick"
             android:alpha="1"
             android:background="@color/dailypic_red" />
 

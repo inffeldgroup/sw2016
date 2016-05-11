@@ -4,9 +4,12 @@ import android.app.*;
 import android.database.Cursor;
 import android.net.*;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import java.util.*;
 import java.io.*;
+
+import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 
 /**
  * Created by markus on 13/04/16.
@@ -79,5 +82,28 @@ public class ImageFetcher{
         }
 
         return ret;
+    }
+
+    public void deleteImages(Map<Integer, ViewHolder> vh) {
+
+        for (Map.Entry<Integer, ViewHolder> kvp : vh.entrySet()) {
+            ViewHolder v = kvp.getValue();
+            File f = new File(v.uri.toString());
+            boolean result = f.delete();
+            if (result == false) {
+                // TODO: debug deletion
+                Toast.makeText(activity, "Error deleting image: " + f.getName(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public void replaceDeletedImages(Map<Integer, ViewHolder> vh) {
+        int size = vh.size();
+        ArrayList<Uri> new_imgs = getNextRandomImages(size);
+        int i = 0;
+        for (Map.Entry<Integer, ViewHolder> kvp : vh.entrySet()) {
+            ViewHolder v = kvp.getValue();
+            v.image.setImageURI(new_imgs.get(i++));
+        }
     }
 }
