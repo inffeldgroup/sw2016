@@ -1,8 +1,6 @@
 package at.tugraz.inffeldgroup.dailypic.db;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import android.net.Uri;
 import android.util.Log;
@@ -41,13 +39,11 @@ public class DbDatasource
 		if (context != null)
 		{
 			this.context = context;
-			try
-			{
+			try {
 				SqlLiteHelper.getInstance(context);
 			}
-			catch (Exception e)
-			{
-				Log.e(TAG, "Failed to open database.");
+			catch (Exception e) {
+				Log.e(TAG, "Failed to initialize database.");
 			}
 		}
 	}

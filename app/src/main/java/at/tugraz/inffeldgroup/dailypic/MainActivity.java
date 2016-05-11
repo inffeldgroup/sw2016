@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +15,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -24,7 +22,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 import at.tugraz.inffeldgroup.dailypic.db.AndroidDatabaseManager;
-
+import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,48 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageGridViewAdapter gridAdapter;
     private FavouriteHandler favhandler;
 
-    abstract class DoubleClickListener implements AdapterView.OnItemClickListener {
-        private static final long DOUBLE_CLICK_TIME_DELTA = 500; //milliseconds
 
-        private CountDownTimer timer;
-        long lastClickTime = 0;
-
-        private void startSingleClickTimer(final View view, final int position) {
-            lastClickTime = System.currentTimeMillis();
-            timer = new CountDownTimer(DOUBLE_CLICK_TIME_DELTA, DOUBLE_CLICK_TIME_DELTA) {
-                @Override
-                public void onTick(long l) {}
-
-                @Override
-                public void onFinish() {
-                    onSingleClick(view, position);
-                }
-            };
-            timer.start();
-        }
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-
-            if (lastClickTime == 0) {
-                startSingleClickTimer(view, position);
-            } else {
-                if (System.currentTimeMillis() - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
-                    timer.cancel();
-                    lastClickTime = 0;
-                    onDoubleClick(view, position);
-                } else {
-                    if (timer != null) {
-                        timer.cancel();
-                    }
-                    startSingleClickTimer(view, position);
-                }
-            }
-        }
-
-        public abstract void onSingleClick(View v, int position);
-        public abstract void onDoubleClick(View v, int position);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
