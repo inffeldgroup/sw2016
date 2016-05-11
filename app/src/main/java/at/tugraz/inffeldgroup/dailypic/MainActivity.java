@@ -14,11 +14,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
+import at.tugraz.inffeldgroup.dailypic.db.AndroidDatabaseManager;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -199,6 +203,15 @@ public class MainActivity extends AppCompatActivity {
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+
+        ImageButton deleteButton =(ImageButton)findViewById(R.id.but_delete);
+        if (deleteButton != null) {deleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent dbmanager = new Intent(MainActivity.this, AndroidDatabaseManager.class);
+                startActivity(dbmanager);
+            }
+        });}
     }
 
     public void sharebuttonOnClick(View v)

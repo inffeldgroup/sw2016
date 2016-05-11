@@ -19,6 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".db.AndroidDatabaseManager"
+            android:theme="@style/Theme.AppCompat.Light"/>
+
         <activity android:name=".FullscreenImage" />
         <activity android:name=".FavouriteActivity" android:screenOrientation="portrait"/>
     </application>
