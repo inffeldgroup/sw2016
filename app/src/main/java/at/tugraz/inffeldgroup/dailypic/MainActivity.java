@@ -189,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareList);
             startActivity(sendIntent);
-        }
+            }
+        else Toast.makeText(this, "No Images for sharing selected!", Toast.LENGTH_SHORT).show();
     }
 
     public void deleteButtonOnClick(View v) {
