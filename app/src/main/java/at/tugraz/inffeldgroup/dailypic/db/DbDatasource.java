@@ -98,6 +98,25 @@ public class DbDatasource
 
 	}
 
+	public boolean checkIfExists(UriWrapper wrapper) {
+		boolean ret = false;
+		try {
+			Cursor cursor = database.rawQuery(
+					"Select * from " + SqlLiteHelper.TABLE_IMAGES + " where " + SqlLiteHelper.COLUMN_URI
+							+ " = '" + wrapper.getUri().toString() + "'", null);
+			cursor.moveToFirst();
+			if (!cursor.isAfterLast()) {
+				cursorToUriWrapper(cursor);
+				ret = true;
+			}
+			cursor.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+
 	public void insert(UriWrapper uriWrapper)
 	{
 		ContentValues values = new ContentValues();
