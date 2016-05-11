@@ -275,8 +275,9 @@ public class MainActivity extends AppCompatActivity {
                     uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
                 }
                 uriList = uriListNew;
-                gridAdapter.setNewImages(uriList);
-                gridAdapter.notifyDataSetChanged();
+                gridAdapter = new ImageGridViewAdapter(MainActivity.this, uriList);
+                gridView.setAdapter(gridAdapter);
+                gridView.invalidate();
             }
 
             @Override
