@@ -45,7 +45,8 @@ public class ImageGridViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         //ViewHolder holder = null;
-
+        int h = mContext.getResources().getDisplayMetrics().widthPixels;
+        int v = mContext.getResources().getDisplayMetrics().heightPixels;
         if (row == null) {
             LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
             row = inflater.inflate(layoutResourceId,parent,false);
@@ -54,14 +55,16 @@ public class ImageGridViewAdapter extends BaseAdapter {
             holder.checked=(ImageView)row.findViewById(R.id.checked);
             holder.fav = (ImageView)row.findViewById(R.id.fav);
             row.setTag(holder);
-            int h = mContext.getResources().getDisplayMetrics().widthPixels;
-            int v = mContext.getResources().getDisplayMetrics().heightPixels;
+
             holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(v/4)-30));
         } else {
             holder = (ViewHolder) row.getTag();
         }
-        holder.image.setImageBitmap(ImageTools.getDownsampledBitmap(mContext, imgUri.get(position), 100, 100));
+        //holder.image.setImageURI(imgUri.get(position));
+        BitmapWorkerTask task = new BitmapWorkerTask(holder.image, mContext);
+        task.execute(imgUri.get(position));
+        //holder.image.setImageBitmap(ImageTools.getDownsampledBitmap(mContext, imgUri.get(position), h/2, (v-350)/3));
         holder.uri = imgUri.get(position);
         return row;
     }

@@ -31,7 +31,6 @@ public class FullscreenImage extends Activity {
         Button btnClose;
 
 
-
         btnClose = (Button) findViewById(R.id.btnClose);
 
 
