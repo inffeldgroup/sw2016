@@ -1,8 +1,11 @@
 package at.tugraz.inffeldgroup.dailypic;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +19,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -24,9 +26,10 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 import at.tugraz.inffeldgroup.dailypic.db.AndroidDatabaseManager;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import at.tugraz.inffeldgroup.dailypic.ShakeDetector;
 
 public class MainActivity extends AppCompatActivity {
     public static final int numberOfItems = 6;
@@ -35,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private GridView gridView;
     private ImageGridViewAdapter gridAdapter;
     private FavouriteHandler favhandler;
+
+    private SensorManager mSensorManager;
+	private Sensor mAccelerometer;
+	private ShakeDetector mShakeDetector;
 
     abstract class DoubleClickListener implements AdapterView.OnItemClickListener {
         private static final long DOUBLE_CLICK_TIME_DELTA = 500; //milliseconds
@@ -88,6 +95,21 @@ public class MainActivity extends AppCompatActivity {
 
         this.favhandler = new FavouriteHandler();
 
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mShakeDetector = new ShakeDetector();
+		mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+
+			@Override
+			public void onShake(int count) {
+				/*
+				 * The following method, "handleShakeEvent(count):" is a stub //
+				 * method you would use to setup whatever you want done once the
+				 * device has been shook.
+				 */
+				handleShakeEvent(count);
+			}
+                                          });
         gridAdapter = new ImageGridViewAdapter(this, uriList);
         gridView = (GridView) findViewById(R.id.mainGridView);
         gridView.setAdapter(gridAdapter);
@@ -217,6 +239,17 @@ public class MainActivity extends AppCompatActivity {
         });}
     }
 
+    private void handleShakeEvent(int count) {
+        Log.d("NOTE:", "Shake it " + count + " times");
+        if(count > 2) {
+            uriList = img_fetcher.getNextRandomImages(numberOfItems);
+            clearSelection();
+
+            gridAdapter.setNewImages(uriList);
+            gridAdapter.notifyDataSetChanged();
+        }
+    }
+
     public void sharebuttonOnClick(View v)
     {
         Intent sendIntent = new Intent();
@@ -331,6 +364,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 }
 
