@@ -265,9 +265,9 @@ public class MainActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new DoubleClickListener() {
             @Override
             public void onDoubleClick(View v, int position) {
-                Uri uri = uriList.get(position).getUri();
-                DbDatasource.getInstance(MainActivity.this).insert(new UriWrapper(uri, true));
-                Toast.makeText(getApplicationContext(), "Added to favourites: " + uri.getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
+                UriWrapper uri = uriList.get(position);
+                FavouriteHandler.toggleFavouriteState(MainActivity.this, uri);
+                Toast.makeText(getApplicationContext(), "Added to favourites: " + uri.getUri().getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
 
                 // Update grid view with favorite stars
                 ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();

@@ -147,6 +147,24 @@ public class DbDatasource
 		return favorites;
 	}
 
+	public void update(UriWrapper uriWrapper)
+	{
+		ContentValues values = new ContentValues();
+		values.put(SqlLiteHelper.COLUMN_URI, uriWrapper.getUri().toString());
+		values.put(SqlLiteHelper.COLUMN_IS_FAVORITE, uriWrapper.isFav());
+
+		try {
+			database.update(
+							SqlLiteHelper.TABLE_IMAGES,
+							values,
+							SqlLiteHelper.COLUMN_URI + " = " + "'" + uriWrapper.getUri() + "'",
+							null);
+		}
+		catch (Exception e) {
+			Log.e(TAG, "Failed to update image.");
+		}
+	}
+
 	private UriWrapper cursorToUriWrapper(Cursor cursor)
 	{
 		UriWrapper uriWrapper = null;

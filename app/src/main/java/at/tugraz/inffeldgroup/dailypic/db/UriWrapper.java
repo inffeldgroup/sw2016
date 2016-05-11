@@ -19,6 +19,10 @@ public class UriWrapper {
         return this.uri;
     }
 
+    public void setFavourite(boolean isFav) {
+        this.is_favourite = isFav;
+    }
+
     public boolean isFav() {
         return this.is_favourite;
     }
