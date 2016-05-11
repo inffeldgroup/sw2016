@@ -267,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDoubleClick(View v, int position) {
                 UriWrapper uri = uriList.get(position);
                 FavouriteHandler.toggleFavouriteState(MainActivity.this, uri);
-                Toast.makeText(getApplicationContext(), "Added to favourites: " + uri.getUri().getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
 
                 // Update grid view with favorite stars
                 ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();

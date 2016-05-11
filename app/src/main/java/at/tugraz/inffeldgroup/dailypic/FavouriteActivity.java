@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
+import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 
 public class FavouriteActivity extends AppCompatActivity {
     private GridView gridView;
@@ -30,9 +31,20 @@ public class FavouriteActivity extends AppCompatActivity {
         gridView = (GridView) findViewById(R.id.favGridView);
         gridView.setAdapter(gridAdapter);
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new DoubleClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onDoubleClick(View v, int position) {
+                UriWrapper uri = uriList.get(position);
+                FavouriteHandler.toggleFavouriteState(FavouriteActivity.this, uri);
+                // Refresh grid view with removed favorite
+                ArrayList<UriWrapper> uriListNew = DbDatasource.getInstance(FavouriteActivity.this).getAllFavorites();
+                gridAdapter = new ImageGridViewAdapter(FavouriteActivity.this, uriListNew);
+                gridView.setAdapter(gridAdapter);
+                gridView.invalidate();
+            }
+
+            @Override
+            public void onSingleClick(View v, int position) {
                 Intent intent = new Intent(FavouriteActivity.this, FullscreenImage.class);
                 intent.setData(uriList.get(position).getUri());
                 startActivity(intent);

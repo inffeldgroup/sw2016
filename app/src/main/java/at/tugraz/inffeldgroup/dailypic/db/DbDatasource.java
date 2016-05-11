@@ -135,7 +135,10 @@ public class DbDatasource
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast())
 			{
-				favorites.add(cursorToUriWrapper(cursor));
+				UriWrapper uri = cursorToUriWrapper(cursor);
+				if (uri.isFav()) {
+					favorites.add(cursorToUriWrapper(cursor));
+				}
 				cursor.moveToNext();
 			}
 			cursor.close();
@@ -155,10 +158,10 @@ public class DbDatasource
 
 		try {
 			database.update(
-							SqlLiteHelper.TABLE_IMAGES,
-							values,
-							SqlLiteHelper.COLUMN_URI + " = " + "'" + uriWrapper.getUri() + "'",
-							null);
+					SqlLiteHelper.TABLE_IMAGES,
+					values,
+					SqlLiteHelper.COLUMN_URI + " = " + "'" + uriWrapper.getUri() + "'",
+					null);
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Failed to update image.");
