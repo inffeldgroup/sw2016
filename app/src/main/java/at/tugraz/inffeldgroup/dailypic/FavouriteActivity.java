@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
+
 public class FavouriteActivity extends AppCompatActivity {
     private GridView gridView;
     private ImageGridViewAdapter gridAdapter;
@@ -24,7 +26,7 @@ public class FavouriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
 
-        final ArrayList<Uri> uriList = getImgUri();
+        final ArrayList<Uri> uriList = DbDatasource.getInstance(this).getAllFavorites();
         if (uriList == null) {
             Toast.makeText(this, "No favourite pictures selected.", Toast.LENGTH_LONG).show();
             return;
@@ -43,30 +45,4 @@ public class FavouriteActivity extends AppCompatActivity {
         });
 
     }
-
-    private ArrayList<Uri> getImgUri() {
-        String folder = FavouriteHandler.fav_folder_path;
-
-        ArrayList<Uri> paths_specific = new ArrayList<Uri>();
-
-        File f = new File(folder);
-        if (!f.exists()) {
-            return null;
-        }
-
-        for (File img : f.listFiles()) {
-            if (img.isFile()) {
-                paths_specific.add(Uri.fromFile(img));
-            }
-        }
-        if (paths_specific.size() == 0) {
-            return null;
-        }
-
-        if (paths_specific.size() == 0) {
-            return null;
-        }
-        return paths_specific;
-    }
-
 }

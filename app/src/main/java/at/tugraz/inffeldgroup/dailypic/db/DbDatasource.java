@@ -71,12 +71,10 @@ public class DbDatasource
 
 	private void openDatabase()
 	{
-		try
-		{
+		try {
 			database = SqlLiteHelper.getInstance(context).getWritableDatabase();
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			Log.e(TAG, "Failed to open database.");
 		}
 	}
@@ -88,12 +86,10 @@ public class DbDatasource
 			ContentValues values = new ContentValues();
 			values.put(SqlLiteHelper.COLUMN_URI, uriWrapper.getUri().toString());
 
-			try
-			{
+			try {
 				database.insert(SqlLiteHelper.TABLE_FAVORITES, null, values);
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				Log.e(TAG, "Failed to insert uriWrapper into database.");
 			}
 		}
@@ -101,38 +97,34 @@ public class DbDatasource
 
 	public int delete(UriWrapper uriWrapper)
 	{
-		try
-		{
+		try {
 			return database.delete(SqlLiteHelper.TABLE_FAVORITES,
 					SqlLiteHelper.COLUMN_URI + " = '" + uriWrapper.getUri() + "'", null);
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			Log.e(TAG, "Failed to delete uriWrapper.");
 		}
 		return 0;
 	}
 
-	public ArrayList<UriWrapper> getAllFavorites()
+	public ArrayList<Uri> getAllFavorites()
 	{
-		ArrayList<UriWrapper> favorites = new ArrayList<UriWrapper>();
+		ArrayList<Uri> favorites = new ArrayList<Uri>();
 
-		try
-		{
+		try {
 			Cursor cursor = database.query(SqlLiteHelper.TABLE_FAVORITES,
 					allColumnsFavorites, null, null, null, null, null);
 
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast())
 			{
-				favorites.add(cursorToUriWrapper(cursor));
+				favorites.add(cursorToUriWrapper(cursor).getUri());
 				cursor.moveToNext();
 			}
 			cursor.close();
 			return favorites;
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			Log.e(TAG, "Failed to fetch favorites from db.");
 		}
 		return favorites;
@@ -143,12 +135,10 @@ public class DbDatasource
 		UriWrapper uriWrapper = null;
 		if (cursor != null)
 		{
-			try
-			{
+			try {
 				uriWrapper = new UriWrapper(Uri.parse(cursor.getString(0)), true);
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				Log.e(TAG, "Failed to convert cursor to UriWrapper.");
 			}
 		}
