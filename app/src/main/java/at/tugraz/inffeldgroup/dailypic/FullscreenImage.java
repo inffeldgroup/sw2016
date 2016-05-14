@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,7 +28,8 @@ public class FullscreenImage extends Activity {
         setContentView(R.layout.activity_fullscreen_image);
         SubsamplingScaleImageView imgDisplay;
         imgDisplay = (SubsamplingScaleImageView) findViewById(R.id.imgDisplay);
-        imgDisplay.setImage(ImageSource.uri(getIntent().getData()));
+        imgDisplay.setOrientation(SubsamplingScaleImageView.ORIENTATION_USE_EXIF);
+        imgDisplay.setImage(ImageSource.uri(getIntent().getData()).tilingDisabled());
         Button btnClose;
 
 

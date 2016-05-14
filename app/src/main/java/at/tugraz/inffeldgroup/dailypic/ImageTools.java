@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
+import at.tugraz.inffeldgroup.dailypic.util.ExifUtil;
+
 public class ImageTools {
     public static Bitmap getDownsampledBitmap(Context context, Uri uri, int targetWidth, int targetHeight) {
         Bitmap bitmap = null;
@@ -102,7 +104,12 @@ class BitmapWorkerTask extends AsyncTask<Uri, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(Uri... params) {
         data = params[0];
-        return ImageTools.getDownsampledBitmap(cx , data, 100, 100);
+        int h = cx.getResources().getDisplayMetrics().widthPixels;
+        int v = cx.getResources().getDisplayMetrics().heightPixels;
+        //return ImageTools.getDownsampledBitmap(cx , data, h/2, v/4);
+        return ExifUtil.rotateBitmap(data.getPath() ,ImageTools.getDownsampledBitmap(cx , data, h/2, v/4));
+
+
     }
 
     // Once complete, see if ImageView is still around and set bitmap.
