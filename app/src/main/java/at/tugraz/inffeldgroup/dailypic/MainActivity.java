@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                     shareList.add(uriList.get(i).getUri());
                 }
             sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareList);
-            startActivity(sendIntent);
+            startActivity(Intent.createChooser(sendIntent, "Share via"));
             }
         else Toast.makeText(this, "No Images for sharing selected!", Toast.LENGTH_SHORT).show();
     }
