@@ -2,13 +2,16 @@ package at.tugraz.inffeldgroup.dailypic;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -62,9 +65,30 @@ public class ImageGridViewAdapter extends BaseAdapter {
                 holder.fav.setVisibility(View.INVISIBLE);
             }
             row.setTag(holder);
-
-            holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(v/4)-30));
+            int bar = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
+            int bot = ((Activity) mContext).findViewById(R.id.but_share).getHeight();
+            float dppxl = Math.round(1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
+            //holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            double vert = Math.floor((v - (3* bot) - bar - (4 * dppxl))/3);
+            RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
+            switch (position) {
+                case 0: layout.setPadding(1*(int)dppxl, 1*(int)dppxl, 0, 1*(int)dppxl);
+                        break;
+                case 1: layout.setPadding(1*(int)dppxl, 1*(int)dppxl, 1*(int)dppxl, 1*(int)dppxl);
+                        break;
+                case 2: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
+                        break;
+                case 3: layout.setPadding(1*(int)dppxl, 0, 1*(int)dppxl, 1*(int)dppxl);
+                        break;
+                case 4: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
+                        break;
+                case 5: layout.setPadding(1*(int)dppxl, 0, 1*(int)dppxl, 1*(int)dppxl);
+                        break;
+            }
+            Log.d("Dimensions","Statusbar: "+bar + " pannels "+ bot);
+            if(position == 1)
+                ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
+            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
         } else {
             holder = (ViewHolder) row.getTag();
         }
