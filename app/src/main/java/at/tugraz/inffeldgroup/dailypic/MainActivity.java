@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,11 +25,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity {
 
     private ImageFetcher img_fetcher;
     private ArrayList<View> image_view;
+    private int time;
+
     private Bitmap getDownsampledBitmap(Uri uri, int targetWidth, int targetHeight) {
         Bitmap bitmap = null;
         try {
@@ -124,17 +130,43 @@ public class MainActivity extends AppCompatActivity {
         setImages(rand_img, this.image_view);
         img_list = rand_img;
 
-        Intent myIntent = new Intent(MainActivity.this, PushUpNotification.class);
+    }
+
+    protected void onStart()
+    {
+        super.onStart();
+        time = 0;
+    }
+
+    protected void onStop()
+    {
+        super.onStop();
+
+        new Timer().schedule(new TimerTask(){
+            @Override
+            public void run(){
+                time = 5;
+            }
+        }, 48 * 60 * 60 * 1000);
+
+        Intent myIntent = new Intent(this, PushUpNotification.class);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        PendingIntent PendI = PendingIntent.getActivity(this, 101, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent PendI = PendingIntent.getBroadcast(this, 101, myIntent, 0);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 15);
-        calendar.set(Calendar.MINUTE, 57);
-        calendar.set(Calendar.SECOND, 0);
+        if(time == 5)
+        {
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (5 * 24 * 60 * 60 * 1000), 5 * 24 * 60 * 60 * 1000, PendI);
+            time = 7;
+        }
+        else if(time == 7)
+        {
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (7 * 24 * 60 * 60 * 1000), 7 * 24 * 60 * 60 * 1000, PendI);
+        }
+        else
+        {
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (48 * 60 * 60 * 1000), 48 * 60 * 60 * 1000, PendI);
+        }
 
-        //set repeating every 24 hours
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, PendI);
     }
 
     public void sharebuttonOnClick(View v)

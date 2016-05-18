@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".FullscreenImage"></activity>
-        <activity android:name=".PushUpNotification"></activity>
+        <receiver android:process=":remote" android:name="PushUpNotification"></receiver>
     </application>
 
 </manifest>
