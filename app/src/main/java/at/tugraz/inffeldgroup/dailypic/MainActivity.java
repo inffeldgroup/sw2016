@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         gridAdapter = new ImageGridViewAdapter(this, startUpPictures, nextPictures);
         gridView = (GridView) findViewById(R.id.mainGridView);
         gridView.setAdapter(gridAdapter);
-        gridAdapter.setNewImages(img_fetcher.getNextRandomImages(numberOfItems, this));
 
         setGridViewClickListener();
 

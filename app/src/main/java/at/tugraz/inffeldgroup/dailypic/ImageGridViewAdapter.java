@@ -38,20 +38,23 @@ public class ImageGridViewAdapter extends BaseAdapter {
     public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> startUp, ArrayList<UriWrapper> next)
     {
         mContext = c;
-        setNewImages(startUp);
+        previousBitmaps = new ArrayList<>();
+        currentBitmaps = new ArrayList<>();
+        nextBitmaps = new ArrayList<>();
+
+        previousUris = new ArrayList<>();
+        currentUris = startUp;
         nextUris = next;
         preloadBitmaps(nextBitmaps, next);
     }
 
     public void setNextImages(ArrayList<UriWrapper> nextImages)
     {
-        // Update preloading buffer
         previousBitmaps = currentBitmaps;
         currentBitmaps = nextBitmaps;
         nextBitmaps = new ArrayList<>();
         preloadBitmaps(nextBitmaps, nextImages);
 
-        // Update uri lists
         previousUris = currentUris;
         currentUris = nextUris;
         nextUris = nextImages;
@@ -61,28 +64,23 @@ public class ImageGridViewAdapter extends BaseAdapter {
 
     public void setNewImages(ArrayList<UriWrapper> newImages)
     {
-        previousBitmaps = new ArrayList<>();
         currentBitmaps = new ArrayList<>();
-        nextBitmaps = new ArrayList<>();
-
-        previousUris = new ArrayList<>();
         currentUris = newImages;
-        nextUris = new ArrayList<>();
         notifyDataSetChanged();
     }
 
     public void setPreviousImages(ArrayList<UriWrapper> prevImages, ArrayList<UriWrapper> nextImages)
     {
+        nextUris = nextImages;
         nextBitmaps = new ArrayList<>();
         preloadBitmaps(nextBitmaps, nextImages);
-        nextUris = nextImages;
 
-        currentBitmaps = previousBitmaps;
         currentUris = previousUris;
+        currentBitmaps = previousBitmaps;
 
+        previousUris = prevImages;
         previousBitmaps = new ArrayList<>();
         preloadBitmaps(previousBitmaps, prevImages);
-        previousUris = prevImages;
 
         notifyDataSetChanged();
     }
