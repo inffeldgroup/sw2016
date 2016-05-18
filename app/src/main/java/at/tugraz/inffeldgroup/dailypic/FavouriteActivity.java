@@ -7,8 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import at.tugraz.inffeldgroup.dailypic.db.AndroidDatabaseManager;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
@@ -50,6 +52,16 @@ public class FavouriteActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        // TODO: ONLY FOR DEBUGGING
+        TextView title = (TextView) findViewById(R.id.textView);
+        if (title != null) {title.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent dbmanager = new Intent(FavouriteActivity.this, AndroidDatabaseManager.class);
+                startActivity(dbmanager);
+            }
+        });}
 
     }
 }
