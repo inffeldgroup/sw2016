@@ -13,6 +13,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import at.tugraz.inffeldgroup.dailypic.util.ExifUtil;
+import at.tugraz.inffeldgroup.dailypic.util.ImageTools;
 
 class BitmapWorkerTask extends AsyncTask<Uri, Void, Bitmap> {
 

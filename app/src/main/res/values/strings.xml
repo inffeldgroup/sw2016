@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">DailyPic</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string name="act_main_but_back">back</string>
     <string name="act_main_but_fav">fav</string>
@@ -7,9 +9,16 @@
     <string name="act_main_but_fav_desc">Add to the favourites</string>
     <string name="act_main_but_delete_desc">Delete Pictures</string>
     <string name="act_main_but_share_desc">Share Pictures</string>
-
+    <string name="act_main_alert_title_delete_images">Delete Images</string>
+    <string name="act_main_alert_msg_delete_images">Are you sure you want to delete the selected images?</string>
+    <string name="act_main_toast_delete">No images for deletion selected!</string>
+    <string name="act_main_toast_share">No Images for sharing selected!</string>
 
     <string name="act_favourites_title">Favourites</string>
+
+    <string name="image_fetcher_toast">No Pictures to load.</string>
+    <string name="image_fetcher_toast_delete_error">Error deleting image(s): </string>
+    <string name="image_fetcher_toast_delete_success">Successfully deleted images.</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-3406938862137540/3927782716</string>
 

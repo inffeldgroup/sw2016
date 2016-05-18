@@ -14,16 +14,10 @@ import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 
-/**
- * Created by markus on 13/04/16.
- */
-
 public class ImageFetcher{
     private Activity activity;
     private Stack<Integer> seedHistory;
     private Random seed_gen = new Random();
-
-    // TODO: handle files from DailyPicFavs folder in a different way, since they should be marked with a star in the usual view!
 
     private Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
     private ArrayList<String> imgPaths;
@@ -43,6 +37,7 @@ public class ImageFetcher{
                 imgPaths.add(cursor.getString(data_column));
             }while(cursor.moveToNext());
         }
+        cursor.close();
     }
 
     public ArrayList<UriWrapper> getNextRandomImages(int size, Context context){
@@ -50,7 +45,7 @@ public class ImageFetcher{
         ArrayList<UriWrapper> ret = new ArrayList<UriWrapper>();
 
         if (imgPaths.isEmpty()) {
-            Toast.makeText(activity, "No Pictures to load. ", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.image_fetcher_toast, Toast.LENGTH_LONG).show();
             return ret;
         }
 
@@ -101,18 +96,18 @@ public class ImageFetcher{
         for (Map.Entry<Integer, ViewHolder> kvp : vh.entrySet()) {
             ViewHolder v = kvp.getValue();
             File f = new File(v.uri.getPath());
-            String f_name = f.getName();
+            String f_name = f.getName() + " ";
             boolean result = f.delete();
-            if (result == false) {
-                error_deleted.append(f_name + " ");
+            if (!result) {
+                error_deleted.append(f_name);
             }
         }
 
         if (error_deleted.length() > 0) {
             String files = error_deleted.toString().trim().replace(" ", ", ");
-            Toast.makeText(activity, "Error deleting image(s): " + files, Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.image_fetcher_toast_delete_error+ files, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(activity, "Successfully deleted images.", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.image_fetcher_toast_delete_success, Toast.LENGTH_LONG).show();
         }
     }
 

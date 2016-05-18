@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,7 +134,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
                 bot = ((Activity) mContext).findViewById(R.id.textView).getHeight();
                 vert = ((v - bot - bar - (2 * dppxl))/3);
             }
-            Log.d("muhaha","1dp= "+ dppxl +" "+ (bar+2*dppxl+3*bot+3*vert) + " "+ v);
             RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
             switch (position) {
                 case 0: layout.setPadding(0, 0, 0, 1*(int)dppxl);
@@ -151,7 +149,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
                 case 5: layout.setPadding(1*(int)dppxl, 0, 0, 0);
                         break;
             }
-            Log.d("Dimensions","Statusbar: "+bar + " pannels "+ bot);
             if(position == 1)
                 ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
             holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
@@ -176,10 +173,10 @@ public class ImageGridViewAdapter extends BaseAdapter {
         return row;
     }
 
-    static class ViewHolder {
-        ImageView image;
-        ImageView checked;
-        ImageView fav;
-        Uri uri;
+    public static class ViewHolder {
+        public ImageView image;
+        public ImageView checked;
+        public ImageView fav;
+        public Uri uri;
     }
 }

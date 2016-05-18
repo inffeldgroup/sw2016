@@ -15,9 +15,9 @@ public class FavouriteHandler {
         }
 
         if (uri.isFav()) {
-            Toast.makeText(context, "Removed from favourites: " + uri.getUri().getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Removed from favourites: " + uri.getUri().getLastPathSegment(), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(context, "Added to favourites: " + uri.getUri().getLastPathSegment().toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Added to favourites: " + uri.getUri().getLastPathSegment(), Toast.LENGTH_LONG).show();
         }
         uri.setFavourite(!uri.isFav());
         DbDatasource.getInstance(context).update(uri);
