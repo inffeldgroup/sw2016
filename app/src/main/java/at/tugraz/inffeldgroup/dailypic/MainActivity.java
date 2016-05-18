@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-
+        /*
         ImageButton deleteButton =(ImageButton)findViewById(R.id.but_delete);
         if (deleteButton != null) {deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(dbmanager);
             }
         });}
+        */
     }
 
     private void handleShakeEvent(int count) {

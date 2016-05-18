@@ -93,14 +93,23 @@ public class ImageFetcher{
 
     public void deleteImages(Map<Integer, ViewHolder> vh) {
 
+        StringBuilder error_deleted = new StringBuilder();
+
         for (Map.Entry<Integer, ViewHolder> kvp : vh.entrySet()) {
             ViewHolder v = kvp.getValue();
-            File f = new File(v.uri.toString());
+            File f = new File(v.uri.getPath());
+            String f_name = f.getName();
             boolean result = f.delete();
             if (result == false) {
-                // TODO: debug deletion
-                Toast.makeText(activity, "Error deleting image: " + f.getName(), Toast.LENGTH_LONG).show();
+                error_deleted.append(f_name + " ");
             }
+        }
+
+        if (error_deleted.length() > 0) {
+            String files = error_deleted.toString().trim().replace(" ", ", ");
+            Toast.makeText(activity, "Error deleting image(s): " + files, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(activity, "Successfully deleted images.", Toast.LENGTH_LONG).show();
         }
     }
 
