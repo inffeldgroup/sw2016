@@ -52,6 +52,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
         //ViewHolder holder = null;
         int h = mContext.getResources().getDisplayMetrics().widthPixels;
         int v = mContext.getResources().getDisplayMetrics().heightPixels;
+
         if (row == null) {
             LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
             row = inflater.inflate(layoutResourceId,parent,false);
@@ -59,11 +60,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
             holder.image=(ImageView)row.findViewById(R.id.image);
             holder.checked=(ImageView)row.findViewById(R.id.checked);
             holder.fav = (ImageView)row.findViewById(R.id.fav);
-            if (imgUri.get(position).isFav()) {
-                holder.fav.setVisibility(View.VISIBLE);
-            } else {
-                holder.fav.setVisibility(View.INVISIBLE);
-            }
             row.setTag(holder);
             int bar = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
             int bot;
@@ -99,6 +95,11 @@ public class ImageGridViewAdapter extends BaseAdapter {
             holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
         } else {
             holder = (ViewHolder) row.getTag();
+        }
+        if (imgUri.get(position).isFav()) {
+            holder.fav.setVisibility(View.VISIBLE);
+        } else {
+            holder.fav.setVisibility(View.INVISIBLE);
         }
         //holder.image.setImageURI(imgUri.get(position));
         BitmapWorkerTask task = new BitmapWorkerTask(holder.image, mContext);
