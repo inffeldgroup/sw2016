@@ -50,6 +50,7 @@ public class ImageFetcher{
         ArrayList<UriWrapper> ret = new ArrayList<UriWrapper>();
 
         if (imgPaths.isEmpty()) {
+            Toast.makeText(activity, "No Pictures to load. ", Toast.LENGTH_LONG).show();
             return ret;
         }
 
