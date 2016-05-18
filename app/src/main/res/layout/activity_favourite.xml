@@ -36,6 +36,6 @@
         android:focusable="true"
         android:clickable="true"
             android:background="#ffffff"
-            android:verticalSpacing="2dp"
-            android:horizontalSpacing="4dp" />
+            android:verticalSpacing="0dp"
+            android:horizontalSpacing="0dp" />
 </LinearLayout>
