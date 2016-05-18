@@ -1,15 +1,17 @@
-package at.tugraz.inffeldgroup.dailypic;
+package at.tugraz.inffeldgroup.dailypic.activities;
 
 import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import at.tugraz.inffeldgroup.dailypic.FavouriteHandler;
+import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter;
+import at.tugraz.inffeldgroup.dailypic.R;
 import at.tugraz.inffeldgroup.dailypic.db.AndroidDatabaseManager;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
@@ -47,7 +49,7 @@ public class FavouriteActivity extends AppCompatActivity {
 
             @Override
             public void onSingleClick(View v, int position) {
-                Intent intent = new Intent(FavouriteActivity.this, FullscreenImage.class);
+                Intent intent = new Intent(FavouriteActivity.this, FullscreenActivity.class);
                 intent.setData(uriList.get(position).getUri());
                 startActivity(intent);
             }

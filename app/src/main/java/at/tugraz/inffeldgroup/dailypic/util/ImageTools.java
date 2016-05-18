@@ -1,4 +1,4 @@
-package at.tugraz.inffeldgroup.dailypic;
+package at.tugraz.inffeldgroup.dailypic.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,7 +21,6 @@ public class ImageTools {
             bitmap = downsampleBitmap(context, uri, sampleSize);
 
         } catch (FileNotFoundException e) {
-            Log.e("E - getDownsampledBitma", e.getMessage());
             //handle the exception(s)
         }
 
@@ -37,7 +36,6 @@ public class ImageTools {
             BitmapFactory.decodeStream(is, null, outDimens);
             is.close();
         } catch (IOException e) {
-            Log.e("E - getBitmapDimensions", e.getMessage());
         }
 
 
