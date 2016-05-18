@@ -69,20 +69,20 @@ public class ImageGridViewAdapter extends BaseAdapter {
             int bot = ((Activity) mContext).findViewById(R.id.but_share).getHeight();
             float dppxl = Math.round(1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
             //holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            double vert = Math.floor((v - (3* bot) - bar - (4 * dppxl))/3);
+            double vert = Math.floor((v - (3* bot) - bar - (2 * dppxl))/3);
             RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
             switch (position) {
-                case 0: layout.setPadding(1*(int)dppxl, 1*(int)dppxl, 0, 1*(int)dppxl);
+                case 0: layout.setPadding(0, 0, 0, 1*(int)dppxl);
                         break;
-                case 1: layout.setPadding(1*(int)dppxl, 1*(int)dppxl, 1*(int)dppxl, 1*(int)dppxl);
+                                                                            case 1: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
                         break;
-                case 2: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
+                case 2: layout.setPadding(0, 0, 0, 1*(int)dppxl);
                         break;
-                case 3: layout.setPadding(1*(int)dppxl, 0, 1*(int)dppxl, 1*(int)dppxl);
+                                                                            case 3: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
                         break;
-                case 4: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
+                case 4: layout.setPadding(0, 0, 0, 0);
                         break;
-                case 5: layout.setPadding(1*(int)dppxl, 0, 1*(int)dppxl, 1*(int)dppxl);
+                                                                            case 5: layout.setPadding(1*(int)dppxl, 0, 0, 0);
                         break;
             }
             Log.d("Dimensions","Statusbar: "+bar + " pannels "+ bot);
