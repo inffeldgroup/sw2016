@@ -25,7 +25,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         ArrayList<UriWrapper> image_paths_01 = img_fetcher.getNextRandomImages(6, getActivity());
         ArrayList<UriWrapper> image_paths_02 = img_fetcher.getNextRandomImages(6, getActivity());
-        ArrayList<UriWrapper> image_paths_03 = img_fetcher.getPrevRandomImages(6);
+        ArrayList<UriWrapper> image_paths_03 = img_fetcher.getPrevRandomImages(6, getActivity());
 
 
         Assert.assertTrue(image_paths_03.equals(image_paths_01) == true);
@@ -36,7 +36,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         ArrayList<UriWrapper> image_paths_01 = img_fetcher.getNextRandomImages(6, getActivity());
         ArrayList<UriWrapper> image_paths_02 = img_fetcher.getNextRandomImages(6, getActivity());
-        ArrayList<UriWrapper> image_paths_03 = img_fetcher.getPrevRandomImages(6);
+        ArrayList<UriWrapper> image_paths_03 = img_fetcher.getPrevRandomImages(6, getActivity());
         ArrayList<UriWrapper> image_paths_04 = img_fetcher.getNextRandomImages(6, getActivity());
 
 

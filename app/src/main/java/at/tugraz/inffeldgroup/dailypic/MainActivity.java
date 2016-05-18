@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void backButtonOnClick(View v) {
-        uriList = img_fetcher.getPrevRandomImages(numberOfItems);
+        uriList = img_fetcher.getPrevRandomImages(numberOfItems, this);
         clearSelection();
         gridAdapter.setNewImages(uriList);
         gridAdapter.notifyDataSetChanged();

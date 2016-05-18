@@ -67,9 +67,9 @@ public class ImageFetcher{
         return ret;
     }
 
-    public ArrayList<UriWrapper> getPrevRandomImages(int size){
+    public ArrayList<UriWrapper> getPrevRandomImages(int size, Context context){
         ArrayList<UriWrapper> ret = new ArrayList<UriWrapper>();
-        ArrayList<Uri> raw_uris = new ArrayList<Uri>();
+
         int seed;
         int image_index;
 
@@ -83,10 +83,9 @@ public class ImageFetcher{
 
         for(int i = 0; i < size; i++){
             image_index = Math.abs(rand_gen.nextInt()) % imgPaths.size();
-            raw_uris.add(Uri.fromFile(new File(imgPaths.get(image_index))));
+            Uri uri = Uri.fromFile(new File(imgPaths.get(image_index)));
+            ret.add(DbDatasource.getInstance(context).getUriWrapper(uri));
         }
-
-
 
         return ret;
     }
