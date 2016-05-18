@@ -1,4 +1,4 @@
-package at.tugraz.inffeldgroup.dailypic;
+package at.tugraz.inffeldgroup.dailypic.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,9 +24,12 @@ import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import at.tugraz.inffeldgroup.dailypic.FavouriteHandler;
+import at.tugraz.inffeldgroup.dailypic.ImageFetcher;
+import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
-import at.tugraz.inffeldgroup.dailypic.activities.FavouriteActivity;
-import at.tugraz.inffeldgroup.dailypic.activities.FullscreenActivity;
+import at.tugraz.inffeldgroup.dailypic.R;
+import at.tugraz.inffeldgroup.dailypic.ShakeDetector;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;

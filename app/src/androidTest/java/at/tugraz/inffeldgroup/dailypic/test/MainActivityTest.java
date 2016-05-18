@@ -1,10 +1,9 @@
 package at.tugraz.inffeldgroup.dailypic.test;
 
-import android.net.Uri;
 import android.test.ActivityInstrumentationTestCase2;
 import junit.framework.Assert;
 
-import at.tugraz.inffeldgroup.dailypic.MainActivity;
+import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         ArrayList<UriWrapper> image_paths_03 = img_fetcher.getPrevRandomImages(6, getActivity());
 
 
-        Assert.assertTrue(image_paths_03.equals(image_paths_01) == true);
+        Assert.assertTrue(image_paths_03.equals(image_paths_01));
     }
 
     public void testNextFunction() {
@@ -40,6 +39,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         ArrayList<UriWrapper> image_paths_04 = img_fetcher.getNextRandomImages(6, getActivity());
 
 
-        Assert.assertTrue(image_paths_04.equals(image_paths_02) == true);
+        Assert.assertTrue(image_paths_04.equals(image_paths_02));
     }
 }

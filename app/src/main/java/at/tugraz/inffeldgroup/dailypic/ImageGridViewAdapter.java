@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,10 +102,10 @@ public class ImageGridViewAdapter extends BaseAdapter {
         return row;
     }
 
-    static class ViewHolder {
-        ImageView image;
-        ImageView checked;
-        ImageView fav;
-        Uri uri;
+    public static class ViewHolder {
+        public ImageView image;
+        public ImageView checked;
+        public ImageView fav;
+        public Uri uri;
     }
 }

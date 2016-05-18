@@ -97,7 +97,7 @@ public class ImageFetcher{
             File f = new File(v.uri.getPath());
             String f_name = f.getName();
             boolean result = f.delete();
-            if (result == false) {
+            if (!result) {
                 error_deleted.append(f_name + " ");
             }
         }

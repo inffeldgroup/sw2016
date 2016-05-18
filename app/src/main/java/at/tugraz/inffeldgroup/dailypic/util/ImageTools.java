@@ -21,7 +21,7 @@ public class ImageTools {
             bitmap = downsampleBitmap(context, uri, sampleSize);
 
         } catch (FileNotFoundException e) {
-            //handle the exception(s)
+            Log.d("EXCEPTION:", e.getMessage());
         }
 
         return bitmap;
@@ -36,6 +36,7 @@ public class ImageTools {
             BitmapFactory.decodeStream(is, null, outDimens);
             is.close();
         } catch (IOException e) {
+            Log.d("EXCEPTION:", e.getMessage());
         }
 
 
@@ -73,7 +74,7 @@ public class ImageTools {
             resizedBitmap = BitmapFactory.decodeStream(is, null, outBitmap);
             is.close();
         } catch (IOException e) {
-            Log.e("E - downsampleBitmap", e.getMessage());
+            Log.d("EXCEPTION:", e.getMessage());
         }
 
         return resizedBitmap;
