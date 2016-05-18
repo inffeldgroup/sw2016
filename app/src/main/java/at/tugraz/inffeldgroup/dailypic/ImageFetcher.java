@@ -37,6 +37,7 @@ public class ImageFetcher{
                 imgPaths.add(cursor.getString(data_column));
             }while(cursor.moveToNext());
         }
+        cursor.close();
     }
 
     public ArrayList<UriWrapper> getNextRandomImages(int size, Context context){
@@ -95,10 +96,10 @@ public class ImageFetcher{
         for (Map.Entry<Integer, ViewHolder> kvp : vh.entrySet()) {
             ViewHolder v = kvp.getValue();
             File f = new File(v.uri.getPath());
-            String f_name = f.getName();
+            String f_name = f.getName() + " ";
             boolean result = f.delete();
             if (!result) {
-                error_deleted.append(f_name + " ");
+                error_deleted.append(f_name);
             }
         }
 
