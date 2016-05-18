@@ -1,6 +1,7 @@
 package at.tugraz.inffeldgroup.dailypic;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -23,12 +24,13 @@ public class ImageGridViewAdapter extends BaseAdapter {
     private ArrayList<UriWrapper> imgUri;
     private ViewHolder holder = null;
 
+    //private ArrayList<Bitmap>
     private ArrayList<Bitmap> currentBitmaps;
-    private ArrayList<Bitmap> preloadedBitmaps;
+    private ArrayList<Bitmap> nextBitmaps;
 
     public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> imgUri){
         currentBitmaps = new ArrayList<Bitmap>();
-        preloadedBitmaps = new ArrayList<Bitmap>();
+        nextBitmaps = new ArrayList<Bitmap>();
         mContext = c;
         this.imgUri = imgUri;
         preloadBitmaps();
@@ -40,16 +42,23 @@ public class ImageGridViewAdapter extends BaseAdapter {
 
     public void setNewImages(ArrayList<UriWrapper> arrayList)
     {
-        currentBitmaps = preloadedBitmaps;
+        currentBitmaps = nextBitmaps;
         notifyDataSetChanged();
         this.imgUri = arrayList;
         preloadBitmaps();
     }
 
     private void preloadBitmaps() {
-        preloadedBitmaps = new ArrayList<>();
+        ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        if (am.isLowRamDevice()) {
+            return; // Do not use preloading on devices with low ram
+        }
+
+        nextBitmaps = new ArrayList<>();
         for (UriWrapper img : imgUri) {
-            BitmapPreloaderTask.preLoadBitmap(img.getUri(), preloadedBitmaps, mContext);
+            if (img.getUri() != null) {
+                BitmapPreloaderTask.preLoadBitmap(img.getUri(), nextBitmaps, mContext);
+            }
         }
     }
 

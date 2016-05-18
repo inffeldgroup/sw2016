@@ -284,12 +284,6 @@ public class MainActivity extends AppCompatActivity {
         clearSelection();
     }
 
-    public void backButtonOnClick(View v) {
-        uriList = img_fetcher.getPrevRandomImages(numberOfItems, this);
-        clearSelection();
-        gridAdapter.setNewImages(uriList);
-    }
-
     public void favButtonOnClick(View v) {
         Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
         startActivity(intent);
@@ -299,6 +293,12 @@ public class MainActivity extends AppCompatActivity {
         uriList = img_fetcher.getNextRandomImages(numberOfItems, this);
         clearSelection();
 
+        gridAdapter.setNewImages(uriList);
+    }
+
+    public void backButtonOnClick(View v) {
+        uriList = img_fetcher.getPrevRandomImages(numberOfItems, this);
+        clearSelection();
         gridAdapter.setNewImages(uriList);
     }
 
