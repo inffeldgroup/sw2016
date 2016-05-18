@@ -20,6 +20,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -108,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
                             item.checked.setVisibility(View.INVISIBLE);
                             item.image.setImageAlpha(255);
                             gridView.setItemChecked(position, false);
+                            if(gridView.getCheckedItemCount() == 0)
+                                clearSelection();
                         }
                     }
                 });
@@ -206,14 +209,6 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-
-        ImageButton deleteButton =(ImageButton)findViewById(R.id.but_delete);
-        if (deleteButton != null) {deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent dbmanager = new Intent(MainActivity.this, AndroidDatabaseManager.class);
-                startActivity(dbmanager);
-            }
-        });}
     }
 
     private void handleShakeEvent(int count) {
@@ -291,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void backButtonOnClick(View v) {
-        uriList = img_fetcher.getPrevRandomImages(numberOfItems);
+        uriList = img_fetcher.getPrevRandomImages(numberOfItems, this);
         clearSelection();
         gridAdapter.setNewImages(uriList);
         gridAdapter.notifyDataSetChanged();

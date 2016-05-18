@@ -52,6 +52,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
         //ViewHolder holder = null;
         int h = mContext.getResources().getDisplayMetrics().widthPixels;
         int v = mContext.getResources().getDisplayMetrics().heightPixels;
+
         if (row == null) {
             LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
             row = inflater.inflate(layoutResourceId,parent,false);
@@ -59,30 +60,33 @@ public class ImageGridViewAdapter extends BaseAdapter {
             holder.image=(ImageView)row.findViewById(R.id.image);
             holder.checked=(ImageView)row.findViewById(R.id.checked);
             holder.fav = (ImageView)row.findViewById(R.id.fav);
-            if (imgUri.get(position).isFav()) {
-                holder.fav.setVisibility(View.VISIBLE);
-            } else {
-                holder.fav.setVisibility(View.INVISIBLE);
-            }
             row.setTag(holder);
             int bar = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
-            int bot = ((Activity) mContext).findViewById(R.id.but_share).getHeight();
-            float dppxl = Math.round(1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
-            //holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            double vert = Math.floor((v - (3* bot) - bar - (4 * dppxl))/3);
+            int bot;
+            double vert;
+            double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
+            if(((Activity) mContext).findViewById(R.id.but_share) != null) {
+                bot = ((Activity) mContext).findViewById(R.id.but_share).getHeight();
+                vert = ((v - (3* bot) - bar - (2 * dppxl))/3)+1;
+            }
+            else {
+                bot = ((Activity) mContext).findViewById(R.id.textView).getHeight();
+                vert = ((v - bot - bar - (2 * dppxl))/3);
+            }
+            Log.d("muhaha","1dp= "+ dppxl +" "+ (bar+2*dppxl+3*bot+3*vert) + " "+ v);
             RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
             switch (position) {
-                case 0: layout.setPadding(1*(int)dppxl, 1*(int)dppxl, 0, 1*(int)dppxl);
+                case 0: layout.setPadding(0, 0, 0, 1*(int)dppxl);
                         break;
-                case 1: layout.setPadding(1*(int)dppxl, 1*(int)dppxl, 1*(int)dppxl, 1*(int)dppxl);
+                case 1: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
                         break;
-                case 2: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
+                case 2: layout.setPadding(0, 0, 0, 1*(int)dppxl);
                         break;
-                case 3: layout.setPadding(1*(int)dppxl, 0, 1*(int)dppxl, 1*(int)dppxl);
+                case 3: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
                         break;
-                case 4: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
+                case 4: layout.setPadding(0, 0, 0, 0);
                         break;
-                case 5: layout.setPadding(1*(int)dppxl, 0, 1*(int)dppxl, 1*(int)dppxl);
+                case 5: layout.setPadding(1*(int)dppxl, 0, 0, 0);
                         break;
             }
             Log.d("Dimensions","Statusbar: "+bar + " pannels "+ bot);
@@ -91,6 +95,11 @@ public class ImageGridViewAdapter extends BaseAdapter {
             holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
         } else {
             holder = (ViewHolder) row.getTag();
+        }
+        if (imgUri.get(position).isFav()) {
+            holder.fav.setVisibility(View.VISIBLE);
+        } else {
+            holder.fav.setVisibility(View.INVISIBLE);
         }
         //holder.image.setImageURI(imgUri.get(position));
         BitmapWorkerTask task = new BitmapWorkerTask(holder.image, mContext);
