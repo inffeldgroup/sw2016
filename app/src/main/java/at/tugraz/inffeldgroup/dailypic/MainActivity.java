@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                             item.checked.setVisibility(View.INVISIBLE);
                             item.image.setImageAlpha(255);
                             gridView.setItemChecked(position, false);
+                            if(gridView.getCheckedItemCount() == 0)
+                                clearSelection();
                         }
                     }
                 });
