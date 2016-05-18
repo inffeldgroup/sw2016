@@ -3,6 +3,7 @@ package at.tugraz.inffeldgroup.dailypic;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,15 +23,34 @@ public class ImageGridViewAdapter extends BaseAdapter {
     private ArrayList<UriWrapper> imgUri;
     private ViewHolder holder = null;
 
+    private ArrayList<Bitmap> currentBitmaps;
+    private ArrayList<Bitmap> preloadedBitmaps;
+
     public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> imgUri){
+        currentBitmaps = new ArrayList<Bitmap>();
+        preloadedBitmaps = new ArrayList<Bitmap>();
         mContext = c;
         this.imgUri = imgUri;
+        preloadBitmaps();
     }
-    public ViewHolder getHolder(){
+
+   /* public ViewHolder getHolder(){
         return holder;
-    }
-    public void setNewImages(ArrayList<UriWrapper> arrayList){
+    }*/
+
+    public void setNewImages(ArrayList<UriWrapper> arrayList)
+    {
+        currentBitmaps = preloadedBitmaps;
+        notifyDataSetChanged();
         this.imgUri = arrayList;
+        preloadBitmaps();
+    }
+
+    private void preloadBitmaps() {
+        preloadedBitmaps = new ArrayList<>();
+        for (UriWrapper img : imgUri) {
+            BitmapPreloaderTask.preLoadBitmap(img.getUri(), preloadedBitmaps, mContext);
+        }
     }
 
     public int getCount() {
@@ -99,7 +119,13 @@ public class ImageGridViewAdapter extends BaseAdapter {
             holder.fav.setVisibility(View.INVISIBLE);
         }
 
-        BitmapWorkerTask.loadBitmap(imgUri.get(position).getUri(), holder.image, mContext, h, v);
+        if (position < currentBitmaps.size()) {
+            // Use preloaded bitmap whenever available
+            holder.image.setImageBitmap(currentBitmaps.get(position));
+        } else {
+            // Retrieve bitmap from uri when there is no preloaded bitmap
+            BitmapWorkerTask.loadBitmap(imgUri.get(position).getUri(), holder.image, mContext, h, v);
+        }
 
         holder.uri = imgUri.get(position).getUri();
         return row;

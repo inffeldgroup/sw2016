@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import at.tugraz.inffeldgroup.dailypic.util.ExifUtil;
 
@@ -100,6 +101,47 @@ class BitmapWorkerTask extends AsyncTask<Uri, Void, Bitmap> {
             if (this == bitmapWorkerTask && imageView != null) {
                 imageView.setImageBitmap(bitmap);
             }
+        }
+    }
+}
+
+
+
+class BitmapPreloaderTask extends AsyncTask<Uri, Void, Bitmap> {
+
+    public static void preLoadBitmap(Uri uri, ArrayList<Bitmap> dest, Context context) {
+        final BitmapPreloaderTask task = new BitmapPreloaderTask(dest, uri, context);
+        task.execute(uri);
+    }
+
+    private final WeakReference<ArrayList<Bitmap>> bitMapContainer;
+    public Uri uri = null;
+    Context cx;
+
+    public BitmapPreloaderTask(ArrayList<Bitmap> dest, Uri uri, Context cx) {
+        // Use a WeakReference to ensure the ImageView can be garbage collected
+        bitMapContainer = new WeakReference<ArrayList<Bitmap>>(dest);
+        this.cx = cx;
+        this.uri = uri;
+    }
+
+    // Decode image in background.
+    @Override
+    protected Bitmap doInBackground(Uri... params) {
+        int h = cx.getResources().getDisplayMetrics().widthPixels;
+        int v = cx.getResources().getDisplayMetrics().heightPixels;
+        return ExifUtil.rotateBitmap(uri.getPath(), ImageTools.getDownsampledBitmap(cx, uri, h / 2, v / 4));
+    }
+
+    @Override
+    protected void onPostExecute(Bitmap bitmap) {
+        if (isCancelled()) {
+            bitmap = null;
+        }
+
+        final ArrayList<Bitmap> bitMaps = bitMapContainer.get();
+        if (bitMaps != null && bitmap != null) {
+            bitMaps.add(bitmap);
         }
     }
 }

@@ -218,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
             clearSelection();
 
             gridAdapter.setNewImages(uriList);
-            gridAdapter.notifyDataSetChanged();
         }
     }
 
@@ -289,7 +288,6 @@ public class MainActivity extends AppCompatActivity {
         uriList = img_fetcher.getPrevRandomImages(numberOfItems, this);
         clearSelection();
         gridAdapter.setNewImages(uriList);
-        gridAdapter.notifyDataSetChanged();
     }
 
     public void favButtonOnClick(View v) {
@@ -302,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
         clearSelection();
 
         gridAdapter.setNewImages(uriList);
-        gridAdapter.notifyDataSetChanged();
     }
 
     @Override
