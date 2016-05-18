@@ -71,26 +71,26 @@ public class ImageGridViewAdapter extends BaseAdapter {
             float dppxl = Math.round(1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
             if(((Activity) mContext).findViewById(R.id.but_share) != null) {
                 bot = ((Activity) mContext).findViewById(R.id.but_share).getHeight();
-                vert = Math.floor((v - (3* bot) - bar - (4 * dppxl))/3);
+                vert = Math.floor((v - (3* bot) - bar - (2 * dppxl))/3);
             }
             else {
                 bot = ((Activity) mContext).findViewById(R.id.textView).getHeight();
-                vert = Math.floor((v - bot - bar - (4 * dppxl))/3);
+                vert = Math.floor((v - bot - bar - (2 * dppxl))/3);
             }
             Log.d("muhaha","1dp= " + dppxl);
             RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
             switch (position) {
-                case 0: layout.setPadding(1*(int)dppxl, 1*(int)dppxl, 0, 1*(int)dppxl);
+                case 0: layout.setPadding(0, 0, 0, 1*(int)dppxl);
                         break;
-                case 1: layout.setPadding(1*(int)dppxl, 1*(int)dppxl, 1*(int)dppxl, 1*(int)dppxl);
+                case 1: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
                         break;
-                case 2: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
+                case 2: layout.setPadding(0, 0, 0, 1*(int)dppxl);
                         break;
-                case 3: layout.setPadding(1*(int)dppxl, 0, 1*(int)dppxl, 1*(int)dppxl);
+                case 3: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
                         break;
-                case 4: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
+                case 4: layout.setPadding(0, 0, 0, 0);
                         break;
-                case 5: layout.setPadding(1*(int)dppxl, 0, 1*(int)dppxl, 1*(int)dppxl);
+                case 5: layout.setPadding(1*(int)dppxl, 0, 0, 0);
                         break;
             }
             Log.d("Dimensions","Statusbar: "+bar + " pannels "+ bot);
