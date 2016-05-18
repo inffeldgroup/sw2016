@@ -68,16 +68,16 @@ public class ImageGridViewAdapter extends BaseAdapter {
             int bar = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
             int bot;
             double vert;
-            float dppxl = Math.round(1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
+            double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
             if(((Activity) mContext).findViewById(R.id.but_share) != null) {
                 bot = ((Activity) mContext).findViewById(R.id.but_share).getHeight();
-                vert = Math.floor((v - (3* bot) - bar - (2 * dppxl))/3);
+                vert = ((v - (3* bot) - bar - (2 * dppxl))/3)+1;
             }
             else {
                 bot = ((Activity) mContext).findViewById(R.id.textView).getHeight();
-                vert = Math.floor((v - bot - bar - (2 * dppxl))/3);
+                vert = ((v - bot - bar - (2 * dppxl))/3);
             }
-            Log.d("muhaha","1dp= " + dppxl);
+            Log.d("muhaha","1dp= "+ dppxl +" "+ (bar+2*dppxl+3*bot+3*vert) + " "+ v);
             RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
             switch (position) {
                 case 0: layout.setPadding(0, 0, 0, 1*(int)dppxl);
