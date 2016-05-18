@@ -20,6 +20,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -172,14 +173,6 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-
-        ImageButton deleteButton =(ImageButton)findViewById(R.id.but_delete);
-        if (deleteButton != null) {deleteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent dbmanager = new Intent(MainActivity.this, AndroidDatabaseManager.class);
-                startActivity(dbmanager);
-            }
-        });}
     }
 
     private void handleShakeEvent(int count) {
