@@ -59,12 +59,15 @@ public class ImageFetcher{
         Random rand_gen = new Random(seed);
 
         this.seedHistory.push(seed);
-        for(int i = 0; i < size; i++){
+        for(int i = 0; i < size && i < imgPaths.size(); i++){
             image_index = Math.abs(rand_gen.nextInt()) % imgPaths.size();
             Uri uri = Uri.fromFile(new File(imgPaths.get(image_index)));
-            ret.add(DbDatasource.getInstance(context).getUriWrapper(uri));
-        }
 
+            UriWrapper image = DbDatasource.getInstance(context).getUriWrapper(uri);
+            if (!ret.contains(image)) {
+                ret.add(image);
+            }
+        }
         return ret;
     }
 
