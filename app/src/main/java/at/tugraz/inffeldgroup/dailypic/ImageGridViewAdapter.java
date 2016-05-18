@@ -1,8 +1,12 @@
 package at.tugraz.inffeldgroup.dailypic;
 
+import at.tugraz.inffeldgroup.dailypic.ImageTools;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
@@ -101,13 +106,70 @@ public class ImageGridViewAdapter extends BaseAdapter {
         } else {
             holder.fav.setVisibility(View.INVISIBLE);
         }
+
+
+        if (cancelPotentialWork(imgUri.get(position).getUri(), holder.image)) {
+            final BitmapWorkerTask task = new BitmapWorkerTask(holder.image, imgUri.get(position).getUri(), mContext);
+            final AsyncDrawable asyncDrawable =
+                    new AsyncDrawable(mContext.getResources(), Bitmap.createBitmap(h, v, Bitmap.Config.ARGB_8888), task);
+            holder.image.setImageDrawable(asyncDrawable);
+            task.execute(imgUri.get(position).getUri());
+        }
+
+
         //holder.image.setImageURI(imgUri.get(position));
-        BitmapWorkerTask task = new BitmapWorkerTask(holder.image, mContext);
-        task.execute(imgUri.get(position).getUri());
+        /** BitmapWorkerTask task = new BitmapWorkerTask(holder.image, mContext);
+        task.execute(imgUri.get(position).getUri()); **/
         //holder.image.setImageBitmap(ImageTools.getDownsampledBitmap(mContext, imgUri.get(position), h/2, (v-350)/3));
+
         holder.uri = imgUri.get(position).getUri();
         return row;
     }
+
+    public static boolean cancelPotentialWork(Uri data, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final Uri bitmapData = bitmapWorkerTask.data;
+            // If bitmapData is not yet set or it differs from the new data
+            if (bitmapData == null || !bitmapData.equals(data)) {
+                // Cancel previous task
+                bitmapWorkerTask.cancel(true);
+            } else {
+                // The same work is already in progress
+                return false;
+            }
+        }
+        // No task associated with the ImageView, or an existing task was cancelled
+        return true;
+    }
+
+    public static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final ImageGridViewAdapter.AsyncDrawable asyncDrawable = (ImageGridViewAdapter.AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
+    }
+
+    public static class AsyncDrawable extends BitmapDrawable {
+        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+        public AsyncDrawable(Resources res, Bitmap bitmap,
+                             BitmapWorkerTask bitmapWorkerTask) {
+            super(res, bitmap);
+            bitmapWorkerTaskReference =
+                    new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+        }
+
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return bitmapWorkerTaskReference.get();
+        }
+    }
+
     static class ViewHolder {
         ImageView image;
         ImageView checked;

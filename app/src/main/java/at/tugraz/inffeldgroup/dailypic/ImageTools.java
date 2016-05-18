@@ -2,8 +2,11 @@ package at.tugraz.inffeldgroup.dailypic;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -86,38 +89,52 @@ public class ImageTools {
 
         return resizedBitmap;
     }
-
-
 }
+
 class BitmapWorkerTask extends AsyncTask<Uri, Void, Bitmap> {
+
     private final WeakReference<ImageView> imageViewReference;
-    private Uri data = null;
+    public Uri data = null;
     Context cx;
 
-    public BitmapWorkerTask(ImageView imageView, Context cx) {
+    public BitmapWorkerTask(ImageView imageView, Uri uri, Context cx) {
         // Use a WeakReference to ensure the ImageView can be garbage collected
         imageViewReference = new WeakReference<ImageView>(imageView);
         this.cx = cx;
+        this.data = uri;
     }
 
     // Decode image in background.
     @Override
     protected Bitmap doInBackground(Uri... params) {
-        data = params[0];
         int h = cx.getResources().getDisplayMetrics().widthPixels;
         int v = cx.getResources().getDisplayMetrics().heightPixels;
         //return ImageTools.getDownsampledBitmap(cx , data, h/2, v/4);
         return ExifUtil.rotateBitmap(data.getPath() ,ImageTools.getDownsampledBitmap(cx , data, h/2, v/4));
-
-
     }
 
-    // Once complete, see if ImageView is still around and set bitmap.
+    /*// Once complete, see if ImageView is still around and set bitmap.
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if (imageViewReference != null && bitmap != null) {
             final ImageView imageView = imageViewReference.get();
             if (imageView != null) {
+                imageView.setImageBitmap(bitmap);
+            }
+        }
+    }*/
+
+    @Override
+    protected void onPostExecute(Bitmap bitmap) {
+        if (isCancelled()) {
+            bitmap = null;
+        }
+
+        if (imageViewReference != null && bitmap != null) {
+            final ImageView imageView = imageViewReference.get();
+            final BitmapWorkerTask bitmapWorkerTask =
+                    ImageGridViewAdapter.getBitmapWorkerTask(imageView);
+            if (this == bitmapWorkerTask && imageView != null) {
                 imageView.setImageBitmap(bitmap);
             }
         }
