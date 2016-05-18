@@ -1,8 +1,11 @@
 package at.tugraz.inffeldgroup.dailypic;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,12 +31,18 @@ import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import at.tugraz.inffeldgroup.dailypic.ShakeDetector;
+
 public class MainActivity extends AppCompatActivity {
     public static final int numberOfItems = 6;
     private ImageFetcher img_fetcher;
     public ArrayList<UriWrapper> uriList;
     private GridView gridView;
     private ImageGridViewAdapter gridAdapter;
+
+    private SensorManager mSensorManager;
+	private Sensor mAccelerometer;
+	private ShakeDetector mShakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,21 @@ public class MainActivity extends AppCompatActivity {
         this.img_fetcher = new ImageFetcher(MainActivity.this);
         this.uriList = img_fetcher.getNextRandomImages(numberOfItems, this);
 
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mShakeDetector = new ShakeDetector();
+		mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+
+			@Override
+			public void onShake(int count) {
+				/*
+				 * The following method, "handleShakeEvent(count):" is a stub //
+				 * method you would use to setup whatever you want done once the
+				 * device has been shook.
+				 */
+				handleShakeEvent(count);
+			}
+                                          });
         gridAdapter = new ImageGridViewAdapter(this, uriList);
         gridView = (GridView) findViewById(R.id.mainGridView);
         gridView.setAdapter(gridAdapter);
@@ -156,6 +180,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(dbmanager);
             }
         });}
+    }
+
+    private void handleShakeEvent(int count) {
+        Log.d("NOTE:", "Shake it " + count + " times");
+        if(count > 2) {
+            uriList = img_fetcher.getNextRandomImages(numberOfItems, this);
+            clearSelection();
+
+            gridAdapter.setNewImages(uriList);
+            gridAdapter.notifyDataSetChanged();
+        }
     }
 
     public void sharebuttonOnClick(View v)
@@ -286,6 +321,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 }
 
