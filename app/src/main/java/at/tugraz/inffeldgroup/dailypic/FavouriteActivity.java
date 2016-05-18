@@ -29,7 +29,7 @@ public class FavouriteActivity extends AppCompatActivity {
             Toast.makeText(this, "No favourite pictures selected.", Toast.LENGTH_LONG).show();
             return;
         }
-        gridAdapter = new ImageGridViewAdapter(this, uriList);
+        gridAdapter = new ImageGridViewAdapter(this, uriList, new ArrayList<UriWrapper>());
         gridView = (GridView) findViewById(R.id.favGridView);
         gridView.setAdapter(gridAdapter);
 
@@ -40,9 +40,7 @@ public class FavouriteActivity extends AppCompatActivity {
                 FavouriteHandler.toggleFavouriteState(FavouriteActivity.this, uri);
                 // Refresh grid view with removed favorite
                 ArrayList<UriWrapper> uriListNew = DbDatasource.getInstance(FavouriteActivity.this).getAllFavorites();
-                gridAdapter = new ImageGridViewAdapter(FavouriteActivity.this, uriListNew);
-                gridView.setAdapter(gridAdapter);
-                gridView.invalidate();
+                gridAdapter.setNewImages(uriListNew);
             }
 
             @Override

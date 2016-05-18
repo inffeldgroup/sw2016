@@ -37,7 +37,6 @@ import at.tugraz.inffeldgroup.dailypic.ShakeDetector;
 public class MainActivity extends AppCompatActivity {
     public static final int numberOfItems = 6;
     private ImageFetcher img_fetcher;
-    public ArrayList<UriWrapper> uriList;
     private GridView gridView;
     private ImageGridViewAdapter gridAdapter;
 
@@ -53,26 +52,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.img_fetcher = new ImageFetcher(MainActivity.this);
-        this.uriList = img_fetcher.getNextRandomImages(numberOfItems, this);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mShakeDetector = new ShakeDetector();
 		mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
 
-			@Override
-			public void onShake(int count) {
+            @Override
+            public void onShake(int count) {
 				/*
 				 * The following method, "handleShakeEvent(count):" is a stub //
 				 * method you would use to setup whatever you want done once the
 				 * device has been shook.
 				 */
-				handleShakeEvent(count);
-			}
-                                          });
-        gridAdapter = new ImageGridViewAdapter(this, uriList);
+                handleShakeEvent(count);
+            }
+        });
+        ArrayList<UriWrapper> startUpPictures = img_fetcher.getNextRandomImages(numberOfItems, this);
+        ArrayList<UriWrapper> nextPictures = img_fetcher.getNextRandomImages(numberOfItems, this);
+        gridAdapter = new ImageGridViewAdapter(this, startUpPictures, nextPictures);
         gridView = (GridView) findViewById(R.id.mainGridView);
         gridView.setAdapter(gridAdapter);
+        gridAdapter.setNewImages(img_fetcher.getNextRandomImages(numberOfItems, this));
 
         setGridViewClickListener();
 
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-                        intent.setData(uriList.get(position).getUri());
+                        intent.setData(gridAdapter.getUriList().get(position).getUri());
                         startActivity(intent);
                     }
                 });
@@ -214,10 +215,8 @@ public class MainActivity extends AppCompatActivity {
     private void handleShakeEvent(int count) {
         Log.d("NOTE:", "Shake it " + count + " times");
         if(count > 2) {
-            uriList = img_fetcher.getNextRandomImages(numberOfItems, this);
             clearSelection();
-
-            gridAdapter.setNewImages(uriList);
+            gridAdapter.setNextImages(img_fetcher.getNextRandomImages(numberOfItems, this));
         }
     }
 
@@ -232,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < gridView.getCount(); i++)
                 if (checked.get(i)) {
                     Log.d("asdf", "test" + checked.toString());
-                    shareList.add(uriList.get(i).getUri());
+                    shareList.add(gridAdapter.getUriList().get(i).getUri());
                 }
             sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareList);
             startActivity(Intent.createChooser(sendIntent, "Share via"));
@@ -290,16 +289,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void nextButtonOnClick(View v) {
-        uriList = img_fetcher.getNextRandomImages(numberOfItems, this);
         clearSelection();
-
-        gridAdapter.setNewImages(uriList);
+        gridAdapter.setNextImages(img_fetcher.getNextRandomImages(numberOfItems, this));
     }
 
     public void backButtonOnClick(View v) {
-        uriList = img_fetcher.getPrevRandomImages(numberOfItems, this);
         clearSelection();
-        gridAdapter.setNewImages(uriList);
+        gridAdapter.setPreviousImages(img_fetcher.getPrevRandomImages(numberOfItems, this), img_fetcher.getNextRandomImages(numberOfItems, this));
     }
 
     @Override
@@ -326,24 +322,23 @@ public class MainActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new DoubleClickListener() {
             @Override
             public void onDoubleClick(View v, int position) {
-                UriWrapper uri = uriList.get(position);
+                UriWrapper uri = gridAdapter.getUriList().get(position);
                 FavouriteHandler.toggleFavouriteState(MainActivity.this, uri);
 
                 // Update grid view with favorite stars
                 ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
-                for (UriWrapper uriWrapper : uriList) {
+                for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
                     uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
                 }
-                uriList = uriListNew;
-                gridAdapter = new ImageGridViewAdapter(MainActivity.this, uriList);
-                gridView.setAdapter(gridAdapter);
-                gridView.invalidate();
+                gridAdapter.setNewImages(uriListNew);
+                //gridAdapter = new ImageGridViewAdapter(MainActivity.this, uriList);
+                //gridView.setAdapter(gridAdapter);
             }
 
             @Override
             public void onSingleClick(View v, int position) {
                 Intent intent = new Intent(MainActivity.this, FullscreenImage.class);
-                intent.setData(uriList.get(position).getUri());
+                intent.setData(gridAdapter.getUriList().get(position).getUri());
                 startActivity(intent);
             }
         });
