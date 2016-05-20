@@ -32,7 +32,7 @@ public class FavouriteActivity extends AppCompatActivity {
             return;
         }
         gridAdapter = new ImageGridViewAdapter(this, uriList);
-        gridView = (GridView) findViewById(R.id.favGridView);
+        gridView = (GridView) findViewById(R.id.act_fav_gridView);
         gridView.setAdapter(gridAdapter);
 
         gridView.setOnItemClickListener(new DoubleClickListener() {
@@ -57,7 +57,7 @@ public class FavouriteActivity extends AppCompatActivity {
 
 
         // TODO: ONLY FOR DEBUGGING
-        TextView title = (TextView) findViewById(R.id.textView);
+        TextView title = (TextView) findViewById(R.id.act_fav_topPanel);
         if (title != null) {title.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent dbmanager = new Intent(FavouriteActivity.this, AndroidDatabaseManager.class);

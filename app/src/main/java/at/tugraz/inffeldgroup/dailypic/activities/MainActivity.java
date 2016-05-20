@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new MyOnShakeListener());
         gridAdapter = new ImageGridViewAdapter(this, uriList);
-        gridView = (GridView) findViewById(R.id.mainGridView);
+        gridView = (GridView) findViewById(R.id.act_main_gridView);
         gridView.setAdapter(gridAdapter);
         gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
         gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initAdvertise() {
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdView mAdView = (AdView) findViewById(R.id.act_main_adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }

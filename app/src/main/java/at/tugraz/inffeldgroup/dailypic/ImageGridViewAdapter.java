@@ -61,12 +61,12 @@ public class ImageGridViewAdapter extends BaseAdapter {
             int bot;
             double vert;
             double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
-            if(((Activity) mContext).findViewById(R.id.but_share) != null) {
-                bot = ((Activity) mContext).findViewById(R.id.but_share).getHeight();
+            if(((Activity) mContext).findViewById(R.id.act_main_but_share) != null) {
+                bot = ((Activity) mContext).findViewById(R.id.act_main_but_share).getHeight();
                 vert = ((v - (3* bot) - bar - (2 * dppxl))/3)+1;
             }
             else {
-                bot = ((Activity) mContext).findViewById(R.id.textView).getHeight();
+                bot = ((Activity) mContext).findViewById(R.id.act_fav_topPanel).getHeight();
                 vert = ((v - bot - bar - (2 * dppxl))/3);
             }
             RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);

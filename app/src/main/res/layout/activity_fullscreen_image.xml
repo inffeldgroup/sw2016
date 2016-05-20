@@ -2,17 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/activity_fullscreen_base">
+    android:id="@+id/act_full_baseLayout">
 
     <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/imgDisplay"
+        android:id="@+id/act_full_imgDisplay"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="fitCenter"
         android:onClick="onFullScreenClick" />
 
     <Button
-        android:id="@+id/btnClose"
+        android:id="@+id/act_full_btnClose"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"

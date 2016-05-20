@@ -18,11 +18,11 @@ public class FullscreenActivity extends Activity {
         setContentView(R.layout.activity_fullscreen_image);
 
         SubsamplingScaleImageView imgDisplay;
-        imgDisplay = (SubsamplingScaleImageView) findViewById(R.id.imgDisplay);
+        imgDisplay = (SubsamplingScaleImageView) findViewById(R.id.act_full_imgDisplay);
         imgDisplay.setOrientation(SubsamplingScaleImageView.ORIENTATION_USE_EXIF);
         imgDisplay.setImage(ImageSource.uri(getIntent().getData()).tilingDisabled());
         Button btnClose;
-        btnClose = (Button) findViewById(R.id.btnClose);
+        btnClose = (Button) findViewById(R.id.act_full_btnClose);
         btnClose.setOnClickListener(new MyOnClickListener());
     }
 

@@ -8,10 +8,11 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MainActivity"
+    android:id="@+id/act_fav_baseLayout">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/act_fav_topPanel"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_gravity="center"
@@ -26,7 +27,7 @@
         android:background="@color/dailypic_red"/>
 
         <GridView
-        android:id="@+id/favGridView"
+        android:id="@+id/act_fav_gridView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
             android:drawSelectorOnTop="true"

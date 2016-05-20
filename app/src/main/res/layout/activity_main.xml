@@ -11,7 +11,8 @@
     android:paddingTop="0dp"
     tools:context=".activities.MainActivity"
     android:orientation="vertical"
-    android:onClick="favButtonOnClick">
+    android:onClick="favButtonOnClick"
+    android:id="@+id/act_main_baseLayout">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -25,12 +26,12 @@
         android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
-        android:id="@+id/topPanel">
+        android:id="@+id/act_main_topPanel">
 
         <ImageButton
             android:layout_width="10dp"
             android:layout_height="fill_parent"
-            android:id="@+id/but_delete"
+            android:id="@+id/act_main_but_delete"
             android:layout_weight="0.25"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="@string/act_main_but_delete_desc"
@@ -44,7 +45,7 @@
             android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/app_name"
-            android:id="@+id/txt_AppName"
+            android:id="@+id/act_main_txt_AppName"
             android:layout_weight="0.5"
             android:textSize="30sp"
             android:textAlignment="center"
@@ -58,7 +59,7 @@
         <ImageButton
             android:layout_width="10dp"
             android:layout_height="fill_parent"
-            android:id="@+id/but_share"
+            android:id="@+id/act_main_but_share"
             android:layout_weight="0.25"
             android:src="@android:drawable/ic_menu_share"
             android:contentDescription="@string/act_main_but_share_desc"
@@ -71,15 +72,15 @@
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:id="@+id/mainGridView"
+        android:id="@+id/act_main_gridView"
         android:numColumns="2"
         android:verticalSpacing="0dp"
         android:horizontalSpacing="0dp"
         android:drawSelectorOnTop="true"
         android:background="@color/dailypic_background"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/adView"
-        android:layout_above="@+id/bottomPanel" />
+        android:layout_below="@+id/act_main_adView"
+        android:layout_above="@+id/act_main_bottomPanel" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -91,7 +92,7 @@
         android:layout_marginLeft="0dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/bottomPanel"
+        android:id="@+id/act_main_bottomPanel"
         android:gravity="bottom"
         android:layout_alignParentTop="false">
 
@@ -99,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="@string/act_main_but_back"
-            android:id="@+id/but_back"
+            android:id="@+id/act_main_but_back"
             android:layout_weight="1"
             style="@android:style/MediaButton.Next"
             android:background="@color/dailypic_darkred"
@@ -113,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:text="@string/act_main_but_fav"
-            android:id="@+id/but_fav"
+            android:id="@+id/act_main_but_fav"
             android:layout_weight="2"
             android:src="@drawable/abc_btn_rating_star_on_mtrl_alpha"
             android:visibility="visible"
@@ -129,7 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="@string/act_main_but_next"
-            android:id="@+id/but_next"
+            android:id="@+id/act_main_but_next"
             android:layout_weight="1"
             style="@android:style/MediaButton.Next"
             android:background="@color/dailypic_darkred"
@@ -141,13 +142,13 @@
     </LinearLayout>
 
     <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
+        android:id="@+id/act_main_adView"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"
         android:foreground="#2caf2a"
-        android:layout_below="@+id/topPanel"
+        android:layout_below="@+id/act_main_topPanel"
         android:layout_alignParentStart="true">
     </com.google.android.gms.ads.AdView>
 </RelativeLayout>
