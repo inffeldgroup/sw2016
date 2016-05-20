@@ -1,8 +1,10 @@
 package at.tugraz.inffeldgroup.dailypic;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,26 +20,89 @@ import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 public class ImageGridViewAdapter extends BaseAdapter {
     private Context mContext;
     private int layoutResourceId = R.layout.image_item;
-    private ArrayList<UriWrapper> imgUri;
     private ViewHolder holder = null;
 
-    public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> imgUri){
+    private ArrayList<Bitmap> previousBitmaps;
+    private ArrayList<Bitmap> currentBitmaps;
+    private ArrayList<Bitmap> nextBitmaps;
+
+    private ArrayList<UriWrapper> previousUris;
+    private ArrayList<UriWrapper> currentUris;
+    private ArrayList<UriWrapper> nextUris;
+
+    public ArrayList<UriWrapper> getUriList() {
+        return  currentUris;
+    }
+
+    public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> startUp, ArrayList<UriWrapper> next)
+    {
         mContext = c;
-        this.imgUri = imgUri;
+        previousBitmaps = new ArrayList<>();
+        currentBitmaps = new ArrayList<>();
+        nextBitmaps = new ArrayList<>();
+
+        previousUris = new ArrayList<>();
+        currentUris = startUp;
+        nextUris = next;
+        preloadBitmaps(nextBitmaps, next);
     }
-    public ViewHolder getHolder(){
-        return holder;
+
+    public void setNextImages(ArrayList<UriWrapper> nextImages)
+    {
+        previousBitmaps = currentBitmaps;
+        currentBitmaps = nextBitmaps;
+        nextBitmaps = new ArrayList<>();
+        preloadBitmaps(nextBitmaps, nextImages);
+
+        previousUris = currentUris;
+        currentUris = nextUris;
+        nextUris = nextImages;
+
+        notifyDataSetChanged();
     }
-    public void setNewImages(ArrayList<UriWrapper> arrayList){
-        this.imgUri = arrayList;
+
+    public void setNewImages(ArrayList<UriWrapper> newImages)
+    {
+        currentBitmaps = new ArrayList<>();
+        currentUris = newImages;
+        notifyDataSetChanged();
+    }
+
+    public void setPreviousImages(ArrayList<UriWrapper> prevImages, ArrayList<UriWrapper> nextImages)
+    {
+        nextUris = nextImages;
+        nextBitmaps = new ArrayList<>();
+        preloadBitmaps(nextBitmaps, nextImages);
+
+        currentUris = previousUris;
+        currentBitmaps = previousBitmaps;
+
+        previousUris = prevImages;
+        previousBitmaps = new ArrayList<>();
+        preloadBitmaps(previousBitmaps, prevImages);
+
+        notifyDataSetChanged();
+    }
+
+    private void preloadBitmaps(ArrayList<Bitmap> target, ArrayList<UriWrapper> imagesToPreload) {
+        ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        if (am.isLowRamDevice()) {
+            return; // Do not use preloading on devices with low ram
+        }
+
+        for (UriWrapper img : imagesToPreload) {
+            if (img.getUri() != null) {
+                BitmapPreloaderTask.preLoadBitmap(img.getUri(), target, mContext);
+            }
+        }
     }
 
     public int getCount() {
-        return imgUri.size();
+        return currentUris.size();
     }
 
     public Object getItem(int position) {
-        return imgUri.get(position);
+        return currentUris.get(position);
     }
 
     public long getItemId(int position) {
@@ -90,15 +155,21 @@ public class ImageGridViewAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) row.getTag();
         }
-        if (imgUri.get(position).isFav()) {
+        if (currentUris.get(position).isFav()) {
             holder.fav.setVisibility(View.VISIBLE);
         } else {
             holder.fav.setVisibility(View.INVISIBLE);
         }
 
-        BitmapWorkerTask.loadBitmap(imgUri.get(position).getUri(), holder.image, mContext, h, v);
+        if (position < currentBitmaps.size()) {
+            // Use preloaded bitmap whenever available
+            holder.image.setImageBitmap(currentBitmaps.get(position));
+        } else {
+            // Retrieve bitmap from uri when there is no preloaded bitmap
+            BitmapWorkerTask.loadBitmap(currentUris.get(position).getUri(), holder.image, mContext, h, v);
+        }
 
-        holder.uri = imgUri.get(position).getUri();
+        holder.uri = currentUris.get(position).getUri();
         return row;
     }
 

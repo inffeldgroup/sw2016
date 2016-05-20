@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int SHAKE_LIMIT = 3;
 
     private ImageFetcher imageFetcher;
-    private ArrayList<UriWrapper> uriList;
     private GridView gridView;
     private ImageGridViewAdapter gridAdapter;
     private SensorManager mSensorManager;
@@ -57,13 +56,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.imageFetcher = new ImageFetcher(MainActivity.this);
-        this.uriList = imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new MyOnShakeListener());
-        gridAdapter = new ImageGridViewAdapter(this, uriList);
+        ArrayList<UriWrapper> startUpPictures = imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this);
+        ArrayList<UriWrapper> nextPictures = imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this);
+        gridAdapter = new ImageGridViewAdapter(this, startUpPictures, nextPictures);
         gridView = (GridView) findViewById(R.id.act_main_gridView);
         gridView.setAdapter(gridAdapter);
         gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
@@ -81,10 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleShakeEvent(int count) {
         if (count > SHAKE_LIMIT) {
-            uriList = imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this);
             clearSelection();
-
-            gridAdapter.setNewImages(uriList);
+            gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
             gridAdapter.notifyDataSetChanged();
         }
     }
@@ -98,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<Uri> shareList = new ArrayList<Uri>();
             for (int i = 0; i < gridView.getCount(); i++)
                 if (checked.get(i)) {
-                    shareList.add(uriList.get(i).getUri());
+                    shareList.add(gridAdapter.getUriList().get(i).getUri());
                 }
             sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareList);
             startActivity(Intent.createChooser(sendIntent, "Share via"));
@@ -146,10 +144,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void backButtonOnClick(View v) {
-        uriList = imageFetcher.getPrevRandomImages(NUMBER_OF_ITEMS, this);
         clearSelection();
-        gridAdapter.setNewImages(uriList);
-        gridAdapter.notifyDataSetChanged();
+        gridAdapter.setPreviousImages(imageFetcher.getPrevRandomImages(NUMBER_OF_ITEMS, this), imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
 
     public void favButtonOnClick(View v) {
@@ -158,11 +154,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void nextButtonOnClick(View v) {
-        uriList = imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this);
         clearSelection();
-
-        gridAdapter.setNewImages(uriList);
-        gridAdapter.notifyDataSetChanged();
+        gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
 
     @Override
@@ -188,24 +181,21 @@ public class MainActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new DoubleClickListener() {
             @Override
             public void onDoubleClick(View v, int position) {
-                UriWrapper uri = uriList.get(position);
+                UriWrapper uri = gridAdapter.getUriList().get(position);
                 FavouriteHandler.toggleFavouriteState(MainActivity.this, uri);
 
                 // Update grid view with favorite stars
                 ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
-                for (UriWrapper uriWrapper : uriList) {
+                for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
                     uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
                 }
-                uriList = uriListNew;
-                gridAdapter = new ImageGridViewAdapter(MainActivity.this, uriList);
-                gridView.setAdapter(gridAdapter);
-                gridView.invalidate();
+                gridAdapter.setNewImages(uriListNew);
             }
 
             @Override
             public void onSingleClick(View v, int position) {
                 Intent intent = new Intent(MainActivity.this, FullscreenActivity.class);
-                intent.setData(uriList.get(position).getUri());
+                intent.setData(gridAdapter.getUriList().get(position).getUri());
                 startActivity(intent);
             }
         });
@@ -285,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(MainActivity.this, FullscreenActivity.class);
-                    intent.setData(uriList.get(position).getUri());
+                    intent.setData(gridAdapter.getUriList().get(position).getUri());
                     startActivity(intent);
                 }
             });
