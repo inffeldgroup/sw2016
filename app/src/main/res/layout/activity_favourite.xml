@@ -13,18 +13,8 @@
 
     <TextView
         android:id="@+id/act_fav_topPanel"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:gravity="center_vertical|center_horizontal"
         android:text="@string/act_favourites_title"
-        android:textAlignment="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ffffff"
-        android:textIsSelectable="false"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:background="@color/dailypic_red"/>
+        style="@style/TitleTextView" />
 
         <GridView
         android:id="@+id/act_fav_gridView"
