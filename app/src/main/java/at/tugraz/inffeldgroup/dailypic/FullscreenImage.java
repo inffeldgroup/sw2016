@@ -78,7 +78,7 @@ public class FullscreenImage extends Activity {
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(FullscreenImage.this);
-                    builder.setMessage("DATA: " + data)
+                    builder.setMessage(data)
                             .setCancelable(false)
                             .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
