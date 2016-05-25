@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -22,10 +24,13 @@ public class PushUpNotification extends BroadcastReceiver {
         // Sets an ID for the notification
         int mNotificationId = 101;
 
+        //Converts png icon to Bitmap so it can be used in .setLargeIcon
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
         // Build Notification
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.Icon_DailyPic2_Notifications)
+                        .setSmallIcon(R.drawable.icon_dailypic2_notifications)
+                        .setLargeIcon(largeIcon)
                         .setContentTitle("DailyPic")
                         .setContentText("Check out your new Pics!")
                         .setOnlyAlertOnce(true)
