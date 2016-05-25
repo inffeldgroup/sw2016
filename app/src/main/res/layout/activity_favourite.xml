@@ -8,11 +8,11 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context="at.tugraz.inffeldgroup.dailypic.MainActivity"
-    android:background="@color/dailypic_red">
+    tools:context=".activities.MainActivity"
+    android:id="@+id/act_fav_baseLayout">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/act_fav_topPanel"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_gravity="center"
@@ -23,10 +23,11 @@
         android:textColor="#ffffff"
         android:textIsSelectable="false"
         android:textSize="30sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:background="@color/dailypic_red"/>
 
         <GridView
-        android:id="@+id/favGridView"
+        android:id="@+id/act_fav_gridView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
             android:drawSelectorOnTop="true"

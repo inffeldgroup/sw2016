@@ -8,16 +8,15 @@ import com.robotium.solo.Solo;
 
 import junit.framework.TestCase;
 
-import at.tugraz.inffeldgroup.dailypic.FullscreenImage;
-import at.tugraz.inffeldgroup.dailypic.ImageItem;
+import at.tugraz.inffeldgroup.dailypic.activities.FullscreenActivity;
 
 /**
  * Created by christian on 20.04.16.
  */
-public class FullscreenImageTest extends ActivityInstrumentationTestCase2 {
+public class uitest_FullscreenActivity extends ActivityInstrumentationTestCase2 {
 
-    public FullscreenImageTest() {
-        super(FullscreenImage.class);
+    public uitest_FullscreenActivity() {
+        super(FullscreenActivity.class);
     }
 
     private Solo mySolo;

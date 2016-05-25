@@ -1,17 +1,16 @@
-package at.tugraz.inffeldgroup.dailypic;
+package at.tugraz.inffeldgroup.dailypic.activities;
 
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
 import android.net.Uri;
+
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,33 +20,21 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-public class FullscreenImage extends Activity {
+import at.tugraz.inffeldgroup.dailypic.R;
 
 
-    @SuppressLint("NewApi")
-
-
-
+public class FullscreenActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen_image);
+
         SubsamplingScaleImageView imgDisplay;
-        imgDisplay = (SubsamplingScaleImageView) findViewById(R.id.imgDisplay);
+        imgDisplay = (SubsamplingScaleImageView) findViewById(R.id.act_full_imgDisplay);
         imgDisplay.setOrientation(SubsamplingScaleImageView.ORIENTATION_USE_EXIF);
         imgDisplay.setImage(ImageSource.uri(getIntent().getData()).tilingDisabled());
         Button btnClose;
-
-
-        btnClose = (Button) findViewById(R.id.btnClose);
-
-
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                FullscreenImage.this.finish();
-            }
-        });
 
         View iv = (View) imgDisplay;
         iv.setOnLongClickListener(new View.OnLongClickListener() {
@@ -77,7 +64,7 @@ public class FullscreenImage extends Activity {
                         }
                     }
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(FullscreenImage.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(FullscreenActivity.this);
                     builder.setMessage(data)
                             .setCancelable(false)
                             .setPositiveButton("Close", new DialogInterface.OnClickListener() {
@@ -91,15 +78,25 @@ public class FullscreenImage extends Activity {
                 } catch (IOException | IllegalAccessException e) {
                     e.printStackTrace();
                     ret = false;
-                    Toast.makeText(FullscreenImage.this, "Error reading image.\nTag: " + current_tag, Toast.LENGTH_LONG).show();
+                    Toast.makeText(FullscreenActivity.this, "Error reading image.\nTag: " + current_tag, Toast.LENGTH_LONG).show();
                 }
 
                 return ret;
             }
         });
+
+        btnClose = (Button) findViewById(R.id.act_full_btnClose);
+        btnClose.setOnClickListener(new MyOnClickListener());
     }
 
     public void onFullScreenClick(View v) {
-        FullscreenImage.this.finish();
+        FullscreenActivity.this.finish();
+    }
+
+    private class MyOnClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            FullscreenActivity.this.finish();
+        }
     }
 }

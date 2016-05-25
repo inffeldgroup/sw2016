@@ -1,25 +1,19 @@
 package at.tugraz.inffeldgroup.dailypic.uitest;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.KeyEvent;
-import android.widget.ImageButton;
 
 import com.robotium.solo.Solo;
 
-import at.tugraz.inffeldgroup.dailypic.R;
-import at.tugraz.inffeldgroup.dailypic.MainActivity;
-import junit.framework.TestCase;
-
-import at.tugraz.inffeldgroup.dailypic.MainActivity;
+import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
 
 /**
  * Created by Merkus on 20.04.2016.
  */
-public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainActivity> {
 
     private Solo mySolo;
 
-    public MainActivityTest() {
+    public uitest_MainActivity() {
         super(MainActivity.class);
     }
 

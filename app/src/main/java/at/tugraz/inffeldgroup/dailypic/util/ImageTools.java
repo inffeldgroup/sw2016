@@ -1,20 +1,14 @@
-package at.tugraz.inffeldgroup.dailypic;
+package at.tugraz.inffeldgroup.dailypic.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
-
-import at.tugraz.inffeldgroup.dailypic.util.ExifUtil;
 
 public class ImageTools {
     public static Bitmap getDownsampledBitmap(Context context, Uri uri, int targetWidth, int targetHeight) {
@@ -27,8 +21,7 @@ public class ImageTools {
             bitmap = downsampleBitmap(context, uri, sampleSize);
 
         } catch (FileNotFoundException e) {
-            Log.e("E - getDownsampledBitma", e.getMessage());
-            //handle the exception(s)
+            Log.d("EXCEPTION:", e.getMessage());
         }
 
         return bitmap;
@@ -43,7 +36,7 @@ public class ImageTools {
             BitmapFactory.decodeStream(is, null, outDimens);
             is.close();
         } catch (IOException e) {
-            Log.e("E - getBitmapDimensions", e.getMessage());
+            Log.d("EXCEPTION:", e.getMessage());
         }
 
 
@@ -81,46 +74,9 @@ public class ImageTools {
             resizedBitmap = BitmapFactory.decodeStream(is, null, outBitmap);
             is.close();
         } catch (IOException e) {
-            Log.e("E - downsampleBitmap", e.getMessage());
+            Log.d("EXCEPTION:", e.getMessage());
         }
 
         return resizedBitmap;
     }
-
-
 }
-class BitmapWorkerTask extends AsyncTask<Uri, Void, Bitmap> {
-    private final WeakReference<ImageView> imageViewReference;
-    private Uri data = null;
-    Context cx;
-
-    public BitmapWorkerTask(ImageView imageView, Context cx) {
-        // Use a WeakReference to ensure the ImageView can be garbage collected
-        imageViewReference = new WeakReference<ImageView>(imageView);
-        this.cx = cx;
-    }
-
-    // Decode image in background.
-    @Override
-    protected Bitmap doInBackground(Uri... params) {
-        data = params[0];
-        int h = cx.getResources().getDisplayMetrics().widthPixels;
-        int v = cx.getResources().getDisplayMetrics().heightPixels;
-        //return ImageTools.getDownsampledBitmap(cx , data, h/2, v/4);
-        return ExifUtil.rotateBitmap(data.getPath() ,ImageTools.getDownsampledBitmap(cx , data, h/2, v/4));
-
-
-    }
-
-    // Once complete, see if ImageView is still around and set bitmap.
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        if (imageViewReference != null && bitmap != null) {
-            final ImageView imageView = imageViewReference.get();
-            if (imageView != null) {
-                imageView.setImageBitmap(bitmap);
-            }
-        }
-    }
-}
-
