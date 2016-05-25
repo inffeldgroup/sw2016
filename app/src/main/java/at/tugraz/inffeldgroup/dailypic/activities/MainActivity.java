@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int ALPHA_FULL_VISIBLE = 255;
     private static final int MIN_DISTANCE = 150;
     private static final int SHAKE_LIMIT = 3;
+    private boolean ready = false;
 
     private ImageFetcher imageFetcher;
     private GridView gridView;
@@ -183,13 +184,17 @@ public class MainActivity extends AppCompatActivity {
             public void onDoubleClick(View v, int position) {
                 UriWrapper uri = gridAdapter.getUriList().get(position);
                 FavouriteHandler.toggleFavouriteState(MainActivity.this, uri);
-
-                // Update grid view with favorite stars
+                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
                 ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
                 for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
                     uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
                 }
-                gridAdapter.setNewImages(uriListNew);
+                gridAdapter.updateFavStatus(uriListNew);
+                if ((item.fav.getVisibility())== View.VISIBLE) {
+                    item.fav.setVisibility(View.INVISIBLE);
+                } else {
+                    item.fav.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -204,7 +209,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (ready)
+        {
+            ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
+            for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
+                uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
+            }
+
+            for (int position = 0; position < 6; position++)
+            {
+                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
+                if (uriListNew.get(position).isFav())
+                {
+                    item.fav.setVisibility(View.VISIBLE);
+                }
+                else {
+                    item.fav.setVisibility(View.INVISIBLE);
+                }
+            }
+            gridAdapter.updateFavStatus(uriListNew);
+        }
+        else {
+            ready = true;
+        }
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+
     }
 
     @Override

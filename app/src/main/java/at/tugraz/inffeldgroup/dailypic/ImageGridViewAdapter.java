@@ -67,6 +67,11 @@ public class ImageGridViewAdapter extends BaseAdapter {
         currentUris = newImages;
         notifyDataSetChanged();
     }
+    public void updateFavStatus(ArrayList<UriWrapper> newImages)
+    {
+        currentBitmaps = new ArrayList<>();
+        currentUris = newImages;
+    }
 
     public void setPreviousImages(ArrayList<UriWrapper> prevImages, ArrayList<UriWrapper> nextImages)
     {
@@ -128,27 +133,34 @@ public class ImageGridViewAdapter extends BaseAdapter {
             double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
             if(((Activity) mContext).findViewById(R.id.act_main_but_share) != null) {
                 bot = ((Activity) mContext).findViewById(R.id.act_main_but_share).getHeight();
-                vert = ((v - (3* bot) - bar - (2 * dppxl))/3)+1;
+                vert = ((v - (3* bot) - bar - (2 * dppxl))/3);
+                RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
+                switch (position) {
+                    case 0:
+                        layout.setPadding(0, 0, 0, 1 * (int) dppxl);
+                        break;
+                    case 1:
+                        layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
+                        break;
+                    case 2:
+                        layout.setPadding(0, 0, 0, 1 * (int) dppxl);
+                        break;
+                    case 3:
+                        layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
+                        break;
+                    case 4:
+                        layout.setPadding(0, 0, 0, 0);
+                        break;
+                    case 5:
+                        layout.setPadding(1 * (int) dppxl, 0, 0, 0);
+                        break;
+                }
             }
             else {
                 bot = ((Activity) mContext).findViewById(R.id.act_fav_topPanel).getHeight();
                 vert = ((v - bot - bar - (2 * dppxl))/3);
             }
-            RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
-            switch (position) {
-                case 0: layout.setPadding(0, 0, 0, 1*(int)dppxl);
-                        break;
-                case 1: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
-                        break;
-                case 2: layout.setPadding(0, 0, 0, 1*(int)dppxl);
-                        break;
-                case 3: layout.setPadding(1*(int)dppxl, 0, 0, 1*(int)dppxl);
-                        break;
-                case 4: layout.setPadding(0, 0, 0, 0);
-                        break;
-                case 5: layout.setPadding(1*(int)dppxl, 0, 0, 0);
-                        break;
-            }
+
             if(position == 1)
                 ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
             holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));

@@ -13,6 +13,9 @@ public class FavouriteHandler {
         if (!DbDatasource.getInstance(context).checkIfExists(uri)) {
             DbDatasource.getInstance(context).insert(uri);
         }
+        else{
+            DbDatasource.getInstance(context).delete(uri);
+        }
 
         if (uri.isFav()) {
             Toast.makeText(context, "Removed from favourites: " + uri.getUri().getLastPathSegment(), Toast.LENGTH_LONG).show();
