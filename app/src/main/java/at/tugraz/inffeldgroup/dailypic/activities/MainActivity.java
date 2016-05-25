@@ -278,15 +278,14 @@ public class MainActivity extends AppCompatActivity {
                 uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
             }
 
-            for (int position = 0; position < 6; position++)
-            {
-                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
-                if (uriListNew.get(position).isFav())
-                {
-                    item.fav.setVisibility(View.VISIBLE);
-                }
-                else {
-                    item.fav.setVisibility(View.INVISIBLE);
+            for (int position = 0; position < 6; position++) {
+                if (gridView.getChildAt(position).getTag() != null) {
+                    ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
+                    if (uriListNew.get(position).isFav()) {
+                        item.fav.setVisibility(View.VISIBLE);
+                    } else {
+                        item.fav.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
             gridAdapter.updateFavStatus(uriListNew);
