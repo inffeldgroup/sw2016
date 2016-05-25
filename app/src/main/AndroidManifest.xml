@@ -26,6 +26,8 @@
 
         <activity android:name=".activities.FullscreenActivity" />
         <activity android:name=".activities.FavouriteActivity" android:screenOrientation="portrait"/>
+        <receiver android:process=":remote" android:name="PushUpNotification"></receiver>
+
     </application>
 
 </manifest>
