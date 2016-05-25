@@ -27,7 +27,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
     private int layoutResourceId = R.layout.image_item;
     private ViewHolder holder = null;
 
-    private Stack<UriWrapper> uriHistory;
+    private Stack<ArrayList<UriWrapper>> uriHistory;
 
     private ArrayList<Bitmap> previousBitmaps;
     private ArrayList<Bitmap> currentBitmaps;
@@ -59,9 +59,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
 
     public void setNextImages(ArrayList<UriWrapper> nextImages)
     {
-        for (UriWrapper img : previousUris) {
-            uriHistory.push(img);
-        }
+        uriHistory.push(previousUris);
 
         previousBitmaps = currentBitmaps;
         currentBitmaps = nextBitmaps;
@@ -101,11 +99,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
         currentUris = previousUris;
         currentBitmaps = previousBitmaps;
 
-        previousUris = new ArrayList<>();
-        for (int i = 0; i < MainActivity.NUMBER_OF_ITEMS && !uriHistory.isEmpty(); i++) {
-            previousUris.add(uriHistory.pop());
-        }
-        Collections.rotate(previousUris, MainActivity.NUMBER_OF_ITEMS / 2);
+        previousUris = uriHistory.pop();
         previousBitmaps = new ArrayList<>();
         preloadBitmaps(previousBitmaps, previousUris);
 
