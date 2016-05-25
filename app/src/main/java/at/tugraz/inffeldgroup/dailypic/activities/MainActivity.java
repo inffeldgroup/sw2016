@@ -12,9 +12,12 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,8 +27,10 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -56,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
+    private Toolbar topBar;
+    private PopupMenu popupMenu;
 
     private float x1, x2;
     private int time;
@@ -65,9 +72,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
+        setSupportActionBar(topBar);
+
         this.imageFetcher = new ImageFetcher(MainActivity.this);
-        TextView appName = (TextView)findViewById(R.id.act_main_txt_AppName);
-        appName.setOnClickListener(new HelpScreenListener());
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
@@ -84,19 +93,48 @@ public class MainActivity extends AppCompatActivity {
         initAdvertise();
     }
 
-    protected void onStart()
-    {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.topbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.topbar_action_favorite:
+                favButtonOnClick();
+                return true;
+            case R.id.topbar_action_settings:
+
+                return true;
+            case R.id.topbar_action_share:
+                sharebuttonOnClick();
+                return true;
+            case R.id.topbar_action_delete:
+                deleteButtonOnClick();
+                return true;
+            case R.id.topbar_action_help:
+                helpButtonOnClick();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    protected void onStart() {
         super.onStart();
         time = 0;
     }
 
-    protected void onStop()
-    {
+    protected void onStop() {
         super.onStop();
 
-        new Timer().schedule(new TimerTask(){
+        new Timer().schedule(new TimerTask() {
             @Override
-            public void run(){
+            public void run() {
                 time = 5;
             }
         }, 48 * 60 * 60 * 1000);
@@ -105,17 +143,12 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         PendingIntent PendI = PendingIntent.getBroadcast(this, 101, myIntent, 0);
 
-        if(time == 5)
-        {
+        if (time == 5) {
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (5 * 24 * 60 * 60 * 1000), 5 * 24 * 60 * 60 * 1000, PendI);
             time = 7;
-        }
-        else if(time == 7)
-        {
+        } else if (time == 7) {
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (7 * 24 * 60 * 60 * 1000), 7 * 24 * 60 * 60 * 1000, PendI);
-        }
-        else
-        {
+        } else {
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (48 * 60 * 60 * 1000), 48 * 60 * 60 * 1000, PendI);
         }
 
@@ -134,8 +167,12 @@ public class MainActivity extends AppCompatActivity {
             gridAdapter.notifyDataSetChanged();
         }
     }
+    private void helpButtonOnClick() {
+        //TODO: implement
+    }
 
-    public void sharebuttonOnClick(View v) {
+
+    private void sharebuttonOnClick() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
         sendIntent.setType("image/*");
@@ -151,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         } else Toast.makeText(this, R.string.act_main_toast_share, Toast.LENGTH_SHORT).show();
     }
 
-    public void deleteButtonOnClick(View v) {
+    private void deleteButtonOnClick() {
         if (gridView.getCheckedItemPositions() != null) {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -191,17 +228,17 @@ public class MainActivity extends AppCompatActivity {
         clearSelection();
     }
 
-    public void backButtonOnClick(View v) {
+    private void backButtonOnClick() {
         clearSelection();
         gridAdapter.setPreviousImages(imageFetcher.getPrevRandomImages(NUMBER_OF_ITEMS, this), imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
 
-    public void favButtonOnClick(View v) {
+    private void favButtonOnClick() {
         Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
         startActivity(intent);
     }
 
-    public void nextButtonOnClick(View v) {
+    private void nextButtonOnClick() {
         clearSelection();
         gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
@@ -213,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         clearSelection();
     }
 
-    public void clearSelection() {
+    private void clearSelection() {
         if (gridView.getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE_MODAL) {
             for (int i = 0; i < gridView.getCount(); i++) {
                 ((ViewHolder) gridView.getChildAt(i).getTag()).image.setImageAlpha(ALPHA_FULL_VISIBLE);
@@ -237,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
                     uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
                 }
                 gridAdapter.updateFavStatus(uriListNew);
-                if ((item.fav.getVisibility())== View.VISIBLE) {
+                if ((item.fav.getVisibility()) == View.VISIBLE) {
                     item.fav.setVisibility(View.INVISIBLE);
                 } else {
                     item.fav.setVisibility(View.VISIBLE);
@@ -256,27 +293,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (ready)
-        {
+        if (ready) {
             ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
             for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
                 uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
             }
 
-            for (int position = 0; position < 6; position++)
-            {
+            for (int position = 0; position < 6; position++) {
                 ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
-                if (uriListNew.get(position).isFav())
-                {
+                if (uriListNew.get(position).isFav()) {
                     item.fav.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     item.fav.setVisibility(View.INVISIBLE);
                 }
             }
             gridAdapter.updateFavStatus(uriListNew);
-        }
-        else {
+        } else {
             ready = true;
         }
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
@@ -401,9 +433,9 @@ public class MainActivity extends AppCompatActivity {
 
                     if (Math.abs(deltaX) > MIN_DISTANCE) {
                         if (x2 > x1) {
-                            backButtonOnClick(v);
+                            backButtonOnClick();
                         } else {
-                            nextButtonOnClick(v);
+                            nextButtonOnClick();
                         }
 
                     } else {

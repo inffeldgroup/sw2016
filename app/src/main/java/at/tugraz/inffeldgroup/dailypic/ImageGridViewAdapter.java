@@ -31,11 +31,10 @@ public class ImageGridViewAdapter extends BaseAdapter {
     private ArrayList<UriWrapper> nextUris;
 
     public ArrayList<UriWrapper> getUriList() {
-        return  currentUris;
+        return currentUris;
     }
 
-    public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> startUp, ArrayList<UriWrapper> next)
-    {
+    public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> startUp, ArrayList<UriWrapper> next) {
         mContext = c;
         previousBitmaps = new ArrayList<>();
         currentBitmaps = new ArrayList<>();
@@ -47,8 +46,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
         preloadBitmaps(nextBitmaps, next);
     }
 
-    public void setNextImages(ArrayList<UriWrapper> nextImages)
-    {
+    public void setNextImages(ArrayList<UriWrapper> nextImages) {
         previousBitmaps = currentBitmaps;
         currentBitmaps = nextBitmaps;
         nextBitmaps = new ArrayList<>();
@@ -61,20 +59,18 @@ public class ImageGridViewAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void setNewImages(ArrayList<UriWrapper> newImages)
-    {
+    public void setNewImages(ArrayList<UriWrapper> newImages) {
         currentBitmaps = new ArrayList<>();
         currentUris = newImages;
         notifyDataSetChanged();
     }
-    public void updateFavStatus(ArrayList<UriWrapper> newImages)
-    {
+
+    public void updateFavStatus(ArrayList<UriWrapper> newImages) {
         currentBitmaps = new ArrayList<>();
         currentUris = newImages;
     }
 
-    public void setPreviousImages(ArrayList<UriWrapper> prevImages, ArrayList<UriWrapper> nextImages)
-    {
+    public void setPreviousImages(ArrayList<UriWrapper> prevImages, ArrayList<UriWrapper> nextImages) {
         nextUris = nextImages;
         nextBitmaps = new ArrayList<>();
         preloadBitmaps(nextBitmaps, nextImages);
@@ -120,68 +116,75 @@ public class ImageGridViewAdapter extends BaseAdapter {
         int v = mContext.getResources().getDisplayMetrics().heightPixels;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId,parent,false);
+            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+            row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
-            holder.image=(ImageView)row.findViewById(R.id.image);
-            holder.checked=(ImageView)row.findViewById(R.id.checked);
-            holder.fav = (ImageView)row.findViewById(R.id.fav);
+            holder.image = (ImageView) row.findViewById(R.id.image);
+            holder.checked = (ImageView) row.findViewById(R.id.checked);
+            holder.fav = (ImageView) row.findViewById(R.id.fav);
             row.setTag(holder);
-            int bar = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
-            int bot;
-            double vert;
             double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
-            if(((Activity) mContext).findViewById(R.id.act_main_but_share) != null) {
-                bot = ((Activity) mContext).findViewById(R.id.act_main_but_share).getHeight();
-                vert = ((v - (3* bot) - bar - (2 * dppxl))/3);
-                RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
-                switch (position) {
-                    case 0:
-                        layout.setPadding(0, 0, 0, 1 * (int) dppxl);
-                        break;
-                    case 1:
-                        layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
-                        break;
-                    case 2:
-                        layout.setPadding(0, 0, 0, 1 * (int) dppxl);
-                        break;
-                    case 3:
-                        layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
-                        break;
-                    case 4:
-                        layout.setPadding(0, 0, 0, 0);
-                        break;
-                    case 5:
-                        layout.setPadding(1 * (int) dppxl, 0, 0, 0);
-                        break;
-                }
-            }
-            else {
-                bot = ((Activity) mContext).findViewById(R.id.act_fav_topPanel).getHeight();
-                vert = ((v - bot - bar - (2 * dppxl))/3);
+            RelativeLayout layout = (RelativeLayout) row.findViewById(R.id.image_layout);
+            switch (position) {
+                case 0:
+                    layout.setPadding(0, 0, 0, 1 * (int) dppxl);
+                    break;
+                case 1:
+                    layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
+                    break;
+                case 2:
+                    layout.setPadding(0, 0, 0, 1 * (int) dppxl);
+                    break;
+                case 3:
+                    layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
+                    break;
+                case 4:
+                    layout.setPadding(0, 0, 0, 0);
+                    break;
+                case 5:
+                    layout.setPadding(1 * (int) dppxl, 0, 0, 0);
+                    break;
             }
 
-            if(position == 1)
-                ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
-            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
-        } else {
+            if (position == 1)
+                ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h / 2, v/3));
+            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h / 2, v/3));
+        } else
+
+        {
             holder = (ViewHolder) row.getTag();
         }
-        if (currentUris.get(position).isFav()) {
+
+        if (currentUris.get(position).
+
+                isFav()
+
+                )
+
+        {
             holder.fav.setVisibility(View.VISIBLE);
-        } else {
+        } else
+
+        {
             holder.fav.setVisibility(View.INVISIBLE);
         }
 
-        if (position < currentBitmaps.size()) {
+        if (position < currentBitmaps.size())
+
+        {
             // Use preloaded bitmap whenever available
             holder.image.setImageBitmap(currentBitmaps.get(position));
-        } else {
+        } else
+
+        {
             // Retrieve bitmap from uri when there is no preloaded bitmap
             BitmapWorkerTask.loadBitmap(currentUris.get(position).getUri(), holder.image, mContext, h, v);
         }
 
-        holder.uri = currentUris.get(position).getUri();
+        holder.uri = currentUris.get(position).
+
+                getUri();
+
         return row;
     }
 
