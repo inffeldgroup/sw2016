@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
-                    + (2 * 1000), 48 * 60 * 60 * 1000, PendI);
+                    + (48 * 60 * 60 * 1000), 48 * 60 * 60 * 1000, PendI);
         }
 
     }
