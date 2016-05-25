@@ -14,7 +14,7 @@ import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 
-public class ImageFetcher{
+public class ImageFetcher extends Activity {
     private Activity activity;
     private Stack<Integer> seedHistory;
     private Random seed_gen = new Random();
