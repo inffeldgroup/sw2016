@@ -21,5 +21,7 @@
     <string name="image_fetcher_toast_delete_success">Successfully deleted images.</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-3406938862137540/3927782716</string>
+    <string name="helptext"><h1>This</h1> is the help Text \n
+     more text\n and a lot more text\n</string>
 
 </resources>
