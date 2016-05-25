@@ -44,7 +44,7 @@ import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int NUMBER_OF_ITEMS = 6;
+    public static final int NUMBER_OF_ITEMS = 6;
     private static final int ALPHA_HALF_VISIBLE = 127;
     private static final int ALPHA_FULL_VISIBLE = 255;
     private static final int MIN_DISTANCE = 150;
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void backButtonOnClick(View v) {
         clearSelection();
-        gridAdapter.setPreviousImages(imageFetcher.getPrevRandomImages(NUMBER_OF_ITEMS, this), imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+        gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
 
     public void favButtonOnClick(View v) {
