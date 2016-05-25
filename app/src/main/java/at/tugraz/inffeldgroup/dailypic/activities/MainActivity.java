@@ -103,16 +103,19 @@ public class MainActivity extends AppCompatActivity {
 
         if(time == 5)
         {
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (5 * 24 * 60 * 60 * 1000), 5 * 24 * 60 * 60 * 1000, PendI);
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
+                    + (5 * 24 * 60 * 60 * 1000), 5 * 24 * 60 * 60 * 1000, PendI);
             time = 7;
         }
         else if(time == 7)
         {
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (7 * 24 * 60 * 60 * 1000), 7 * 24 * 60 * 60 * 1000, PendI);
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
+                    + (7 * 24 * 60 * 60 * 1000), 7 * 24 * 60 * 60 * 1000, PendI);
         }
         else
         {
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (48 * 60 * 60 * 1000), 48 * 60 * 60 * 1000, PendI);
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
+                    + (48 * 60 * 60 * 1000), 48 * 60 * 60 * 1000, PendI);
         }
 
     }

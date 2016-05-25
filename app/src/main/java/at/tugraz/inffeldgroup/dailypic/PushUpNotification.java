@@ -25,7 +25,7 @@ public class PushUpNotification extends BroadcastReceiver {
         // Build Notification
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.icon_notification)
+                        .setSmallIcon(R.drawable.Icon_DailyPic2_Notifications)
                         .setContentTitle("DailyPic")
                         .setContentText("Check out your new Pics!")
                         .setOnlyAlertOnce(true)
