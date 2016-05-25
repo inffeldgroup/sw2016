@@ -46,25 +46,51 @@ public class ImageFetcher extends Activity {
 
         ArrayList<UriWrapper> ret = new ArrayList<UriWrapper>();
 
-        if (imgPaths.isEmpty()) {
-            Toast.makeText(activity, R.string.image_fetcher_toast, Toast.LENGTH_LONG).show();
+        if (this.imgPaths.isEmpty()) {
+            Toast.makeText(this.activity, R.string.image_fetcher_toast, Toast.LENGTH_LONG).show();
             return ret;
         }
 
-        int seed = seed_gen.nextInt();
+        int seed = -1;
         int image_index;
-        Random rand_gen = new Random(seed);
+        Random rand_gen = null;
 
-        this.seedHistory.push(seed);
-        for(int i = 0; i < size && i < imgPaths.size(); i++){
-            image_index = Math.abs(rand_gen.nextInt()) % imgPaths.size();
-            Uri uri = Uri.fromFile(new File(imgPaths.get(image_index)));
+        if (imgPaths.size() > 1024) {
+            // push seed history only if all returned paths are different
+            boolean valid_seed = false;
+            while (valid_seed == false) {
+                seed = this.seed_gen.nextInt();
+                rand_gen = new Random(seed);
+                for (int i = 0; i < size; i++) {
+                    image_index = Math.abs(rand_gen.nextInt()) % this.imgPaths.size();
+                    Uri uri = Uri.fromFile(new File(this.imgPaths.get(image_index)));
 
-            UriWrapper image = DbDatasource.getInstance(context).getUriWrapper(uri);
-            if (!ret.contains(image)) {
-                ret.add(image);
+                    UriWrapper image = DbDatasource.getInstance(context).getUriWrapper(uri);
+                    if (ret.contains(image)) {
+                        break;
+                    } else {
+                        ret.add(image);
+                        if (ret.size() == size) {
+                            valid_seed = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            this.seedHistory.push(seed);
+        } else {
+            this.seedHistory.push(seed);
+            for(int i = 0; i < size && i < this.imgPaths.size(); i++) {
+                image_index = Math.abs(rand_gen.nextInt()) % this.imgPaths.size();
+                Uri uri = Uri.fromFile(new File(this.imgPaths.get(image_index)));
+
+                UriWrapper image = DbDatasource.getInstance(context).getUriWrapper(uri);
+                if (!ret.contains(image)) {
+                    ret.add(image);
+                }
             }
         }
+
         return ret;
     }
 
