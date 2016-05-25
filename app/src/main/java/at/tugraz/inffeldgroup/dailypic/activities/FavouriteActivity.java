@@ -19,6 +19,7 @@ import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 
 public class FavouriteActivity extends AppCompatActivity {
     private GridView gridView;
+    ArrayList<UriWrapper> uriList;
     private ImageGridViewAdapter gridAdapter;
 
     @Override
@@ -26,7 +27,7 @@ public class FavouriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
 
-        final ArrayList<UriWrapper> uriList = DbDatasource.getInstance(this).getAllFavorites();
+        uriList = DbDatasource.getInstance(this).getAllFavorites();
         if (uriList == null) {
             Toast.makeText(this, "No favourite pictures selected.", Toast.LENGTH_LONG).show();
             return;
@@ -43,6 +44,7 @@ public class FavouriteActivity extends AppCompatActivity {
                 // Refresh grid view with removed favorite
                 ArrayList<UriWrapper> uriListNew = DbDatasource.getInstance(FavouriteActivity.this).getAllFavorites();
                 gridAdapter.setNewImages(uriListNew);
+                uriList = uriListNew;
             }
 
             @Override
