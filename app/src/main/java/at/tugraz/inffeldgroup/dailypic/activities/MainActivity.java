@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -186,8 +187,9 @@ public class MainActivity extends AppCompatActivity {
                 del_map.put(i, (ViewHolder) gridView.getChildAt(i).getTag());
             }
         }
+
         this.imageFetcher.deleteImages(del_map);
-        this.imageFetcher.replaceDeletedImages(del_map, this);
+        this.imageFetcher.replaceDeletedImages(checked, gridAdapter, del_map, this);
         clearSelection();
     }
 

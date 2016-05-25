@@ -4,6 +4,8 @@ import android.app.*;
 import android.database.Cursor;
 import android.net.*;
 import android.provider.MediaStore;
+import android.util.SparseBooleanArray;
+import android.widget.GridView;
 import android.widget.Toast;
 import android.content.Context;
 
@@ -111,13 +113,24 @@ public class ImageFetcher extends Activity {
         }
     }
 
-    public void replaceDeletedImages(Map<Integer, ViewHolder> vh, Context context) {
+    public void replaceDeletedImages(SparseBooleanArray checked, ImageGridViewAdapter gv, Map<Integer, ViewHolder> vh, Context context) {
+        ArrayList<UriWrapper> current_uris = gv.getUriList();
         int size = vh.size();
         ArrayList<UriWrapper> new_imgs = getNextRandomImages(size, context);
+        int x = 0;
+        for (int i = 0; i < current_uris.size(); i++) {
+            if (checked.get(i) == true) {
+                current_uris.set(i, new_imgs.get(x++));
+            }
+        }
+
+        gv.setNewImages(current_uris);
+        /*
         int i = 0;
         for (Map.Entry<Integer, ViewHolder> kvp : vh.entrySet()) {
             ViewHolder v = kvp.getValue();
             v.image.setImageURI(new_imgs.get(i++).getUri());
         }
+        */
     }
 }
