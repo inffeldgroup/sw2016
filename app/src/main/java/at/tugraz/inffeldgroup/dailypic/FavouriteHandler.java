@@ -26,5 +26,12 @@ public class FavouriteHandler {
         DbDatasource.getInstance(context).update(uri);
     }
 
+    public static boolean getFavouriteState(Context context, UriWrapper uri){
+        if (!DbDatasource.getInstance(context).checkIfExists(uri)) {
+            return true;
+        }
+        return false;
+    }
+
 }
 

@@ -9,11 +9,11 @@ import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
 /**
  * Created by Merkus on 20.04.2016.
  */
-public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainActivity> {
 
     private Solo mySolo;
 
-    public MainActivityTest() {
+    public uitest_MainActivity() {
         super(MainActivity.class);
     }
 
