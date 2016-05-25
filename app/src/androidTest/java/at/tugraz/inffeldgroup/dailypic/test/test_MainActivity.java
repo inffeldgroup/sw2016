@@ -16,6 +16,20 @@ public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActi
         super(MainActivity.class);
     }
 
+    public void testDoNotShowSamePicturesInOneGrid() {
+        ImageFetcher imgf = new ImageFetcher(this.getActivity());
+
+        ArrayList<UriWrapper> img1 = imgf.getNextRandomImages(6, getActivity());
+
+        for (int i = 0; i < img1.size(); i++) {
+            for (int j = 0; j < img1.size(); j++) {
+                if (j == i) continue;
+                assertTrue(img1.get(i).equals(img1.get(j)));
+            }
+        }
+
+    }
+
     public void testPreviousFunction() {
         ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
 
@@ -30,7 +44,7 @@ public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActi
     public void testNextFunction() {
         ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
 
-        for (int i = 0; i < 10000; i++)
+        for (int i = 0; i < 100; i++)
         {
             ArrayList<UriWrapper> image_paths_01 = img_fetcher.getNextRandomImages(6, getActivity());
             ArrayList<UriWrapper> image_paths_02 = img_fetcher.getNextRandomImages(6, getActivity());
