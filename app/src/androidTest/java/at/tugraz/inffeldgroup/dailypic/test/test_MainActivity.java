@@ -21,10 +21,12 @@ public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActi
 
         ArrayList<UriWrapper> img1 = imgf.getNextRandomImages(6, getActivity());
 
-        for (int i = 0; i < img1.size(); i++) {
-            for (int j = 0; j < img1.size(); j++) {
-                if (j == i) continue;
-                assertTrue(img1.get(i).equals(img1.get(j)));
+        for (int x = 0; x < 100; x++) {
+            for (int i = 0; i < img1.size(); i++) {
+                for (int j = 0; j < img1.size(); j++) {
+                    if (j == i) continue;
+                    assertTrue(img1.get(i).equals(img1.get(j)));
+                }
             }
         }
 
