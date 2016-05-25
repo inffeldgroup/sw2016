@@ -40,6 +40,10 @@ public class ImageFetcher extends Activity {
         cursor.close();
     }
 
+    public int getNumberOfPichtures() {
+        return this.imgPaths.size();
+    }
+
     public ArrayList<UriWrapper> getNextRandomImages(int size, Context context){
 
         ArrayList<UriWrapper> ret = new ArrayList<UriWrapper>();

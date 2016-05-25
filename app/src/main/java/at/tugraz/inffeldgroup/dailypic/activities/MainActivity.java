@@ -195,6 +195,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void backButtonOnClick(View v) {
+        if (this.imageFetcher.getNumberOfPichtures() == 0) {
+            return;
+        }
+        
         clearSelection();
         gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
