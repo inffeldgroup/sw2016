@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         this.imageFetcher.deleteImages(del_map);
         this.imageFetcher.replaceDeletedImages(checked, gridAdapter, del_map, this);
         clearSelection();
+        gridAdapter.notifyDataSetChanged();
     }
 
     public void backButtonOnClick(View v) {
@@ -199,8 +200,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void favButtonOnClick(View v) {
-        Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
-        startActivity(intent);
+        if (DbDatasource.getInstance(MainActivity.this).getAllFavorites().isEmpty())
+        {
+            Toast.makeText(this, R.string.act_main_toast_fav, Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     public void nextButtonOnClick(View v) {
