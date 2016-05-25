@@ -17,6 +17,13 @@ import at.tugraz.inffeldgroup.dailypic.util.ImageTools;
 
 class BitmapWorkerTask extends AsyncTask<Uri, Void, Bitmap> {
 
+    public static Bitmap decodeInBackground(Context cx, Uri uri) {
+        final int SCALE_DIVISOR = 4;
+        int width = cx.getResources().getDisplayMetrics().widthPixels / SCALE_DIVISOR;
+        int height = cx.getResources().getDisplayMetrics().heightPixels / (SCALE_DIVISOR * 2);
+        return ExifUtil.rotateBitmap(uri.getPath(), ImageTools.getDownsampledBitmap(cx, uri, width, height));
+    }
+    
     public static void loadBitmap(Uri uri, ImageView imageView, Context context, int width, int height) {
         if (cancelPotentialWork(uri, imageView)) {
             final BitmapWorkerTask task = new BitmapWorkerTask(imageView, uri, context);
@@ -82,12 +89,9 @@ class BitmapWorkerTask extends AsyncTask<Uri, Void, Bitmap> {
         this.uri = uri;
     }
 
-    // Decode image in background.
     @Override
     protected Bitmap doInBackground(Uri... params) {
-        int h = cx.getResources().getDisplayMetrics().widthPixels;
-        int v = cx.getResources().getDisplayMetrics().heightPixels;
-        return ExifUtil.rotateBitmap(uri.getPath(), ImageTools.getDownsampledBitmap(cx, uri, h / 2, v / 4));
+        return decodeInBackground(cx, uri);
     }
 
     @Override
@@ -129,9 +133,7 @@ class BitmapPreloaderTask extends AsyncTask<Uri, Void, Bitmap> {
     // Decode image in background.
     @Override
     protected Bitmap doInBackground(Uri... params) {
-        int h = cx.getResources().getDisplayMetrics().widthPixels;
-        int v = cx.getResources().getDisplayMetrics().heightPixels;
-        return ExifUtil.rotateBitmap(uri.getPath(), ImageTools.getDownsampledBitmap(cx, uri, h / 2, v / 4));
+        return BitmapWorkerTask.decodeInBackground(cx, uri);
     }
 
     @Override

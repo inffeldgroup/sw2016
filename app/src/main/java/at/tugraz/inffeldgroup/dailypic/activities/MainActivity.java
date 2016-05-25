@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -48,7 +49,7 @@ import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int NUMBER_OF_ITEMS = 6;
+    public static final int NUMBER_OF_ITEMS = 6;
     private static final int ALPHA_HALF_VISIBLE = 127;
     private static final int ALPHA_FULL_VISIBLE = 255;
     private static final int MIN_DISTANCE = 150;
@@ -223,19 +224,33 @@ public class MainActivity extends AppCompatActivity {
                 del_map.put(i, (ViewHolder) gridView.getChildAt(i).getTag());
             }
         }
+
         this.imageFetcher.deleteImages(del_map);
-        this.imageFetcher.replaceDeletedImages(del_map, this);
+        this.imageFetcher.replaceDeletedImages(checked, gridAdapter, del_map, this);
         clearSelection();
+        gridAdapter.notifyDataSetChanged();
     }
 
     private void backButtonOnClick() {
+        if (this.imageFetcher.getNumberOfPichtures() == 0) {
+            return;
+        }
+
         clearSelection();
-        gridAdapter.setPreviousImages(imageFetcher.getPrevRandomImages(NUMBER_OF_ITEMS, this), imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+        gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
 
     private void favButtonOnClick() {
-        Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
-        startActivity(intent);
+        if (DbDatasource.getInstance(MainActivity.this).getAllFavorites().isEmpty())
+        {
+            Toast.makeText(this, R.string.act_main_toast_fav, Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     private void nextButtonOnClick() {
@@ -300,11 +315,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             for (int position = 0; position < 6; position++) {
-                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
-                if (uriListNew.get(position).isFav()) {
-                    item.fav.setVisibility(View.VISIBLE);
-                } else {
-                    item.fav.setVisibility(View.INVISIBLE);
+                if (gridView.getChildAt(position).getTag() != null) {
+                    ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
+                    if (uriListNew.get(position).isFav()) {
+                        item.fav.setVisibility(View.VISIBLE);
+                    } else {
+                        item.fav.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
             gridAdapter.updateFavStatus(uriListNew);

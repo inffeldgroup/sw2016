@@ -32,4 +32,16 @@ public class UriWrapper {
         return this.uri.toString();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (obj == null )
+            return false;
+        if(obj.getClass() != this.getClass())
+            return false;
+        UriWrapper other = (UriWrapper)obj;
+        return (this.uri.equals(other.uri) && (this.is_favourite == other.is_favourite));
+    }
+
 }

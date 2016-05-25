@@ -12,15 +12,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Stack;
 
+import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 
 public class ImageGridViewAdapter extends BaseAdapter {
     private Context mContext;
     private int layoutResourceId = R.layout.image_item;
     private ViewHolder holder = null;
+
+    private Stack<ArrayList<UriWrapper>> uriHistory;
 
     private ArrayList<Bitmap> previousBitmaps;
     private ArrayList<Bitmap> currentBitmaps;
@@ -43,10 +50,15 @@ public class ImageGridViewAdapter extends BaseAdapter {
         previousUris = new ArrayList<>();
         currentUris = startUp;
         nextUris = next;
+
+        uriHistory = new Stack<>();
+
         preloadBitmaps(nextBitmaps, next);
     }
 
     public void setNextImages(ArrayList<UriWrapper> nextImages) {
+        uriHistory.push(previousUris);
+
         previousBitmaps = currentBitmaps;
         currentBitmaps = nextBitmaps;
         nextBitmaps = new ArrayList<>();
@@ -70,7 +82,12 @@ public class ImageGridViewAdapter extends BaseAdapter {
         currentUris = newImages;
     }
 
-    public void setPreviousImages(ArrayList<UriWrapper> prevImages, ArrayList<UriWrapper> nextImages) {
+    public void setPreviousImages(ArrayList<UriWrapper> nextImages) {
+        if (uriHistory.isEmpty()) {
+            Toast.makeText(mContext, "No history available", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         nextUris = nextImages;
         nextBitmaps = new ArrayList<>();
         preloadBitmaps(nextBitmaps, nextImages);
@@ -78,9 +95,9 @@ public class ImageGridViewAdapter extends BaseAdapter {
         currentUris = previousUris;
         currentBitmaps = previousBitmaps;
 
-        previousUris = prevImages;
+        previousUris = uriHistory.pop();
         previousBitmaps = new ArrayList<>();
-        preloadBitmaps(previousBitmaps, prevImages);
+        preloadBitmaps(previousBitmaps, previousUris);
 
         notifyDataSetChanged();
     }
@@ -147,8 +164,8 @@ public class ImageGridViewAdapter extends BaseAdapter {
             }
 
             if (position == 1)
-                ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h / 2, v/3));
-            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h / 2, v/3));
+                ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h / 2, v / 3));
+            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h / 2, v / 3));
         } else
 
         {
