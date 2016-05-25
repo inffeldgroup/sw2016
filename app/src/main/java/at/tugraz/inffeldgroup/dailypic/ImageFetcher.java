@@ -125,12 +125,5 @@ public class ImageFetcher extends Activity {
         }
 
         gv.setNewImages(current_uris);
-        /*
-        int i = 0;
-        for (Map.Entry<Integer, ViewHolder> kvp : vh.entrySet()) {
-            ViewHolder v = kvp.getValue();
-            v.image.setImageURI(new_imgs.get(i++).getUri());
-        }
-        */
     }
 }
