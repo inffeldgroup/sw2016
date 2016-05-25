@@ -1,12 +1,15 @@
 package at.tugraz.inffeldgroup.dailypic.activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
@@ -25,11 +28,14 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import at.tugraz.inffeldgroup.dailypic.FavouriteHandler;
 import at.tugraz.inffeldgroup.dailypic.ImageFetcher;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
+import at.tugraz.inffeldgroup.dailypic.PushUpNotification;
 import at.tugraz.inffeldgroup.dailypic.R;
 import at.tugraz.inffeldgroup.dailypic.ShakeDetector;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int ALPHA_FULL_VISIBLE = 255;
     private static final int MIN_DISTANCE = 150;
     private static final int SHAKE_LIMIT = 3;
+    private boolean ready = false;
 
     private ImageFetcher imageFetcher;
     private GridView gridView;
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private ShakeDetector mShakeDetector;
 
     private float x1, x2;
+    private int time;
 
 
     @Override
@@ -74,6 +82,43 @@ public class MainActivity extends AppCompatActivity {
         gridView.setOnTouchListener(new MyOnTouchListener());
         setGridViewClickListener();
         initAdvertise();
+    }
+
+    protected void onStart()
+    {
+        super.onStart();
+        time = 0;
+    }
+
+    protected void onStop()
+    {
+        super.onStop();
+
+        new Timer().schedule(new TimerTask(){
+            @Override
+            public void run(){
+                time = 5;
+            }
+        }, 48 * 60 * 60 * 1000);
+
+        Intent myIntent = new Intent(this, PushUpNotification.class);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        PendingIntent PendI = PendingIntent.getBroadcast(this, 101, myIntent, 0);
+
+        if(time == 5)
+        {
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (5 * 24 * 60 * 60 * 1000), 5 * 24 * 60 * 60 * 1000, PendI);
+            time = 7;
+        }
+        else if(time == 7)
+        {
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (7 * 24 * 60 * 60 * 1000), 7 * 24 * 60 * 60 * 1000, PendI);
+        }
+        else
+        {
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (48 * 60 * 60 * 1000), 48 * 60 * 60 * 1000, PendI);
+        }
+
     }
 
     private void initAdvertise() {
@@ -186,13 +231,17 @@ public class MainActivity extends AppCompatActivity {
             public void onDoubleClick(View v, int position) {
                 UriWrapper uri = gridAdapter.getUriList().get(position);
                 FavouriteHandler.toggleFavouriteState(MainActivity.this, uri);
-
-                // Update grid view with favorite stars
+                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
                 ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
                 for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
                     uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
                 }
-                gridAdapter.setNewImages(uriListNew);
+                gridAdapter.updateFavStatus(uriListNew);
+                if ((item.fav.getVisibility())== View.VISIBLE) {
+                    item.fav.setVisibility(View.INVISIBLE);
+                } else {
+                    item.fav.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -207,7 +256,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (ready)
+        {
+            ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
+            for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
+                uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
+            }
+
+            for (int position = 0; position < 6; position++)
+            {
+                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
+                if (uriListNew.get(position).isFav())
+                {
+                    item.fav.setVisibility(View.VISIBLE);
+                }
+                else {
+                    item.fav.setVisibility(View.INVISIBLE);
+                }
+            }
+            gridAdapter.updateFavStatus(uriListNew);
+        }
+        else {
+            ready = true;
+        }
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+
     }
 
     @Override

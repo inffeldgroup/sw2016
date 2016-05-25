@@ -9,9 +9,9 @@ import at.tugraz.inffeldgroup.dailypic.activities.FullscreenActivity;
 /**
  * Created by christian on 20.04.16.
  */
-public class FullscreenActivityTest extends ActivityInstrumentationTestCase2 {
+public class uitest_FullscreenActivity extends ActivityInstrumentationTestCase2 {
 
-    public FullscreenActivityTest() {
+    public uitest_FullscreenActivity() {
         super(FullscreenActivity.class);
     }
 

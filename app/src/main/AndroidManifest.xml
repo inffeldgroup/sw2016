@@ -29,11 +29,14 @@
             android:name=".db.AndroidDatabaseManager"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity android:name=".activities.FullscreenActivity" />
+
         <activity
             android:name=".activities.FavouriteActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.HelpScreenActivity"
             android:screenOrientation="portrait" />
+        <receiver android:process=":remote" android:name="PushUpNotification" />
+
     </application>
 
 </manifest>

@@ -3,9 +3,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <string name="act_main_but_back">back</string>
+    <string name="act_main_but_back">BACK</string>
     <string name="act_main_but_fav">fav</string>
-    <string name="act_main_but_next">next</string>
+    <string name="act_main_but_next">NEXT</string>
     <string name="act_main_but_fav_desc">Add to the favourites</string>
     <string name="act_main_but_delete_desc">Delete Pictures</string>
     <string name="act_main_but_share_desc">Share Pictures</string>
