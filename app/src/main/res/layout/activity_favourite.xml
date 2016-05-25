@@ -11,12 +11,15 @@
     tools:context=".activities.MainActivity"
     android:id="@+id/act_fav_baseLayout">
 
-    <TextView
-        android:id="@+id/act_fav_topPanel"
-        android:text="@string/act_favourites_title"
-        style="@style/TitleTextView" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/act_fav_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
 
-        <GridView
+    <GridView
         android:id="@+id/act_fav_gridView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

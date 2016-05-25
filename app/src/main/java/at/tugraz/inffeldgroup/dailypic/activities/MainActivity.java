@@ -44,6 +44,7 @@ import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 import at.tugraz.inffeldgroup.dailypic.PushUpNotification;
 import at.tugraz.inffeldgroup.dailypic.R;
 import at.tugraz.inffeldgroup.dailypic.ShakeDetector;
+import at.tugraz.inffeldgroup.dailypic.db.AndroidDatabaseManager;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
@@ -63,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
     private Toolbar topBar;
-    private PopupMenu popupMenu;
 
     private float x1, x2;
     private int time;
@@ -118,7 +118,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.topbar_action_help:
                 helpButtonOnClick();
                 return true;
-
+            case R.id.topbar_action_database:
+//                databaseOnClick();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -169,7 +171,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void helpButtonOnClick() {
-        //TODO: implement
+        Intent intent = new Intent(MainActivity.this, HelpScreenActivity.class);
+        startActivity(intent);
     }
 
 
@@ -252,6 +255,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+//    private void databaseOnClick(){
+//        Intent dbmanager = new Intent(MainActivity.this, AndroidDatabaseManager.class);
+//        startActivity(dbmanager);
+//    }
 
     private void nextButtonOnClick() {
         clearSelection();
@@ -336,6 +344,10 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
+    }
+
+    public Toolbar getTopBar(){
+        return this.topBar;
     }
 
     private class HelpScreenListener implements View.OnClickListener {
