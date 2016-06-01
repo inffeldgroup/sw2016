@@ -29,9 +29,9 @@ public class PushUpNotification extends BroadcastReceiver {
         // Build Notification
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.icon_dailypic2_notifications)
+                        .setSmallIcon(R.drawable.icon_notifications)
                         .setLargeIcon(largeIcon)
-                        .setContentTitle("DailyPic")
+                        .setContentTitle("DailyPics")
                         .setContentText("Check out your new Pics!")
                         .setOnlyAlertOnce(true)
                         .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
