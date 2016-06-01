@@ -85,8 +85,7 @@ public class FullscreenActivity extends Activity {
             }
         });
 
-        btnClose = (Button) findViewById(R.id.act_full_btnClose);
-        btnClose.setOnClickListener(new MyOnClickListener());
+
     }
 
     public void onFullScreenClick(View v) {
