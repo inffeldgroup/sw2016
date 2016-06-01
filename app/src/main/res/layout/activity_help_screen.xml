@@ -22,8 +22,8 @@
         android:src="@drawable/logo_help"
         android:padding="8dp"
         android:layout_gravity="left"
-        android:scaleType="fitStart" />
-
+        android:scaleType="fitStart"
+        android:foregroundGravity="left" />
     </android.support.v7.widget.Toolbar>
 
 
