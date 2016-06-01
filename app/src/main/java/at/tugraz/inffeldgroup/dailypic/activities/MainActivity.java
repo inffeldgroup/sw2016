@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.Uri;
@@ -21,14 +23,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,10 +67,9 @@ public class MainActivity extends AppCompatActivity {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
-    private Toolbar topBar;
 
     private float x1, x2;
-    private int time;
+
     private int numberofback = 0;
 
 
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
+        Toolbar topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
         setSupportActionBar(topBar);
         topBar.setTitle("");
 
@@ -97,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
             setGridViewClickListener(gridView);
             gridAdapter.notifyDataSetChanged();
             gridAnimator.addView(gridView);
-
         }
         gridAnimator.setAnimateFirstView(true);
         initAdvertise();
@@ -133,18 +136,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void onStart() {
-        super.onStart();
-        time = 0;
-    }
-
     protected void onStop() {
         super.onStop();
 
         new Timer().schedule(new TimerTask() {
             @Override
-            public void run() {
-                time = 5;
+            public void run(){
+
             }
         }, 48 * 60 * 60 * 1000);
 
@@ -152,20 +150,26 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         PendingIntent PendI = PendingIntent.getBroadcast(this, 101, myIntent, 0);
 
-        if (time == 5) {
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (5 * 24 * 60 * 60 * 1000), 5 * 24 * 60 * 60 * 1000, PendI);
-            time = 7;
-        } else if (time == 7) {
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (7 * 24 * 60 * 60 * 1000), 7 * 24 * 60 * 60 * 1000, PendI);
-        } else {
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + (48 * 60 * 60 * 1000), 48 * 60 * 60 * 1000, PendI);
-        }
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
+                + (48 * 60 * 60 * 1000), 7 * 24 * 60 * 60 * 1000, PendI);
 
     }
 
     private void initAdvertise() {
-        AdView mAdView = (AdView) findViewById(R.id.act_main_adView);
+        AdView mAdView = new AdView(this);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        mAdView.setAdUnitId("ca-app-pub-3406938862137540/3927782716");
+        mAdView.setBackgroundColor(Color.BLACK);
         AdRequest adRequest = new AdRequest.Builder().build();
+        double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
+        int v = this.getResources().getDisplayMetrics().heightPixels;
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.act_main_baseLayout);
+        layout.addView(mAdView, params);
+        if(v/dppxl > 720)
+            mAdView.setAdSize(AdSize.BANNER);
+        else
+          mAdView.setAdSize(AdSize.SMART_BANNER);
         mAdView.loadAd(adRequest);
     }
 
@@ -427,10 +431,6 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
-    }
-
-    public Toolbar getTopBar(){
-        return this.topBar;
     }
 
     private class HelpScreenListener implements View.OnClickListener {
