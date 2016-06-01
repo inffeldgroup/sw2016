@@ -14,7 +14,17 @@
         android:titleTextColor="@color/colorText"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        android:foregroundGravity="left" />
+        android:foregroundGravity="left">
+
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/logo_help"
+        android:padding="8dp"
+        android:layout_gravity="left"
+        android:scaleType="fitStart" />
+
+    </android.support.v7.widget.Toolbar>
 
 
     <TextView

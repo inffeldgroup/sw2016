@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
-    private Toolbar topBar;
 
     private float x1, x2;
     private int time;
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
+        Toolbar topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
         setSupportActionBar(topBar);
         topBar.setTitle("");
 
@@ -348,10 +347,6 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
-    }
-
-    public Toolbar getTopBar(){
-        return this.topBar;
     }
 
     private class HelpScreenListener implements View.OnClickListener {
