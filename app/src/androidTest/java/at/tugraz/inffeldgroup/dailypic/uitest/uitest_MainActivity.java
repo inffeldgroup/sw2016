@@ -33,21 +33,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.goBack();
     }
 
-   public void testback(){
-        mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnButton("NEXT");
 
-        mySolo.sleep(2000);
-        mySolo.clickOnButton("BACK");
-        mySolo.sleep(2000);
-    }
-    /*
-    public void testnext(){
-        mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnButton("NEXT");
-        mySolo.sleep(500);
-    }
-    */
 
 
     public void testhelp(){
@@ -71,11 +57,21 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
 
     }
 
-public void testfavourites(){
+public void testnext(){
     mySolo.waitForActivity("MainAvtivity");
-    mySolo.clickLongOnView(1, "");
+    //mySolo.clickOnMenuItem("favourite");
+    mySolo.scrollToSide(Solo.RIGHT);
+    mySolo.sleep(600);
 }
 
+    public void testback(){
+        mySolo.waitForActivity("MainActivity");
+        mySolo.scrollToSide(Solo.RIGHT);
+        mySolo.sleep(600);
+        mySolo.scrollToSide(Solo.LEFT);
+        mySolo.sleep(6000);
+
+    }
 
 
 }
