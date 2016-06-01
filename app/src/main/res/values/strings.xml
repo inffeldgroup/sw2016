@@ -16,6 +16,12 @@
     <string name="act_main_toast_fav">No favourites found!</string>
 
 
+    <string name="topbar_title_menu">Menu</string>
+    <string name="topbar_title_favourite">Favourites</string>
+    <string name="topbar_options_menu_item_share_title">Share</string>
+    <string name="topbar_options_menu_item_delete_title">Delete</string>
+    <string name="topbar_options_menu_item_help_title">Help</string>
+
     <string name="act_favourites_title">Favourites</string>
 
     <string name="image_fetcher_toast">No Pictures to load.</string>
@@ -25,5 +31,7 @@
     <string name="banner_ad_unit_id">ca-app-pub-3406938862137540/3927782716</string>
     <string name="helptext"><h1>This</h1> is the help Text \n
      more text\n and a lot more text\n</string>
+
+
 
 </resources>

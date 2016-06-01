@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import at.tugraz.inffeldgroup.dailypic.FavouriteHandler;
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter;
 import at.tugraz.inffeldgroup.dailypic.R;
-import at.tugraz.inffeldgroup.dailypic.db.AndroidDatabaseManager;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
@@ -21,11 +21,16 @@ public class FavouriteActivity extends AppCompatActivity {
     private GridView gridView;
     ArrayList<UriWrapper> uriList;
     private ImageGridViewAdapter gridAdapter;
+    private Toolbar topBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
+
+        topBar = (Toolbar) findViewById(R.id.act_fav_toolbar);
+        topBar.setTitle(R.string.act_favourites_title);
+        setSupportActionBar(topBar);
 
         uriList = DbDatasource.getInstance(this).getAllFavorites();
         if (uriList == null) {
@@ -54,16 +59,11 @@ public class FavouriteActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
-
-        // TODO: ONLY FOR DEBUGGING
-        TextView title = (TextView) findViewById(R.id.act_fav_topPanel);
-        if (title != null) {title.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent dbmanager = new Intent(FavouriteActivity.this, AndroidDatabaseManager.class);
-                startActivity(dbmanager);
-            }
-        });}
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_topbar_menu, menu);
+        return true;
     }
 }

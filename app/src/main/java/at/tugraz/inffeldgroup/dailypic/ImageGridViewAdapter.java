@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,11 +39,10 @@ public class ImageGridViewAdapter extends BaseAdapter {
     private ArrayList<UriWrapper> nextUris;
 
     public ArrayList<UriWrapper> getUriList() {
-        return  currentUris;
+        return currentUris;
     }
 
-    public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> startUp, ArrayList<UriWrapper> next)
-    {
+    public ImageGridViewAdapter(Context c, ArrayList<UriWrapper> startUp, ArrayList<UriWrapper> next) {
         mContext = c;
         previousBitmaps = new ArrayList<>();
         currentBitmaps = new ArrayList<>();
@@ -57,8 +57,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
         preloadBitmaps(nextBitmaps, next);
     }
 
-    public void setNextImages(ArrayList<UriWrapper> nextImages)
-    {
+    public void setNextImages(ArrayList<UriWrapper> nextImages) {
         uriHistory.push(previousUris);
 
         previousBitmaps = currentBitmaps;
@@ -73,20 +72,18 @@ public class ImageGridViewAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void setNewImages(ArrayList<UriWrapper> newImages)
-    {
+    public void setNewImages(ArrayList<UriWrapper> newImages) {
         currentBitmaps = new ArrayList<>();
         currentUris = newImages;
         notifyDataSetChanged();
     }
-    public void updateFavStatus(ArrayList<UriWrapper> newImages)
-    {
+
+    public void updateFavStatus(ArrayList<UriWrapper> newImages) {
         currentBitmaps = new ArrayList<>();
         currentUris = newImages;
     }
 
-    public void setPreviousImages(ArrayList<UriWrapper> nextImages)
-    {
+    public void setPreviousImages(ArrayList<UriWrapper> nextImages) {
         if (uriHistory.isEmpty()) {
             Toast.makeText(mContext, "No history available", Toast.LENGTH_LONG).show();
             return;
@@ -137,63 +134,72 @@ public class ImageGridViewAdapter extends BaseAdapter {
         int v = mContext.getResources().getDisplayMetrics().heightPixels;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId,parent,false);
+            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+            row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
-            holder.image=(ImageView)row.findViewById(R.id.image);
-            holder.checked=(ImageView)row.findViewById(R.id.checked);
-            holder.fav = (ImageView)row.findViewById(R.id.fav);
+            holder.image = (ImageView) row.findViewById(R.id.image);
+            holder.checked = (ImageView) row.findViewById(R.id.checked);
+            holder.fav = (ImageView) row.findViewById(R.id.fav);
             row.setTag(holder);
-            int bar = mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
-            int bot;
-            double vert;
             double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
-            if(((Activity) mContext).findViewById(R.id.act_main_but_share) != null) {
-                bot = ((Activity) mContext).findViewById(R.id.act_main_but_share).getHeight();
-                vert = ((v - (3* bot) - bar - (2 * dppxl))/3);
-                RelativeLayout layout = (RelativeLayout)row.findViewById(R.id.image_layout);
-                switch (position) {
-                    case 0:
-                        layout.setPadding(0, 0, 0, 1 * (int) dppxl);
-                        break;
-                    case 1:
-                        layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
-                        break;
-                    case 2:
-                        layout.setPadding(0, 0, 0, 1 * (int) dppxl);
-                        break;
-                    case 3:
-                        layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
-                        break;
-                    case 4:
-                        layout.setPadding(0, 0, 0, 0);
-                        break;
-                    case 5:
-                        layout.setPadding(1 * (int) dppxl, 0, 0, 0);
-                        break;
-                }
+            RelativeLayout layout = (RelativeLayout) row.findViewById(R.id.image_layout);
+            switch (position) {
+                case 0:
+                    layout.setPadding(0, 0, 0, 1 * (int) dppxl);
+                    break;
+                case 1:
+                    layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
+                    break;
+                case 2:
+                    layout.setPadding(0, 0, 0, 1 * (int) dppxl);
+                    break;
+                case 3:
+                    layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
+                    break;
+                case 4:
+                    layout.setPadding(0, 0, 0, 0);
+                    break;
+                case 5:
+                    layout.setPadding(1 * (int) dppxl, 0, 0, 0);
+                    break;
             }
-            else {
-                bot = ((Activity) mContext).findViewById(R.id.act_fav_topPanel).getHeight();
-                vert = ((v - bot - bar - (2 * dppxl))/3);
+            double elementsHeight =(50 + 2)* dppxl;
+
+            if( ((Activity) mContext).findViewById(R.id.act_main_toolbar) == null ){
+                v = v - mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
+                v = v - ((Activity) mContext).findViewById(R.id.act_fav_toolbar).getHeight();
+                v = v - (int)elementsHeight;
+                v = v/3;
+                h = (int)((double)h/2 - dppxl);
+            }else {
+                v = v - mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
+                v = v - ((Activity) mContext).findViewById(R.id.act_main_toolbar).getHeight();
+                v = v - (int) elementsHeight;
+                v = v / 3;
+                h = (int) ((double) h / 2 - dppxl);
             }
 
-            if(position == 1)
-                ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
-            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h/2,(int)vert));
-        } else {
+//            Log.d("POSITION", "" + position);
+//            Log.d("TOOLBAR_HEIGHT", "" + ((Activity) mContext).findViewById(R.id.act_main_toolbar).getHeight());
+//            Log.d("ADVERT_HEIGHT", "" + ((Activity) mContext).findViewById(R.id.act_main_adView).getHeight());
+//            Log.d("dppxl", "" + dppxl);
+
+            if (position == 1)
+                ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h, v));
+            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h, v));
+        } else{
             holder = (ViewHolder) row.getTag();
         }
-        if (currentUris.get(position).isFav()) {
+        if (currentUris.get(position).isFav())        {
             holder.fav.setVisibility(View.VISIBLE);
-        } else {
+        } else{
             holder.fav.setVisibility(View.INVISIBLE);
         }
 
-        if (position < currentBitmaps.size()) {
+        if (position < currentBitmaps.size()){
             // Use preloaded bitmap whenever available
             holder.image.setImageBitmap(currentBitmaps.get(position));
-        } else {
+        } else{
             // Retrieve bitmap from uri when there is no preloaded bitmap
             BitmapWorkerTask.loadBitmap(currentUris.get(position).getUri(), holder.image, mContext, h, v);
         }
