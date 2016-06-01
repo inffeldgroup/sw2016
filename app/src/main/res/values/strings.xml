@@ -18,9 +18,9 @@
 
     <string name="topbar_title_menu">Menu</string>
     <string name="topbar_title_favourite">Favourites</string>
-    <string name="topbar_options_menu_item_share_title">share</string>
-    <string name="topbar_options_menu_item_delete_title">delete</string>
-    <string name="topbar_options_menu_item_help_title">help</string>
+    <string name="topbar_options_menu_item_share_title">Share</string>
+    <string name="topbar_options_menu_item_delete_title">Delete</string>
+    <string name="topbar_options_menu_item_help_title">Help</string>
 
     <string name="act_favourites_title">Favourites</string>
 

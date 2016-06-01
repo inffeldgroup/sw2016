@@ -63,7 +63,7 @@ public class FavouriteActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.topbar_menu, menu);
+        getMenuInflater().inflate(R.menu.main_topbar_menu, menu);
         return true;
     }
 }

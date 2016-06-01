@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -162,46 +163,48 @@ public class ImageGridViewAdapter extends BaseAdapter {
                     layout.setPadding(1 * (int) dppxl, 0, 0, 0);
                     break;
             }
+            double elementsHeight =(50 + 2)* dppxl;
+
+            if( ((Activity) mContext).findViewById(R.id.act_main_toolbar) == null ){
+                v = v - mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
+                v = v - ((Activity) mContext).findViewById(R.id.act_fav_toolbar).getHeight();
+                v = v - (int)elementsHeight;
+                v = v/3;
+                h = (int)((double)h/2 - dppxl);
+            }else {
+                v = v - mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
+                v = v - ((Activity) mContext).findViewById(R.id.act_main_toolbar).getHeight();
+                v = v - (int) elementsHeight;
+                v = v / 3;
+                h = (int) ((double) h / 2 - dppxl);
+            }
+
+//            Log.d("POSITION", "" + position);
+//            Log.d("TOOLBAR_HEIGHT", "" + ((Activity) mContext).findViewById(R.id.act_main_toolbar).getHeight());
+//            Log.d("ADVERT_HEIGHT", "" + ((Activity) mContext).findViewById(R.id.act_main_adView).getHeight());
+//            Log.d("dppxl", "" + dppxl);
 
             if (position == 1)
-                ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h / 2, v / 3));
-            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h / 2, v / 3));
-        } else
-
-        {
+                ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h, v));
+            holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h, v));
+        } else{
             holder = (ViewHolder) row.getTag();
         }
-
-        if (currentUris.get(position).
-
-                isFav()
-
-                )
-
-        {
+        if (currentUris.get(position).isFav())        {
             holder.fav.setVisibility(View.VISIBLE);
-        } else
-
-        {
+        } else{
             holder.fav.setVisibility(View.INVISIBLE);
         }
 
-        if (position < currentBitmaps.size())
-
-        {
+        if (position < currentBitmaps.size()){
             // Use preloaded bitmap whenever available
             holder.image.setImageBitmap(currentBitmaps.get(position));
-        } else
-
-        {
+        } else{
             // Retrieve bitmap from uri when there is no preloaded bitmap
             BitmapWorkerTask.loadBitmap(currentUris.get(position).getUri(), holder.image, mContext, h, v);
         }
 
-        holder.uri = currentUris.get(position).
-
-                getUri();
-
+        holder.uri = currentUris.get(position).getUri();
         return row;
     }
 
