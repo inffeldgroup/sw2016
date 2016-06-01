@@ -49,4 +49,35 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.sleep(1000);
         assertTrue(true);
     }
+
+    public void testDeleteButton() {
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnMenuItem("delete");
+        mySolo.waitForDialogToOpen();
+        mySolo.waitForDialogToClose();
+        assertTrue(true);
+    }
+    public void testHelpButton() {
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnMenuItem("help");
+        mySolo.waitForDialogToOpen();
+        mySolo.waitForDialogToClose();
+        mySolo.goBack();
+        assertTrue(true);
+    }
+    public void testDatabaseButton() {
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnMenuItem("database");
+        mySolo.waitForDialogToOpen();
+        mySolo.waitForDialogToClose();
+        assertTrue(true);
+    }
+
+    public void testnew() {
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnMenuItem("Favourites");
+        mySolo.waitForDialogToOpen();
+        mySolo.waitForDialogToClose();
+        assertTrue(true);
+    }
 }
