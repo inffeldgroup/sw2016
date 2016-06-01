@@ -35,6 +35,7 @@ public class uitest_FullscreenActivity extends ActivityInstrumentationTestCase2 
         mySolo.clickLongOnScreen(10,10);
         mySolo.waitForDialogToOpen();
         mySolo.waitForDialogToClose();
+        mySolo.wait(1000);
 
     }
 }

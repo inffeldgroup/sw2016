@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/topbar_action_favorite"
+        android:id="@+id/topbar_action_favourite"
         android:icon="@drawable/icon_favourite"
         android:title="@string/topbar_title_favourite"
         app:showAsAction="ifRoom" />
@@ -11,11 +11,6 @@
         android:id="@+id/topbar_action_share"
         android:icon="@android:drawable/ic_menu_share"
         android:title="@string/topbar_options_menu_item_share_title"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/topbar_action_settings"
-        android:title="settings"
         app:showAsAction="never" />
 
     <item
