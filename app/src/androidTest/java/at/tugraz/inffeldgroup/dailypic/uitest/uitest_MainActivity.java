@@ -17,47 +17,36 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         super(MainActivity.class);
     }
 
+
     public void setUp() throws Exception {
         super.setUp();
-        mySolo = new Solo(getInstrumentation(),getActivity());
+        mySolo = new Solo(getInstrumentation(), getActivity());
     }
 
     public void tearDown() throws Exception {
         super.tearDown();
     }
-    public void testGarbageButton(){
-        mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnImageButton(0);//Garbage
-        mySolo.sleep(1000);
-        assertTrue(true);
-    }
 
-    public void testShareButton(){
-        mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnImageButton(1);//ShareButton
-        mySolo.sleep(1000);
-        assertTrue(true);
-    }
-
-    public void testFavButton(){
-        mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnImageButton(3);//Fav Button
-        mySolo.sleep(1000);
-        mySolo.waitForActivity("Favourites");
-        mySolo.goBack();
-        mySolo.waitForActivity("MainActivity");
-        mySolo.sleep(1000);
-        assertTrue(true);
-    }
-
-    public void testDeleteButton() {
+    public void testdelete() {
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnMenuItem("delete");
         mySolo.waitForDialogToOpen();
         mySolo.waitForDialogToClose();
         assertTrue(true);
     }
-    public void testHelpButton() {
+
+
+    public void testsettings() {
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnMenuItem("settings");
+        mySolo.waitForDialogToOpen();
+        mySolo.waitForDialogToClose();
+        assertTrue(true);
+    }
+
+
+
+    public void testhelp(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnMenuItem("help");
         mySolo.waitForDialogToOpen();
@@ -65,7 +54,8 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.goBack();
         assertTrue(true);
     }
-    public void testDatabaseButton() {
+
+    public void testdatabase(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnMenuItem("database");
         mySolo.waitForDialogToOpen();
@@ -73,11 +63,15 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         assertTrue(true);
     }
 
-    public void testnew() {
+    public void testFullscreen(){
         mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnMenuItem("Favourites");
+       // mySolo.clickOnImageButton(0);//("topbar_title_favourites");
+        //mySolo.clickOnImage(1);
+        mySolo.clickOnMenuItem("topbar_title_favourite");
         mySolo.waitForDialogToOpen();
         mySolo.waitForDialogToClose();
         assertTrue(true);
     }
+
+
 }
