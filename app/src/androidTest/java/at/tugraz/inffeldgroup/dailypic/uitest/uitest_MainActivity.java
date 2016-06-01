@@ -36,7 +36,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
    public void testback(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnButton("NEXT");
-       mySolo.swipe(10 /*50, 50*/);
+
         mySolo.sleep(2000);
         mySolo.clickOnButton("BACK");
         mySolo.sleep(2000);
@@ -71,7 +71,10 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
 
     }
 
-
+public void testfavourites(){
+    mySolo.waitForActivity("MainAvtivity");
+    mySolo.clickLongOnView(1, "");
+}
 
 
 
