@@ -323,12 +323,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
             for (int position = 0; position < 6; position++) {
-                if (gridView.getChildAt(position).getTag() != null) {
-                    ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
-                    if (uriListNew.get(position).isFav()) {
-                        item.fav.setVisibility(View.VISIBLE);
-                    } else {
-                        item.fav.setVisibility(View.INVISIBLE);
+                if(gridView.getChildAt(position) != null) {
+                    if (gridView.getChildAt(position).getTag() != null) {
+                        ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
+                        if (uriListNew.get(position).isFav()) {
+                            item.fav.setVisibility(View.VISIBLE);
+                        } else {
+                            item.fav.setVisibility(View.INVISIBLE);
+                        }
                     }
                 }
             }
