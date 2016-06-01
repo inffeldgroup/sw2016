@@ -6,23 +6,30 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,16 +43,18 @@ import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
 import at.tugraz.inffeldgroup.dailypic.PushUpNotification;
 import at.tugraz.inffeldgroup.dailypic.R;
 import at.tugraz.inffeldgroup.dailypic.ShakeDetector;
+import at.tugraz.inffeldgroup.dailypic.db.AndroidDatabaseManager;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int NUMBER_OF_ITEMS = 6;
+    public static final int NUMBER_OF_ITEMS = 6;
     private static final int ALPHA_HALF_VISIBLE = 127;
     private static final int ALPHA_FULL_VISIBLE = 255;
     private static final int MIN_DISTANCE = 150;
     private static final int SHAKE_LIMIT = 3;
+    private boolean ready = false;
 
     private ImageFetcher imageFetcher;
     private GridView gridView;
@@ -56,13 +65,19 @@ public class MainActivity extends AppCompatActivity {
 
     private float x1, x2;
 
+    private int numberofback = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.imageFetcher = new ImageFetcher(MainActivity.this);
 
+        Toolbar topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
+        setSupportActionBar(topBar);
+        topBar.setTitle("");
+
+        this.imageFetcher = new ImageFetcher(MainActivity.this);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
@@ -79,12 +94,40 @@ public class MainActivity extends AppCompatActivity {
         initAdvertise();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_topbar_menu, menu);
+        return true;
+    }
 
-    protected void onStop()
-    {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.topbar_action_favourite:
+                favButtonOnClick();
+                return true;
+            case R.id.topbar_action_share:
+                sharebuttonOnClick();
+                return true;
+            case R.id.topbar_action_delete:
+                deleteButtonOnClick();
+                return true;
+            case R.id.topbar_action_help:
+                helpButtonOnClick();
+                return true;
+            case R.id.topbar_action_database:
+                databaseOnClick();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    protected void onStop() {
         super.onStop();
 
-        new Timer().schedule(new TimerTask(){
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run(){
 
@@ -101,8 +144,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initAdvertise() {
-        AdView mAdView = (AdView) findViewById(R.id.act_main_adView);
+        AdView mAdView = new AdView(this);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        mAdView.setAdUnitId("ca-app-pub-3406938862137540/3927782716");
+        mAdView.setBackgroundColor(Color.BLACK);
         AdRequest adRequest = new AdRequest.Builder().build();
+        double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
+        int v = this.getResources().getDisplayMetrics().heightPixels;
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.act_main_baseLayout);
+        layout.addView(mAdView, params);
+        if(v/dppxl > 720)
+            mAdView.setAdSize(AdSize.BANNER);
+        else
+          mAdView.setAdSize(AdSize.SMART_BANNER);
         mAdView.loadAd(adRequest);
     }
 
@@ -113,8 +168,12 @@ public class MainActivity extends AppCompatActivity {
             gridAdapter.notifyDataSetChanged();
         }
     }
+    private void helpButtonOnClick() {
+        Intent intent = new Intent(MainActivity.this, HelpScreenActivity.class);
+        startActivity(intent);
+    }
 
-    public void sharebuttonOnClick(View v) {
+    public void sharebuttonOnClick() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
         sendIntent.setType("image/*");
@@ -130,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         } else Toast.makeText(this, R.string.act_main_toast_share, Toast.LENGTH_SHORT).show();
     }
 
-    public void deleteButtonOnClick(View v) {
+    private void deleteButtonOnClick() {
         if (gridView.getCheckedItemPositions() != null) {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -165,23 +224,52 @@ public class MainActivity extends AppCompatActivity {
                 del_map.put(i, (ViewHolder) gridView.getChildAt(i).getTag());
             }
         }
+
         this.imageFetcher.deleteImages(del_map);
-        this.imageFetcher.replaceDeletedImages(del_map, this);
+        this.imageFetcher.replaceDeletedImages(checked, gridAdapter, del_map, this);
         clearSelection();
+        gridAdapter.notifyDataSetChanged();
     }
 
-    public void backButtonOnClick(View v) {
-        clearSelection();
-        gridAdapter.setPreviousImages(imageFetcher.getPrevRandomImages(NUMBER_OF_ITEMS, this), imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+    private void backButtonOnClick() {
+        if(numberofback != 0)
+        {
+            if (this.imageFetcher.getNumberOfPichtures() == 0) {
+                return;
+            }
+
+            clearSelection();
+            gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+            numberofback--;
+        }
     }
 
-    public void favButtonOnClick(View v) {
-        Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
-        startActivity(intent);
+    private void favButtonOnClick() {
+        if (DbDatasource.getInstance(MainActivity.this).getAllFavorites().isEmpty())
+        {
+            Toast.makeText(this, R.string.act_main_toast_fav, Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
+            startActivity(intent);
+        }
+
     }
 
-    public void nextButtonOnClick(View v) {
+    private void databaseOnClick(){
+        Intent dbmanager = new Intent(MainActivity.this, AndroidDatabaseManager.class);
+        startActivity(dbmanager);
+    }
+
+    private void nextButtonOnClick() {
         clearSelection();
+
+        if(numberofback!=2)
+        {
+            numberofback++;
+        }
+
         gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
 
@@ -192,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         clearSelection();
     }
 
-    public void clearSelection() {
+    private void clearSelection() {
         if (gridView.getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE_MODAL) {
             for (int i = 0; i < gridView.getCount(); i++) {
                 ((ViewHolder) gridView.getChildAt(i).getTag()).image.setImageAlpha(ALPHA_FULL_VISIBLE);
@@ -210,13 +298,17 @@ public class MainActivity extends AppCompatActivity {
             public void onDoubleClick(View v, int position) {
                 UriWrapper uri = gridAdapter.getUriList().get(position);
                 FavouriteHandler.toggleFavouriteState(MainActivity.this, uri);
-
-                // Update grid view with favorite stars
+                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
                 ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
                 for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
                     uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
                 }
-                gridAdapter.setNewImages(uriListNew);
+                gridAdapter.updateFavStatus(uriListNew);
+                if ((item.fav.getVisibility()) == View.VISIBLE) {
+                    item.fav.setVisibility(View.INVISIBLE);
+                } else {
+                    item.fav.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -231,13 +323,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (ready) {
+            ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
+            for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
+                uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
+            }
+
+            for (int position = 0; position < 6; position++) {
+                if(gridView.getChildAt(position) != null) {
+                    if (gridView.getChildAt(position).getTag() != null) {
+                        ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
+                        if (uriListNew.get(position).isFav()) {
+                            item.fav.setVisibility(View.VISIBLE);
+                        } else {
+                            item.fav.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                }
+            }
+            gridAdapter.updateFavStatus(uriListNew);
+        } else {
+            ready = true;
+        }
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+
     }
 
     @Override
     public void onPause() {
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
+    }
+
+    private class HelpScreenListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(MainActivity.this, HelpScreenActivity.class);
+            startActivity(intent);
+        }
     }
 
     private class MyOnShakeListener implements ShakeDetector.OnShakeListener {
@@ -344,9 +467,9 @@ public class MainActivity extends AppCompatActivity {
 
                     if (Math.abs(deltaX) > MIN_DISTANCE) {
                         if (x2 > x1) {
-                            backButtonOnClick(v);
+                            backButtonOnClick();
                         } else {
-                            nextButtonOnClick(v);
+                            nextButtonOnClick();
                         }
 
                     } else {

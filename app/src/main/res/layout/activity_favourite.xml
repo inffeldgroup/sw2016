@@ -11,22 +11,25 @@
     tools:context=".activities.MainActivity"
     android:id="@+id/act_fav_baseLayout">
 
-    <TextView
-        android:id="@+id/act_fav_topPanel"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="@string/act_favourites_title"
-        android:textAlignment="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ffffff"
-        android:textIsSelectable="false"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:background="@color/dailypic_red"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/act_fav_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-        <GridView
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/logo_favourites"
+        android:padding="8dp"
+        android:layout_gravity="left"
+        android:scaleType="fitStart" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <GridView
         android:id="@+id/act_fav_gridView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -37,6 +40,6 @@
         android:focusable="true"
         android:clickable="true"
             android:background="#ffffff"
-            android:verticalSpacing="0dp"
-            android:horizontalSpacing="0dp" />
+            android:verticalSpacing="1dp"
+            android:horizontalSpacing="1dp" />
 </LinearLayout>

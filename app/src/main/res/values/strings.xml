@@ -3,16 +3,24 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <string name="act_main_but_back">back</string>
+    <string name="act_main_but_back">BACK</string>
     <string name="act_main_but_fav">fav</string>
-    <string name="act_main_but_next">next</string>
+    <string name="act_main_but_next">NEXT</string>
     <string name="act_main_but_fav_desc">Add to the favourites</string>
     <string name="act_main_but_delete_desc">Delete Pictures</string>
     <string name="act_main_but_share_desc">Share Pictures</string>
     <string name="act_main_alert_title_delete_images">Delete Images</string>
     <string name="act_main_alert_msg_delete_images">Are you sure you want to delete the selected images?</string>
     <string name="act_main_toast_delete">No images for deletion selected!</string>
-    <string name="act_main_toast_share">No Images for sharing selected!</string>
+    <string name="act_main_toast_share">No images for sharing selected!</string>
+    <string name="act_main_toast_fav">No favourites found!</string>
+
+
+    <string name="topbar_title_menu">Menu</string>
+    <string name="topbar_title_favourite">Favourites</string>
+    <string name="topbar_options_menu_item_share_title">Share</string>
+    <string name="topbar_options_menu_item_delete_title">Delete</string>
+    <string name="topbar_options_menu_item_help_title">Help</string>
 
     <string name="act_favourites_title">Favourites</string>
 
@@ -21,5 +29,9 @@
     <string name="image_fetcher_toast_delete_success">Successfully deleted images.</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-3406938862137540/3927782716</string>
+    <string name="helptext"><h1>This</h1> is the help Text \n
+     more text\n and a lot more text\n</string>
+
+
 
 </resources>
