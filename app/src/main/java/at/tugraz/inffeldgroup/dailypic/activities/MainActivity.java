@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.Uri;
@@ -19,14 +21,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -58,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
-    private Toolbar topBar;
 
     private float x1, x2;
     private int time;
+    private int numberofback = 0;
 
 
     @Override
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
+        Toolbar topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
         setSupportActionBar(topBar);
         topBar.setTitle("");
 
@@ -151,8 +155,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initAdvertise() {
-        AdView mAdView = (AdView) findViewById(R.id.act_main_adView);
+        AdView mAdView = new AdView(this);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        mAdView.setAdUnitId("ca-app-pub-3406938862137540/3927782716");
+        mAdView.setBackgroundColor(Color.BLACK);
         AdRequest adRequest = new AdRequest.Builder().build();
+        double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
+        int v = this.getResources().getDisplayMetrics().heightPixels;
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.act_main_baseLayout);
+        layout.addView(mAdView, params);
+        if(v/dppxl > 720)
+            mAdView.setAdSize(AdSize.BANNER);
+        else
+          mAdView.setAdSize(AdSize.SMART_BANNER);
         mAdView.loadAd(adRequest);
     }
 
@@ -168,8 +184,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-    private void sharebuttonOnClick() {
+    public void sharebuttonOnClick() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
         sendIntent.setType("image/*");
@@ -228,12 +243,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void backButtonOnClick() {
-        if (this.imageFetcher.getNumberOfPichtures() == 0) {
-            return;
-        }
+        if(numberofback != 0)
+        {
+            if (this.imageFetcher.getNumberOfPichtures() == 0) {
+                return;
+            }
 
-        clearSelection();
-        gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+            clearSelection();
+            gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+            numberofback--;
+        }
     }
 
     private void favButtonOnClick() {
@@ -256,6 +275,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void nextButtonOnClick() {
         clearSelection();
+
+        if(numberofback!=2)
+        {
+            numberofback++;
+        }
+
         gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
 
@@ -339,10 +364,6 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
-    }
-
-    public Toolbar getTopBar(){
-        return this.topBar;
     }
 
     private class HelpScreenListener implements View.OnClickListener {

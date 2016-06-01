@@ -6,11 +6,25 @@
     android:orientation="vertical"
     tools:context="at.tugraz.inffeldgroup.dailypic.activities.HelpScreenActivity">
 
-    <TextView
-        android:id="@+id/act_main_txt_AppName"
-        style="@style/TitleTextView" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/act_helpscreen_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:titleTextColor="@color/colorText"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:foregroundGravity="left">
 
-
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/logo_help"
+        android:padding="8dp"
+        android:layout_gravity="left"
+        android:scaleType="fitStart"
+        android:foregroundGravity="left" />
+    </android.support.v7.widget.Toolbar>
 
     <TextView
 
