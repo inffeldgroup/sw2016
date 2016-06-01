@@ -29,6 +29,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
 
     public void testdelete() {
         mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnImage(0);
         mySolo.clickOnMenuItem("delete");
         mySolo.waitForDialogToOpen();
         mySolo.waitForDialogToClose();
@@ -64,6 +65,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
 
     public void testsettings() {
         mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnImage(0);
         mySolo.clickOnMenuItem("settings");
         mySolo.waitForDialogToOpen();
         mySolo.waitForDialogToClose();
@@ -74,6 +76,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
 
     public void testhelp(){
         mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnImage(0);
         mySolo.clickOnMenuItem("help");
         mySolo.waitForDialogToOpen();
         mySolo.waitForDialogToClose();
@@ -83,6 +86,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
 
     public void testdatabase(){
         mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnImage(0);
         mySolo.clickOnMenuItem("database");
         mySolo.waitForDialogToOpen();
         mySolo.waitForDialogToClose();
@@ -93,11 +97,15 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.waitForActivity("MainActivity");
        // mySolo.clickOnImageButton(0);//("topbar_title_favourites");
         //mySolo.clickOnImage(1);
-        mySolo.clickOnMenuItem("topbar_title_favourite");
+       // mySolo.clickOnMenuItem("share");
+        //mySolo.clickOn("Share");
         mySolo.waitForDialogToOpen();
         mySolo.waitForDialogToClose();
         assertTrue(true);
     }
+
+
+
 
 
 }
