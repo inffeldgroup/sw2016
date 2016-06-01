@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private ShakeDetector mShakeDetector;
 
     private float x1, x2;
-    private int time;
 
 
     @Override
@@ -80,11 +79,6 @@ public class MainActivity extends AppCompatActivity {
         initAdvertise();
     }
 
-    protected void onStart()
-    {
-        super.onStart();
-        time = 0;
-    }
 
     protected void onStop()
     {
@@ -93,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         new Timer().schedule(new TimerTask(){
             @Override
             public void run(){
-                time = 5;
+
             }
         }, 48 * 60 * 60 * 1000);
 
@@ -101,22 +95,8 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         PendingIntent PendI = PendingIntent.getBroadcast(this, 101, myIntent, 0);
 
-        if(time == 5)
-        {
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
-                    + (5 * 24 * 60 * 60 * 1000), 5 * 24 * 60 * 60 * 1000, PendI);
-            time = 7;
-        }
-        else if(time == 7)
-        {
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
-                    + (7 * 24 * 60 * 60 * 1000), 7 * 24 * 60 * 60 * 1000, PendI);
-        }
-        else
-        {
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
-                    + (48 * 60 * 60 * 1000), 48 * 60 * 60 * 1000, PendI);
-        }
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()
+                + (48 * 60 * 60 * 1000), 7 * 24 * 60 * 60 * 1000, PendI);
 
     }
 
