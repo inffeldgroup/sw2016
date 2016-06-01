@@ -19,11 +19,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewAnimator;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
@@ -52,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean ready = false;
 
     private ImageFetcher imageFetcher;
-    private GridView gridView;
+    //private GridView gridView;
+    private ViewAnimator gridAnimator;
     private ImageGridViewAdapter gridAdapter;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -81,12 +86,20 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<UriWrapper> startUpPictures = imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this);
         ArrayList<UriWrapper> nextPictures = imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this);
         gridAdapter = new ImageGridViewAdapter(this, startUpPictures, nextPictures);
-        gridView = (GridView) findViewById(R.id.act_main_gridView);
-        gridView.setAdapter(gridAdapter);
-        gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
-        gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
-        gridView.setOnTouchListener(new MyOnTouchListener());
-        setGridViewClickListener();
+        gridAnimator=(ViewAnimator)findViewById(R.id.viewGridAnimator);
+        {
+            GridView gridView = new GridView(this);
+            gridView.setNumColumns(2);
+            gridView.setAdapter(gridAdapter);
+            gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
+            gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
+            gridView.setOnTouchListener(new MyOnTouchListener());
+            setGridViewClickListener(gridView);
+            gridAdapter.notifyDataSetChanged();
+            gridAnimator.addView(gridView);
+
+        }
+        gridAnimator.setAnimateFirstView(true);
         initAdvertise();
     }
 
@@ -159,8 +172,28 @@ public class MainActivity extends AppCompatActivity {
     private void handleShakeEvent(int count) {
         if (count > SHAKE_LIMIT) {
             clearSelection();
-            gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
-            gridAdapter.notifyDataSetChanged();
+            {
+                GridView gridView = new GridView(this);
+                gridView.setNumColumns(2);
+                gridView.setAdapter(gridAdapter);
+                gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
+                gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
+                gridView.setOnTouchListener(new MyOnTouchListener());
+                setGridViewClickListener(gridView);
+                gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+                gridAdapter.notifyDataSetChanged();
+
+                if (gridAnimator.getChildCount()==4)
+                {
+                    gridAnimator.removeViewAt(0);
+                }
+                gridAnimator.addView(gridView);
+            }
+            Animation in = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
+            Animation out = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
+            gridAnimator.setInAnimation(in);
+            gridAnimator.setOutAnimation(out);
+            gridAnimator.showNext();
         }
     }
     private void helpButtonOnClick() {
@@ -172,10 +205,10 @@ public class MainActivity extends AppCompatActivity {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
         sendIntent.setType("image/*");
-        if (gridView.getCheckedItemPositions() != null) {
-            SparseBooleanArray checked = gridView.getCheckedItemPositions();
+        if (((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getCheckedItemPositions() != null) {
+            SparseBooleanArray checked = ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getCheckedItemPositions();
             ArrayList<Uri> shareList = new ArrayList<Uri>();
-            for (int i = 0; i < gridView.getCount(); i++)
+            for (int i = 0; i < ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getCount(); i++)
                 if (checked.get(i)) {
                     shareList.add(gridAdapter.getUriList().get(i).getUri());
                 }
@@ -185,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteButtonOnClick() {
-        if (gridView.getCheckedItemPositions() != null) {
+        if (((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getCheckedItemPositions() != null) {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(R.string.act_main_alert_title_delete_images)
@@ -212,11 +245,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void deleteImages() {
-        SparseBooleanArray checked = gridView.getCheckedItemPositions();
+        SparseBooleanArray checked = ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getCheckedItemPositions();
         HashMap<Integer, ImageGridViewAdapter.ViewHolder> del_map = new HashMap<Integer, ViewHolder>();
-        for (int i = 0; i < gridView.getCount(); i++) {
+        for (int i = 0; i < ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getCount(); i++) {
             if (checked.get(i)) {
-                del_map.put(i, (ViewHolder) gridView.getChildAt(i).getTag());
+                del_map.put(i, (ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(i).getTag());
             }
         }
 
@@ -234,7 +267,34 @@ public class MainActivity extends AppCompatActivity {
             }
 
             clearSelection();
-            gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+            {
+                GridView gridView = new GridView(this);
+                gridView.setNumColumns(2);
+                gridView.setAdapter(gridAdapter);
+                gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
+                gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
+                gridView.setOnTouchListener(new MyOnTouchListener());
+                setGridViewClickListener(gridView);
+                gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+                if (gridAnimator.getChildCount()==4)
+                {
+                    gridAnimator.removeViewAt(3);
+                }
+                else
+                {
+                    if (gridAnimator.getChildCount()==3)
+                    {
+                        gridAnimator.removeViewAt(2);
+                    }
+                    gridAnimator.addView(gridView);
+                }
+
+            }
+            Animation in = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+            Animation out = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
+            gridAnimator.setInAnimation(in);
+            gridAnimator.setOutAnimation(out);
+            gridAnimator.showPrevious();
             numberofback--;
         }
     }
@@ -264,36 +324,55 @@ public class MainActivity extends AppCompatActivity {
         {
             numberofback++;
         }
-
-        gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+        {
+            GridView gridView = new GridView(this);
+            gridView.setNumColumns(2);
+            gridView.setAdapter(gridAdapter);
+            gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
+            gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
+            gridView.setOnTouchListener(new MyOnTouchListener());
+            setGridViewClickListener(gridView);
+            gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+            gridAdapter.notifyDataSetChanged();
+            if (gridAnimator.getChildCount()==4)
+            {
+                gridAnimator.removeViewAt(0);
+            }
+            gridAnimator.addView(gridView);
+        }
+        Animation in = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
+        Animation out = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
+        gridAnimator.setInAnimation(in);
+        gridAnimator.setOutAnimation(out);
+        gridAnimator.showNext();
     }
 
     @Override
     public void onBackPressed() {
-        if (gridView.getChoiceMode() != AbsListView.CHOICE_MODE_MULTIPLE_MODAL)
+        if (((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChoiceMode() != AbsListView.CHOICE_MODE_MULTIPLE_MODAL)
             super.onBackPressed();
         clearSelection();
     }
 
     private void clearSelection() {
-        if (gridView.getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE_MODAL) {
-            for (int i = 0; i < gridView.getCount(); i++) {
-                ((ViewHolder) gridView.getChildAt(i).getTag()).image.setImageAlpha(ALPHA_FULL_VISIBLE);
-                ((ViewHolder) gridView.getChildAt(i).getTag()).checked.setVisibility(View.INVISIBLE);
-                gridView.setItemChecked(i, false);
+        if (((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE_MODAL) {
+            for (int i = 0; i < ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getCount(); i++) {
+                ((ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(i).getTag()).image.setImageAlpha(ALPHA_FULL_VISIBLE);
+                ((ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(i).getTag()).checked.setVisibility(View.INVISIBLE);
+                ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setItemChecked(i, false);
             }
-            gridView.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-            setGridViewClickListener();
+            ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+            setGridViewClickListener(((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())));
         }
     }
 
-    private void setGridViewClickListener() {
+    private void setGridViewClickListener(GridView gridView) {
         gridView.setOnItemClickListener(new DoubleClickListener() {
             @Override
             public void onDoubleClick(View v, int position) {
                 UriWrapper uri = gridAdapter.getUriList().get(position);
                 FavouriteHandler.toggleFavouriteState(MainActivity.this, uri);
-                ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
+                ViewHolder item = (ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position).getTag();
                 ArrayList<UriWrapper> uriListNew = new ArrayList<UriWrapper>();
                 for (UriWrapper uriWrapper : gridAdapter.getUriList()) {
                     uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
@@ -325,9 +404,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             for (int position = 0; position < 6; position++) {
-                if(gridView.getChildAt(position) != null) {
-                    if (gridView.getChildAt(position).getTag() != null) {
-                        ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
+                if(((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position) != null) {
+                    if (((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position).getTag() != null) {
+                        ViewHolder item = (ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position).getTag();
                         if (uriListNew.get(position).isFav()) {
                             item.fav.setVisibility(View.VISIBLE);
                         } else {
@@ -373,33 +452,33 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
 
-            ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
-            if (!gridView.isItemChecked(position)) {
-                gridView.setItemChecked(position, true);
+            ViewHolder item = (ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position).getTag();
+            if (!((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).isItemChecked(position)) {
+                ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setItemChecked(position, true);
                 item.checked.setVisibility(View.VISIBLE);
                 item.image.setImageAlpha(ALPHA_HALF_VISIBLE);
             } else {
                 item.checked.setVisibility(View.INVISIBLE);
                 item.image.setImageAlpha(ALPHA_FULL_VISIBLE);
-                gridView.setItemChecked(position, false);
+                ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setItemChecked(position, false);
             }
         }
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
-                    if (!gridView.isItemChecked(position)) {
-                        gridView.setItemChecked(position, true);
+                    ViewHolder item = (ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position).getTag();
+                    if (!((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).isItemChecked(position)) {
+                        ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setItemChecked(position, true);
                         item.checked.setVisibility(View.VISIBLE);
                         item.image.setImageAlpha(ALPHA_HALF_VISIBLE);
                     } else {
                         item.checked.setVisibility(View.INVISIBLE);
                         item.image.setImageAlpha(ALPHA_FULL_VISIBLE);
-                        gridView.setItemChecked(position, false);
-                        if (gridView.getCheckedItemCount() == 0)
+                        ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setItemChecked(position, false);
+                        if (((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getCheckedItemCount() == 0)
                             clearSelection();
                     }
                 }
@@ -420,7 +499,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(MainActivity.this, FullscreenActivity.class);
@@ -428,7 +507,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-            gridView.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+            ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setChoiceMode(AbsListView.CHOICE_MODE_NONE);
 
         }
 
@@ -438,16 +517,16 @@ public class MainActivity extends AppCompatActivity {
     private class MyOnItemLongClickListener implements AdapterView.OnItemLongClickListener {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            gridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-            ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
-            if (!gridView.isItemChecked(position)) {
-                gridView.setItemChecked(position, true);
+            ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+            ViewHolder item = (ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position).getTag();
+            if (!((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).isItemChecked(position)) {
+                ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setItemChecked(position, true);
                 item.checked.setVisibility(View.VISIBLE);
                 item.image.setImageAlpha(ALPHA_HALF_VISIBLE);
             } else {
                 item.checked.setVisibility(View.INVISIBLE);
                 item.image.setImageAlpha(ALPHA_FULL_VISIBLE);
-                gridView.setItemChecked(position, false);
+                ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setItemChecked(position, false);
             }
             return true;
         }

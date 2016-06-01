@@ -36,17 +36,14 @@
     </android.support.v7.widget.Toolbar>
 
 
-    <GridView
+    <ViewAnimator
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:id="@+id/act_main_gridView"
-        android:numColumns="2"
-        android:verticalSpacing="0dp"
-        android:horizontalSpacing="0dp"
-        android:drawSelectorOnTop="true"
-        android:background="@color/colorBackground"
+        android:id="@+id/viewGridAnimator"
+        android:layout_below="@+id/act_main_toolbar"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/act_main_toolbar" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/act_main_adView"
@@ -59,4 +56,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="false">
     </com.google.android.gms.ads.AdView>
+
 </RelativeLayout>
