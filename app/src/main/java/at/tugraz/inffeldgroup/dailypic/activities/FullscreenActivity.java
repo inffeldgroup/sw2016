@@ -33,7 +33,7 @@ public class FullscreenActivity extends Activity {
         SubsamplingScaleImageView imgDisplay;
         imgDisplay = (SubsamplingScaleImageView) findViewById(R.id.act_full_imgDisplay);
         imgDisplay.setOrientation(SubsamplingScaleImageView.ORIENTATION_USE_EXIF);
-        imgDisplay.setImage(ImageSource.uri(getIntent().getData()).tilingDisabled());
+        imgDisplay.setImage(ImageSource.uri(getIntent().getData()));
         Button btnClose;
 
         View iv = (View) imgDisplay;

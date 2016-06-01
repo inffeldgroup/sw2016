@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     private float x1, x2;
     private int time;
+    private int numberofback = 0;
 
 
     @Override
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         if (count > SHAKE_LIMIT) {
             clearSelection();
             gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
-            gridAdapter.notifyDataSetChanged();
+            //gridAdapter.notifyDataSetChanged();
         }
     }
 
@@ -195,12 +196,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void backButtonOnClick(View v) {
-        if (this.imageFetcher.getNumberOfPichtures() == 0) {
-            return;
+        if(numberofback != 0)
+        {
+            if (this.imageFetcher.getNumberOfPichtures() == 0) {
+                return;
+            }
+
+            clearSelection();
+            gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+            numberofback--;
         }
-        
-        clearSelection();
-        gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
     }
 
     public void favButtonOnClick(View v) {
@@ -218,7 +223,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void nextButtonOnClick(View v) {
         clearSelection();
+
+        if(numberofback!=2)
+        {
+            numberofback++;
+        }
+
         gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+
     }
 
     @Override
@@ -279,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             for (int position = 0; position < 6; position++) {
-                if (gridView.getChildAt(position).getTag() != null) {
+                if (gridView.getChildAt(position) != null) {
                     ViewHolder item = (ViewHolder) gridView.getChildAt(position).getTag();
                     if (uriListNew.get(position).isFav()) {
                         item.fav.setVisibility(View.VISIBLE);

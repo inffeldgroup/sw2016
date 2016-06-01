@@ -25,28 +25,49 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
     public void tearDown() throws Exception {
         super.tearDown();
     }
+    public void testback(){
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnButton("NEXT");
+        mySolo.sleep(2000);
+        mySolo.clickOnButton("BACK");
+        mySolo.sleep(2000);
+    }
+    public void testnext(){
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnButton("NEXT");
+        mySolo.sleep(500);
+    }
+    public void testhelpscreen(){
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnText("DailyPic");
+        mySolo.sleep(500);
+        mySolo.goBack();
+        assertTrue(true);
+    }
     public void testGarbageButton(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImageButton(0);//Garbage
-        mySolo.sleep(1000);
+        mySolo.waitForText("No images for deletion selected!");
+        mySolo.sleep(500);
         assertTrue(true);
     }
 
     public void testShareButton(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImageButton(1);//ShareButton
-        mySolo.sleep(1000);
+        mySolo.sleep(500);
+        mySolo.waitForText("No images for sharing selected!");
         assertTrue(true);
     }
 
     public void testFavButton(){
         mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnImageButton(3);//Fav Button
-        mySolo.sleep(1000);
+        mySolo.clickOnImageButton(2);//Fav Button
+        mySolo.sleep(500);
         mySolo.waitForActivity("Favourites");
         mySolo.goBack();
         mySolo.waitForActivity("MainActivity");
-        mySolo.sleep(1000);
+        mySolo.sleep(500);
         assertTrue(true);
     }
 }
