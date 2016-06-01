@@ -47,16 +47,4 @@
         android:background="@color/colorBackground"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/act_main_toolbar" />
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/act_main_adView"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:background="@color/colorBackground"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id"
-        android:foreground="#2caf2a"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="false">
-    </com.google.android.gms.ads.AdView>
 </RelativeLayout>

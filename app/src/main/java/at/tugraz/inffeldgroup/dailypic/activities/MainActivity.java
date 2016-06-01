@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.Uri;
@@ -19,12 +21,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,8 +156,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initAdvertise() {
-        AdView mAdView = (AdView) findViewById(R.id.act_main_adView);
+        AdView mAdView = new AdView(this);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        mAdView.setAdUnitId("ca-app-pub-3406938862137540/3927782716");
+        mAdView.setBackgroundColor(Color.BLACK);
         AdRequest adRequest = new AdRequest.Builder().build();
+        double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
+        int v = this.getResources().getDisplayMetrics().heightPixels;
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.act_main_baseLayout);
+        layout.addView(mAdView, params);
+        if(v/dppxl > 720)
+            mAdView.setAdSize(AdSize.BANNER);
+        else
+          mAdView.setAdSize(AdSize.SMART_BANNER);
         mAdView.loadAd(adRequest);
     }
 
