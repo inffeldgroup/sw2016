@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DailyPic</string>
+    <string name="app_name">DailyPics</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
@@ -24,7 +24,7 @@
 
     <string name="act_favourites_title">Favourites</string>
 
-    <string name="image_fetcher_toast">No Pictures to load.</string>
+    <string name="image_fetcher_toast">To few pictures to load.</string>
     <string name="image_fetcher_toast_delete_error">Error deleting image(s): </string>
     <string name="image_fetcher_toast_delete_success">Successfully deleted images.</string>
 

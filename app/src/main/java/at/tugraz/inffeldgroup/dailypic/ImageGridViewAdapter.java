@@ -179,11 +179,6 @@ public class ImageGridViewAdapter extends BaseAdapter {
                 h = (int) ((double) h / 2 - dppxl);
             }
 
-//            Log.d("POSITION", "" + position);
-//            Log.d("TOOLBAR_HEIGHT", "" + ((Activity) mContext).findViewById(R.id.act_main_toolbar).getHeight());
-//            Log.d("ADVERT_HEIGHT", "" + ((Activity) mContext).findViewById(R.id.act_main_adView).getHeight());
-//            Log.d("dppxl", "" + dppxl);
-
             if (position == 1)
                 ((ViewHolder) parent.getChildAt(0).getTag()).image.setLayoutParams(new RelativeLayout.LayoutParams(h, v));
             holder.image.setLayoutParams(new RelativeLayout.LayoutParams(h, v));

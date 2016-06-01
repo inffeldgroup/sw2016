@@ -48,7 +48,7 @@ public class ImageFetcher extends Activity {
 
         ArrayList<UriWrapper> ret = new ArrayList<UriWrapper>();
 
-        if (imgPaths.isEmpty()) {
+        if (imgPaths.isEmpty()  | imgPaths.size() < 6) {
             Toast.makeText(activity, R.string.image_fetcher_toast, Toast.LENGTH_LONG).show();
             return ret;
         }
@@ -57,6 +57,7 @@ public class ImageFetcher extends Activity {
         int image_index;
         Random rand_gen = new Random(seed);
 
+
         for(int i = 0; i < size && i < imgPaths.size(); i++){
             image_index = Math.abs(rand_gen.nextInt()) % imgPaths.size();
             Uri uri = Uri.fromFile(new File(imgPaths.get(image_index)));
@@ -64,6 +65,7 @@ public class ImageFetcher extends Activity {
             UriWrapper image = DbDatasource.getInstance(context).getUriWrapper(uri);
             if (!ret.contains(image)) {
                 ret.add(image);
+                i--;
             }
         }
         return ret;
