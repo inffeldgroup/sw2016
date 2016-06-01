@@ -29,79 +29,46 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
 
     public void testdelete() {
         mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnImage(0);
-        mySolo.clickOnMenuItem("delete");
-        mySolo.waitForDialogToOpen();
-        mySolo.waitForDialogToClose();
+        mySolo.clickOnMenuItem("Delete");
+        mySolo.goBack();
     }
 
-    public void testback(){
+   public void testback(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnButton("NEXT");
+       mySolo.swipe(10 /*50, 50*/);
         mySolo.sleep(2000);
         mySolo.clickOnButton("BACK");
         mySolo.sleep(2000);
     }
+    /*
     public void testnext(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnButton("NEXT");
         mySolo.sleep(500);
     }
-    public void testhelpscreen(){
-        mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnText("DailyPic");
-        mySolo.sleep(500);
-        mySolo.goBack();
-        assertTrue(true);
-    }
-    public void testGarbageButton(){
-        mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnImageButton(0);//Garbage
-        mySolo.waitForText("No images for deletion selected!");
-        mySolo.sleep(500);
-        assertTrue(true);
-    }
-
-
-    public void testsettings() {
-        mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnImage(0);
-        mySolo.clickOnMenuItem("settings");
-        mySolo.waitForDialogToOpen();
-        mySolo.waitForDialogToClose();
-        assertTrue(true);
-    }
-
+    */
 
 
     public void testhelp(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImage(0);
-        mySolo.clickOnMenuItem("help");
-        mySolo.waitForDialogToOpen();
-        mySolo.waitForDialogToClose();
+        mySolo.clickOnMenuItem("Help");
         mySolo.goBack();
-        assertTrue(true);
     }
 
     public void testdatabase(){
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImage(0);
         mySolo.clickOnMenuItem("database");
-        mySolo.waitForDialogToOpen();
-        mySolo.waitForDialogToClose();
-        assertTrue(true);
+        mySolo.goBack();
     }
 
-    public void testFullscreen(){
+    public void testShare(){
         mySolo.waitForActivity("MainActivity");
-       // mySolo.clickOnImageButton(0);//("topbar_title_favourites");
-        //mySolo.clickOnImage(1);
-       // mySolo.clickOnMenuItem("share");
-        //mySolo.clickOn("Share");
-        mySolo.waitForDialogToOpen();
-        mySolo.waitForDialogToClose();
-        assertTrue(true);
+       mySolo.clickOnMenuItem("Share");
+        mySolo.goBack();
+
     }
 
 
