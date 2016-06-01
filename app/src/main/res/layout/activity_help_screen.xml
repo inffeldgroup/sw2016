@@ -6,6 +6,17 @@
     android:orientation="vertical"
     tools:context="at.tugraz.inffeldgroup.dailypic.activities.HelpScreenActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/act_helpscreen_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:titleTextColor="@color/colorText"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:foregroundGravity="left" />
+
+
     <TextView
         android:id="@+id/act_main_txt_AppName"
         style="@style/TitleTextView" />
