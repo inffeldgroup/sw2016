@@ -26,13 +26,6 @@
         android:foregroundGravity="left" />
     </android.support.v7.widget.Toolbar>
 
-
-    <TextView
-        android:id="@+id/act_main_txt_AppName"
-        style="@style/TitleTextView" />
-
-
-
     <TextView
 
         android:singleLine="false"
