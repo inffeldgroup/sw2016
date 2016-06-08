@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
     private float x1, x2;
 
-    private int numberofback = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,43 +262,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void backButtonOnClick() {
-        if(numberofback != 0)
-        {
-            if (this.imageFetcher.getNumberOfPichtures() == 0) {
-                return;
-            }
 
-            clearSelection();
-            {
-                GridView gridView = new GridView(this);
-                gridView.setNumColumns(2);
-                gridView.setAdapter(gridAdapter);
-                gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
-                gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
-                gridView.setOnTouchListener(new MyOnTouchListener());
-                setGridViewClickListener(gridView);
-                gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
-                if (gridAnimator.getChildCount()==4)
-                {
-                    gridAnimator.removeViewAt(3);
-                }
-                else
-                {
-                    if (gridAnimator.getChildCount()==3)
-                    {
-                        gridAnimator.removeViewAt(2);
-                    }
-                    gridAnimator.addView(gridView);
-                }
-
-            }
-            Animation in = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-            Animation out = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
-            gridAnimator.setInAnimation(in);
-            gridAnimator.setOutAnimation(out);
-            gridAnimator.showPrevious();
-            numberofback--;
+        if (this.imageFetcher.getNumberOfPichtures() == 0) {
+            return;
         }
+
+        clearSelection();
+        {
+            GridView gridView = new GridView(this);
+            gridView.setNumColumns(2);
+            gridView.setAdapter(gridAdapter);
+            gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
+            gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
+            gridView.setOnTouchListener(new MyOnTouchListener());
+            setGridViewClickListener(gridView);
+            gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+            if (gridAnimator.getChildCount()==4)
+            {
+                gridAnimator.removeViewAt(3);
+            }
+            else
+            {
+                if (gridAnimator.getChildCount()==3)
+                {
+                    gridAnimator.removeViewAt(2);
+                }
+                gridAnimator.addView(gridView);
+            }
+
+        }
+        Animation in = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+        Animation out = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
+        gridAnimator.setInAnimation(in);
+        gridAnimator.setOutAnimation(out);
+        gridAnimator.showPrevious();
     }
 
     private void favButtonOnClick() {
@@ -324,10 +319,10 @@ public class MainActivity extends AppCompatActivity {
     private void nextButtonOnClick() {
         clearSelection();
 
-        if(numberofback!=2)
+        /*if(numberofback!=2)
         {
             numberofback++;
-        }
+        }*/
         {
             GridView gridView = new GridView(this);
             gridView.setNumColumns(2);
@@ -538,9 +533,11 @@ public class MainActivity extends AppCompatActivity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     x1 = event.getX();
+                    //Toast.makeText(getApplicationContext(), "" + x1 + "", Toast.LENGTH_SHORT).show();
                     break;
                 case MotionEvent.ACTION_UP:
                     x2 = event.getX();
+                    //Toast.makeText(getApplicationContext(), "" + x2 + "", Toast.LENGTH_SHORT).show();
                     float deltaX = x2 - x1;
 
                     if (Math.abs(deltaX) > MIN_DISTANCE) {
