@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import at.tugraz.inffeldgroup.dailypic.FavouriteHandler;
 import at.tugraz.inffeldgroup.dailypic.ImageFetcher;
 import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
+import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 
 public class test_FavouriteHandler extends ActivityInstrumentationTestCase2<MainActivity>{
@@ -21,11 +22,11 @@ public class test_FavouriteHandler extends ActivityInstrumentationTestCase2<Main
         ImageFetcher imageFetcher = new ImageFetcher(getActivity());
         final ArrayList<UriWrapper> uriList = imageFetcher.getNextRandomImages(6, getActivity());
 
-        FavouriteHandler fh = new FavouriteHandler();
-        fh.toggleFavouriteState(getActivity(), uriList.get(0));
-        fh.getFavouriteState(getActivity(), uriList.get(0));
-        Assert.assertTrue(fh.getFavouriteState(getActivity(), uriList.get(0)));
-        fh.toggleFavouriteState(getActivity(), uriList.get(0));
-        Assert.assertFalse(fh.getFavouriteState(getActivity(), uriList.get(0)));
+        UriWrapper img = DbDatasource.getInstance(getActivity()).getUriWrapper(uriList.get(0).getUri());
+        boolean prevFavState = img.isFav();
+        FavouriteHandler.toggleFavouriteState(getActivity(), uriList.get(0));
+
+        img = DbDatasource.getInstance(getActivity()).getUriWrapper(uriList.get(0).getUri());
+        Assert.assertTrue(img.isFav() != prevFavState);
     }
 }
