@@ -1,8 +1,10 @@
 package at.tugraz.inffeldgroup.dailypic.test;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.test.ActivityInstrumentationTestCase2;
@@ -65,6 +67,12 @@ public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActi
                 }
             }
             dir.delete();
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            File f = new File("file://"+ Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
+            Uri contentUri = Uri.fromFile(f);
+            mediaScanIntent.setData(contentUri);
+            getActivity().sendBroadcast(mediaScanIntent);
+
         }
     }
 

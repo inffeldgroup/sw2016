@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
                     out.close();
                     in = null;
                     out = null;
-                    MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(),
-                            out_file.getAbsolutePath(), out_file.getName(), null);
+              //      MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(),
+               //             out_file.getAbsolutePath(), out_file.getName(), null);
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(out_file)));
                 }
             } catch (IOException e) {
