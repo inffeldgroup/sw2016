@@ -25,10 +25,14 @@ public class test_UriWrapper extends ActivityInstrumentationTestCase2<MainActivi
         ArrayList<UriWrapper> images = img_fetcher.getNextRandomImages(6, getActivity());
         UriWrapper test_wrapper = images.get(0);
 
+        UriWrapper uri = new UriWrapper(test_wrapper.getUri(), test_wrapper.isFav());
+        Assert.assertTrue(uri.equals(test_wrapper));
+
         Assert.assertTrue(test_wrapper.equals(images.get(0)));
         Assert.assertFalse(test_wrapper.equals(null));
         Object dummy = new Object();
         Assert.assertFalse(test_wrapper.equals(dummy));
+
 
     }
 

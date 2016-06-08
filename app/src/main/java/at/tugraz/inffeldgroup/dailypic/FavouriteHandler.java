@@ -1,6 +1,7 @@
 package at.tugraz.inffeldgroup.dailypic;
 
 import android.content.Context;
+import android.net.Uri;
 import android.widget.Toast;
 
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
@@ -26,12 +27,12 @@ public class FavouriteHandler {
         DbDatasource.getInstance(context).update(uri);
     }
 
-    public static boolean getFavouriteState(Context context, UriWrapper uri){
-        if (!DbDatasource.getInstance(context).checkIfExists(uri)) {
+    public static boolean getFavouriteState(Context context, UriWrapper uw) {
+        if (!DbDatasource.getInstance(context).checkIfExists(uw)) {
+            return false;
+        } else {
             return true;
         }
-        return false;
     }
-
 }
 

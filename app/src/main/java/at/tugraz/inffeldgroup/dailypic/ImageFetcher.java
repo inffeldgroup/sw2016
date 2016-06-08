@@ -65,6 +65,9 @@ public class ImageFetcher extends Activity {
             UriWrapper image = DbDatasource.getInstance(context).getUriWrapper(uri);
             if (!ret.contains(image)) {
                 ret.add(image);
+            }
+            else
+            {
                 i--;
             }
         }

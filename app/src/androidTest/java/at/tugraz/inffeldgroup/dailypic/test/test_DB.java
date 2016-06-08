@@ -1,5 +1,8 @@
 package at.tugraz.inffeldgroup.dailypic.test;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.database.Cursor;
 import android.media.Image;
 import android.net.Uri;
 import android.test.ActivityInstrumentationTestCase2;
@@ -13,6 +16,7 @@ import javax.sql.DataSource;
 import at.tugraz.inffeldgroup.dailypic.ImageFetcher;
 import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
+import at.tugraz.inffeldgroup.dailypic.db.SqlLiteHelper;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 
 /**
@@ -34,11 +38,9 @@ public class test_DB extends ActivityInstrumentationTestCase2<MainActivity> {
         Assert.assertTrue(test_db.checkIfExists(images.get(0)));
         test_db.delete(images.get(0));
         Assert.assertFalse(test_db.checkIfExists(images.get(0)));
-
-
     }
 
-    public void testDatabaseGetAllFavourites(){
+    public void testDatabaseGetAllFavourites() {
 
         DbDatasource test_db = DbDatasource.getInstance(getActivity());
         //Assert.assertTrue(test_db.getAllFavorites().isEmpty());
@@ -55,6 +57,14 @@ public class test_DB extends ActivityInstrumentationTestCase2<MainActivity> {
         Assert.assertTrue(test_db.getAllFavorites().isEmpty());
 
 
+    }
+
+    public void testGetData() {
+        DbDatasource dbs = DbDatasource.getInstance(getActivity());
+        ArrayList<Cursor> ret = SqlLiteHelper.getInstance(getActivity().getApplicationContext()).getData("SELECT * FROM Images;");
+        assertTrue(ret.size() != 0);
+        ret = SqlLiteHelper.getInstance(getActivity().getApplicationContext()).getData("");
+        assertTrue(ret.size() != 0);
     }
 
 

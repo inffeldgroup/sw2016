@@ -185,6 +185,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
         } else{
             holder = (ViewHolder) row.getTag();
         }
+
         if (currentUris.get(position).isFav())        {
             holder.fav.setVisibility(View.VISIBLE);
         } else{

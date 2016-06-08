@@ -1,3 +1,4 @@
+
 package at.tugraz.inffeldgroup.dailypic.test;
 
 import android.test.ActivityInstrumentationTestCase2;
@@ -48,7 +49,6 @@ public class test_FavouriteHandler extends ActivityInstrumentationTestCase2<Main
         Assert.assertFalse(uri_list.get(0).isFav());
         Assert.assertFalse(fav_handler.getFavouriteState(getActivity(), uri_list.get(0)));
 
-
-
     }
 }
+
