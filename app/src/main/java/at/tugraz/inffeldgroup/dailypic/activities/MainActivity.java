@@ -15,6 +15,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -82,14 +83,13 @@ public class MainActivity extends AppCompatActivity {
 
     private int numberofback = 0;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         File dir = new File(Environment.getExternalStorageDirectory() + "/Daily Pic");
-        dir.delete();
+
         if (!dir.exists()) {
             dir.mkdir();
             String[] assets = null;
@@ -97,12 +97,10 @@ public class MainActivity extends AppCompatActivity {
             try {
                 assets = getResources().getAssets().list("pictures");
             } catch (IOException e) {
-                Log.v("TESTTEST", "5");
                 e.printStackTrace();
             }
 
             if (assets == null) {
-                Log.v("TESTTEST", "10");
                 Toast.makeText(this, "Error copying preloaded images!", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -111,14 +109,11 @@ public class MainActivity extends AppCompatActivity {
             InputStream in = null;
             OutputStream out = null;
             String storage_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Daily Pic/";
-            //ArrayList<String> new_paths = new ArrayList<>();
 
             try {
                 for (String name : assets) {
-                    Log.v("TESTTEST", "20: " + name);
                     in = am.open("pictures/" + name);
                     File out_file = new File(storage_path, name);
-                    //new_paths.add(out_file.getAbsolutePath());
                     out = new FileOutputStream(out_file);
                     byte[] data = new byte[in.available()];
                     in.read(data);
@@ -128,21 +123,15 @@ public class MainActivity extends AppCompatActivity {
                     out.close();
                     in = null;
                     out = null;
+                    MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(),
+                            out_file.getAbsolutePath(), out_file.getName(), null);
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(out_file)));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Error copying preloaded images!", Toast.LENGTH_LONG).show();
                 return;
             }
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-            /*
-            String[] paths = new String[new_paths.size()];
-            MediaScannerConnection.scanFile(getApplicationContext(), new_paths.toArray(paths), null, new MediaScannerConnection.OnScanCompletedListener() {
-                public void onScanCompleted(String path, Uri uri) {
-
-                }
-            });
-            */
         }
 
         Toolbar topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
