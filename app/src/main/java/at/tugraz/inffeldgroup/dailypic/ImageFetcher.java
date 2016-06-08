@@ -13,6 +13,7 @@ import java.util.*;
 import java.io.*;
 
 import at.tugraz.inffeldgroup.dailypic.ImageGridViewAdapter.ViewHolder;
+import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
 import at.tugraz.inffeldgroup.dailypic.db.DbDatasource;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 
@@ -47,8 +48,7 @@ public class ImageFetcher extends Activity {
     public ArrayList<UriWrapper> getNextRandomImages(int size, Context context){
 
         ArrayList<UriWrapper> ret = new ArrayList<UriWrapper>();
-
-        if (imgPaths.isEmpty()  | imgPaths.size() < 6) {
+        if (imgPaths.isEmpty()  | imgPaths.size() < MainActivity.NUMBER_OF_ITEMS) {
             Toast.makeText(activity, R.string.image_fetcher_toast, Toast.LENGTH_LONG).show();
             return ret;
         }

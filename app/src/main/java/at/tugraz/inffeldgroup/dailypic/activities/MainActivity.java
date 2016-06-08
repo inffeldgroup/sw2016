@@ -53,7 +53,9 @@ import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
 import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 
 public class MainActivity extends AppCompatActivity {
-    public static final int NUMBER_OF_ITEMS = 6;
+    public static int NUMBER_OF_ITEMS = 6;
+    public static int NUMBER_OF_ROWS = 2;
+    public static int HELPER_NUMBER_OF_ITEMS = 4;
     private static final int ALPHA_HALF_VISIBLE = 127;
     private static final int ALPHA_FULL_VISIBLE = 255;
     private static final int MIN_DISTANCE = 150;
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
 
-    private float x1, x2;
+    private float x1_in = 0, x1_out = 0,x2_in = 0, x2_out = 0, y1_in = 0,y1_out = 0,y2_in = 0,y2_out = 0;
 
 
     @Override
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         gridAnimator=(ViewAnimator)findViewById(R.id.viewGridAnimator);
         {
             GridView gridView = new GridView(this);
-            gridView.setNumColumns(2);
+            gridView.setNumColumns(NUMBER_OF_ROWS);
             gridView.setAdapter(gridAdapter);
             gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
             gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
@@ -176,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
             clearSelection();
             {
                 GridView gridView = new GridView(this);
-                gridView.setNumColumns(2);
+                gridView.setNumColumns(NUMBER_OF_ROWS);
                 gridView.setAdapter(gridAdapter);
                 gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
                 gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
@@ -270,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
         clearSelection();
         {
             GridView gridView = new GridView(this);
-            gridView.setNumColumns(2);
+            gridView.setNumColumns(NUMBER_OF_ROWS);
             gridView.setAdapter(gridAdapter);
             gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
             gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
@@ -325,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
         }*/
         {
             GridView gridView = new GridView(this);
-            gridView.setNumColumns(2);
+            gridView.setNumColumns(NUMBER_OF_ROWS);
             gridView.setAdapter(gridAdapter);
             gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
             gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
@@ -402,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
                 uriListNew.add(DbDatasource.getInstance(MainActivity.this).getUriWrapper(uriWrapper.getUri()));
             }
 
-            for (int position = 0; position < 6; position++) {
+            for (int position = 0; position < NUMBER_OF_ITEMS; position++) {
                 if(((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position) != null) {
                     if (((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position).getTag() != null) {
                         ViewHolder item = (ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(position).getTag();
@@ -530,29 +532,122 @@ public class MainActivity extends AppCompatActivity {
     private class MyOnTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()) {
+            switch (event.getAction()&MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
-                    x1 = event.getX();
-                    //Toast.makeText(getApplicationContext(), "" + x1 + "", Toast.LENGTH_SHORT).show();
+                    x1_in = event.getX(event.getActionIndex());
+                    y1_in = event.getY(event.getActionIndex());
+                    //Toast.makeText(getApplicationContext(), "" + x1_in +" "+ y1_in, Toast.LENGTH_SHORT).show();
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    x2_in = event.getX(event.getActionIndex());
+                    y2_in = event.getY(event.getActionIndex());
+                    //Toast.makeText(getApplicationContext(), "" + x2_in +" "+ y2_in, Toast.LENGTH_SHORT).show();
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    x2_out = event.getX(event.getActionIndex());
+                    y2_out = event.getY(event.getActionIndex());
+                    //Toast.makeText(getApplicationContext(), "" + x2_out +" "+ y2_out, Toast.LENGTH_SHORT).show();
                     break;
                 case MotionEvent.ACTION_UP:
-                    x2 = event.getX();
-                    //Toast.makeText(getApplicationContext(), "" + x2 + "", Toast.LENGTH_SHORT).show();
-                    float deltaX = x2 - x1;
+                    x1_out = event.getX(event.getActionIndex());
+                    y1_out = event.getY(event.getActionIndex());
+                    //Toast.makeText(getApplicationContext(), "" + x1_out +" "+ y1_out, Toast.LENGTH_SHORT).show();
+                    float deltaX = x1_in - x1_out;
 
-                    if (Math.abs(deltaX) > MIN_DISTANCE) {
-                        if (x2 > x1) {
-                            backButtonOnClick();
+                    if (x2_in==0&&x2_out==0&&y2_in==0&&y2_out==0)
+                    {
+                        if (Math.abs(deltaX) > MIN_DISTANCE&&(Math.abs(y1_in-y1_out)<300)) {
+                            if ((x1_out > x1_in)) {
+                                backButtonOnClick();
+                            } else {
+                                nextButtonOnClick();
+                            }
+
                         } else {
-                            nextButtonOnClick();
+                            if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                                return true;
+                            }
                         }
+                    }
+                    else
+                    {
+                        if ((Math.hypot(x1_in-x2_in,y1_in-y2_in))<(Math.hypot(x1_out-x2_out,y1_out-y2_out)))
+                        {
+                            //zoomin kleiner
+                            if(NUMBER_OF_ROWS !=1)
+                            {
+                                NUMBER_OF_ITEMS = NUMBER_OF_ITEMS - HELPER_NUMBER_OF_ITEMS;
+                                HELPER_NUMBER_OF_ITEMS = HELPER_NUMBER_OF_ITEMS-2;
+                                NUMBER_OF_ROWS--;
+                                {
+                                    GridView gridView = new GridView(getApplicationContext());
+                                    gridView.setNumColumns(NUMBER_OF_ROWS);
+                                    gridView.setAdapter(gridAdapter);
+                                    gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
+                                    gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
+                                    gridView.setOnTouchListener(new MyOnTouchListener());
+                                    setGridViewClickListener(gridView);
+                                    gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, getApplicationContext()));
+                                    gridAdapter.notifyDataSetChanged();
 
-                    } else {
+                                    gridAnimator.removeAllViews();
+                                    gridAnimator.addView(gridView);
+                                }
+                                Animation in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_in_up);
+                                Animation out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_down);
+                                gridAnimator.setInAnimation(in);
+                                gridAnimator.setOutAnimation(out);
+                                gridAnimator.showNext();
+                                Toast.makeText(getApplicationContext(), "Zoomin", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                        else
+                        {
+                            //zoomout größer
+                            if(NUMBER_OF_ROWS !=3)
+                            {
+                                HELPER_NUMBER_OF_ITEMS = HELPER_NUMBER_OF_ITEMS+2;
+                                NUMBER_OF_ITEMS = NUMBER_OF_ITEMS + HELPER_NUMBER_OF_ITEMS;
+                                NUMBER_OF_ROWS++;
+                                Toast.makeText(getApplicationContext(), "Zoomout", Toast.LENGTH_SHORT).show();
+                                {
+                                    GridView gridView = new GridView(getApplicationContext());
+                                    gridView.setNumColumns(NUMBER_OF_ROWS);
+                                    gridView.setAdapter(gridAdapter);
+                                    gridView.setMultiChoiceModeListener(new MyMultipleChoiceListener());
+                                    gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
+                                    gridView.setOnTouchListener(new MyOnTouchListener());
+                                    setGridViewClickListener(gridView);
+                                    gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, getApplicationContext()));
+                                    gridAdapter.notifyDataSetChanged();
+
+                                    gridAnimator.removeAllViews();
+                                    gridAnimator.addView(gridView);
+                                }
+                                Animation in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_in_down);
+                                Animation out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_up);
+                                gridAnimator.setInAnimation(in);
+                                gridAnimator.setOutAnimation(out);
+                                gridAnimator.showNext();
+
+
+                            }
+                        }
                         if (event.getAction() == MotionEvent.ACTION_MOVE) {
                             return true;
                         }
                     }
+                    x1_in = 0;
+                    x1_out = 0;
+                    x2_in = 0;
+                    x2_out = 0;
+                    y1_in = 0;
+                    y1_out = 0;
+                    y2_in = 0;
+                    y2_out = 0;
                     break;
+
             }
             return false;
         }

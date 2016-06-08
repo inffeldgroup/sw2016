@@ -143,7 +143,7 @@ public class ImageGridViewAdapter extends BaseAdapter {
             row.setTag(holder);
             double dppxl = (1 * (Resources.getSystem().getDisplayMetrics().densityDpi / 160f));
             RelativeLayout layout = (RelativeLayout) row.findViewById(R.id.image_layout);
-            switch (position) {
+            switch (position%MainActivity.NUMBER_OF_ROWS) {
                 case 0:
                     layout.setPadding(0, 0, 0, 1 * (int) dppxl);
                     break;
@@ -151,17 +151,9 @@ public class ImageGridViewAdapter extends BaseAdapter {
                     layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
                     break;
                 case 2:
-                    layout.setPadding(0, 0, 0, 1 * (int) dppxl);
-                    break;
-                case 3:
                     layout.setPadding(1 * (int) dppxl, 0, 0, 1 * (int) dppxl);
                     break;
-                case 4:
-                    layout.setPadding(0, 0, 0, 0);
-                    break;
-                case 5:
-                    layout.setPadding(1 * (int) dppxl, 0, 0, 0);
-                    break;
+                default:
             }
             double elementsHeight =(50 + 2)* dppxl;
 
@@ -169,14 +161,14 @@ public class ImageGridViewAdapter extends BaseAdapter {
                 v = v - mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
                 v = v - ((Activity) mContext).findViewById(R.id.act_fav_toolbar).getHeight();
                 v = v - (int)elementsHeight;
-                v = v/3;
-                h = (int)((double)h/2 - dppxl);
+                v = v /(MainActivity.NUMBER_OF_ROWS+1);
+                h = (int)((double)h /MainActivity.NUMBER_OF_ROWS );//- dppxl
             }else {
                 v = v - mContext.getResources().getDimensionPixelSize(mContext.getResources().getIdentifier("status_bar_height", "dimen", "android"));
                 v = v - ((Activity) mContext).findViewById(R.id.act_main_toolbar).getHeight();
                 v = v - (int) elementsHeight;
-                v = v / 3;
-                h = (int) ((double) h / 2 - dppxl);
+                v = v /(MainActivity.NUMBER_OF_ROWS+1)+(int)dppxl;
+                h = (int) ((double) h / MainActivity.NUMBER_OF_ROWS );//- dppxl
             }
 
             if (position == 1)
