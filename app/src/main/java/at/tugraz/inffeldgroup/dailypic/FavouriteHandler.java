@@ -29,9 +29,9 @@ public class FavouriteHandler {
 
     public static boolean getFavouriteState(Context context, UriWrapper uw) {
         if (!DbDatasource.getInstance(context).checkIfExists(uw)) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 }

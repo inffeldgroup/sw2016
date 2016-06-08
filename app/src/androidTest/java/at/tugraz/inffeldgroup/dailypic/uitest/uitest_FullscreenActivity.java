@@ -24,7 +24,7 @@ public class uitest_FullscreenActivity extends ActivityInstrumentationTestCase2<
     public uitest_FullscreenActivity() {
         super(FullscreenActivity.class);
     }
-
+    /*
     private Solo mySolo;
     public void setUp() throws Exception {
 
@@ -38,7 +38,7 @@ public class uitest_FullscreenActivity extends ActivityInstrumentationTestCase2<
         super.setUp();
         mySolo = new Solo(getInstrumentation(),getActivity());
     }
-    */
+
     public void testTearDown() throws Exception{
         mySolo.clickLongOnScreen(10,10);
         mySolo.waitForDialogToOpen();
