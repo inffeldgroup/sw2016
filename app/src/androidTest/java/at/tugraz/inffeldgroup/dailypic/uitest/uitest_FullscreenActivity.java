@@ -24,7 +24,7 @@ public class uitest_FullscreenActivity extends ActivityInstrumentationTestCase2<
     public uitest_FullscreenActivity() {
         super(FullscreenActivity.class);
     }
-
+    /*
     private Solo mySolo;
     public void setUp() throws Exception {
 
@@ -44,4 +44,5 @@ public class uitest_FullscreenActivity extends ActivityInstrumentationTestCase2<
         mySolo.waitForDialogToOpen();
         mySolo.waitForDialogToClose();
     }
+    */
 }

@@ -17,7 +17,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         super(MainActivity.class);
     }
 
-
+    /*
     public void setUp() throws Exception {
         super.setUp();
         mySolo = new Solo(getInstrumentation(), getActivity());
@@ -72,6 +72,5 @@ public void testnext(){
         mySolo.sleep(6000);
 
     }
-
-
+    */
 }

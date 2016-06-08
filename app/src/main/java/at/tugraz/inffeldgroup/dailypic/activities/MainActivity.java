@@ -6,15 +6,20 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -35,6 +40,12 @@ import android.widget.ViewAnimator;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -75,6 +86,52 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        File dir = new File(Environment.getExternalStorageDirectory() + "/Daily Pic");
+
+        if (!dir.exists()) {
+            dir.mkdir();
+            String[] assets = null;
+
+            try {
+                assets = getResources().getAssets().list("pictures");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (assets == null) {
+                Toast.makeText(this, "Error copying preloaded images!", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            AssetManager am = getResources().getAssets();
+            InputStream in = null;
+            OutputStream out = null;
+            String storage_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Daily Pic/";
+
+            try {
+                for (String name : assets) {
+                    in = am.open("pictures/" + name);
+                    File out_file = new File(storage_path, name);
+                    out = new FileOutputStream(out_file);
+                    byte[] data = new byte[in.available()];
+                    in.read(data);
+                    out.write(data);
+                    in.close();
+                    out.flush();
+                    out.close();
+                    in = null;
+                    out = null;
+              //      MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(),
+               //             out_file.getAbsolutePath(), out_file.getName(), null);
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(out_file)));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error copying preloaded images!", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
 
         Toolbar topBar = (Toolbar) findViewById(R.id.act_main_toolbar);
         setSupportActionBar(topBar);
@@ -356,9 +413,14 @@ public class MainActivity extends AppCompatActivity {
     private void clearSelection() {
         if (((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE_MODAL) {
             for (int i = 0; i < ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getCount(); i++) {
+                View v = ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(i);
+                if (v == null) {
+                    ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setItemChecked(i, false);
+                    continue;
+                }
                 ((ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(i).getTag()).image.setImageAlpha(ALPHA_FULL_VISIBLE);
                 ((ViewHolder) ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).getChildAt(i).getTag()).checked.setVisibility(View.INVISIBLE);
-                ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setItemChecked(i, false);
+
             }
             ((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())).setChoiceMode(AbsListView.CHOICE_MODE_NONE);
             setGridViewClickListener(((GridView)gridAnimator.getChildAt(gridAnimator.getDisplayedChild())));

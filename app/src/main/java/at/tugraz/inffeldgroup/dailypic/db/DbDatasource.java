@@ -41,10 +41,11 @@ public class DbDatasource
 			this.context = context;
 			try {
 				SqlLiteHelper.getInstance(context);
-			}
+			} finally {}/*
 			catch (Exception e) {
 				Log.e(TAG, "Failed to initialize database.");
 			}
+			*/
 		}
 	}
 
@@ -69,10 +70,11 @@ public class DbDatasource
 	{
 		try {
 			database = SqlLiteHelper.getInstance(context).getWritableDatabase();
-		}
-		catch (Exception e) {
+		} finally {}/*
+			catch (Exception e) {
 			Log.e(TAG, "Failed to open database.");
 		}
+		*/
 	}
 
 	public UriWrapper getUriWrapper(Uri uri) {
@@ -90,10 +92,11 @@ public class DbDatasource
 				ret = new UriWrapper(uri, false);
 			}
 			cursor.close();
-		}
-		catch (Exception e) {
+		} finally {}/*
+			catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		return ret;
 
 	}
@@ -110,10 +113,11 @@ public class DbDatasource
 				ret = true;
 			}
 			cursor.close();
-		}
-		catch (Exception e) {
+		} finally {}/*
+			catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		return ret;
 	}
 
@@ -125,22 +129,28 @@ public class DbDatasource
 
 		try {
 			database.insert(SqlLiteHelper.TABLE_IMAGES, null, values);
-		}
-		catch (Exception e) {
+		} finally {}/*
+			catch (Exception e) {
 			Log.e(TAG, "Failed to insert uriWrapper into database.");
 		}
+		*/
 	}
 
 	public int delete(UriWrapper uriWrapper)
 	{
+		int ret = 0;
+
 		try {
-			return database.delete(SqlLiteHelper.TABLE_IMAGES,
+			ret = database.delete(SqlLiteHelper.TABLE_IMAGES,
 					SqlLiteHelper.COLUMN_URI + " = '" + uriWrapper.getUri() + "'", null);
-		}
-		catch (Exception e) {
+		} finally {
+			return ret;
+		}/*
+			catch (Exception e) {
 			Log.e(TAG, "Failed to delete uriWrapper.");
 		}
-		return 0;
+		*/
+
 	}
 
 	public ArrayList<UriWrapper> getAllFavorites()
@@ -161,12 +171,15 @@ public class DbDatasource
 				cursor.moveToNext();
 			}
 			cursor.close();
+
+		} finally {
 			return favorites;
-		}
-		catch (Exception e) {
+		}/*
+			catch (Exception e) {
 			Log.e(TAG, "Failed to fetch favorites from db.");
 		}
-		return favorites;
+		*/
+
 	}
 
 	public void update(UriWrapper uriWrapper)
@@ -181,10 +194,10 @@ public class DbDatasource
 					values,
 					SqlLiteHelper.COLUMN_URI + " = " + "'" + uriWrapper.getUri() + "'",
 					null);
-		}
+		} finally {} /*
 		catch (Exception e) {
 			Log.e(TAG, "Failed to update image.");
-		}
+		} */
 	}
 
 	private UriWrapper cursorToUriWrapper(Cursor cursor)
@@ -194,11 +207,12 @@ public class DbDatasource
 		{
 			try {
 				uriWrapper = new UriWrapper(Uri.parse(cursor.getString(0)), cursor.getInt(1) != 0);
-			}
+			} finally {}
+			/*
 			catch (Exception e) {
 				Log.e(TAG, "Failed to convert cursor to UriWrapper.");
 				e.printStackTrace();
-			}
+			} */
 		}
 		return uriWrapper;
 	}
