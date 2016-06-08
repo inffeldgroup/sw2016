@@ -25,7 +25,7 @@ public class uitest_FullscreenActivity extends ActivityInstrumentationTestCase2 
         mySolo = new Solo(getInstrumentation(),getActivity());
     }
 
-
+    /*
     public void testCloseButton() {
         mySolo.clickOnButton("Close");
     }
@@ -38,4 +38,5 @@ public class uitest_FullscreenActivity extends ActivityInstrumentationTestCase2 
         mySolo.wait(1000);
 
     }
+    */
 }

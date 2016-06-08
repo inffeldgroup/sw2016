@@ -86,7 +86,7 @@ public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActi
         }
 
     }
-
+    /*
     public void testDoNotShowSamePicturesInOneGrid() {
         ImageFetcher imgf = new ImageFetcher(this.getActivity());
 
@@ -102,6 +102,7 @@ public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActi
         }
 
     }
+    */
 
     public void testPreviousFunction() {
         ImageFetcher img_fetcher = new ImageFetcher(this.getActivity());
