@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "at.tugraz.inffeldgroup.dailypic"
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -15,6 +15,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            testCoverageEnabled = true
         }
     }
 }
@@ -26,5 +30,6 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.5.4'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
     //androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.3.1'
 }
