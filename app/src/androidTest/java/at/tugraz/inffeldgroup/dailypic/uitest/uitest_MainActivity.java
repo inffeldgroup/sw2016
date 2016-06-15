@@ -45,9 +45,14 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnMenuItem("Share");
         mySolo.goBack();
-
     }
 
+    public void testShare2(){
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickLongOnScreen(50, 600, 3000);
+        mySolo.clickOnMenuItem("Share");
+        mySolo.goBack();
+    }
     public void testnext(){
         mySolo.waitForActivity("MainActivity");
         mySolo.scrollToSide(Solo.RIGHT);

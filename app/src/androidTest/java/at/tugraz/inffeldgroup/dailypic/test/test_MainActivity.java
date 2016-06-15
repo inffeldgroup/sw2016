@@ -10,7 +10,8 @@ import android.provider.MediaStore;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.UiThreadTest;
 import android.util.Log;
-
+import android.view.View;
+import android.widget.GridView;
 import junit.framework.Assert;
 
 import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 
 import at.tugraz.inffeldgroup.dailypic.ImageFetcher;
 import at.tugraz.inffeldgroup.dailypic.db.UriWrapper;
+import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 
 public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActivity> {
     private static boolean firstRun = true;
@@ -141,12 +143,19 @@ public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActi
     public void testHandleShakeEvent() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, InstantiationException, InterruptedException {
         Method method = MainActivity.class.getDeclaredMethod("handleShakeEvent", Integer.TYPE);
         method.setAccessible(true);
-        Activity mainActivity = new MainActivity();
-        //Thread.sleep(10000);
         method.invoke(this.getActivity(), 1);
         method.invoke(this.getActivity(), 5);
-        //Thread.sleep(10000);
 
         assertTrue(true);
+    }
+    @UiThreadTest
+    public void testDoubleClickListener() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = MainActivity.class.getDeclaredMethod("setGridViewClickListener", GridView.class);
+        method.setAccessible(true);
+        GridView gridview = new GridView(this.getActivity());
+        method.invoke(this.getActivity(), gridview);
+        DoubleClickListener listener = (DoubleClickListener)gridview.getOnItemClickListener();
+        listener.onDoubleClick(gridview.getChildAt(0), 0);
+        assertFalse(false);
     }
 }
