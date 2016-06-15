@@ -1,9 +1,17 @@
 package at.tugraz.inffeldgroup.dailypic.uitest;
 
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
 
+import junit.framework.Assert;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import at.tugraz.inffeldgroup.dailypic.ShakeDetector;
 import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
 
 /**
@@ -17,29 +25,20 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         super(MainActivity.class);
     }
 
-    /*
+
     public void setUp() throws Exception {
         super.setUp();
         mySolo = new Solo(getInstrumentation(), getActivity());
     }
 
+
     public void tearDown() throws Exception {
         super.tearDown();
     }
-
+    /*
     public void testdelete() {
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnMenuItem("Delete");
-        mySolo.goBack();
-    }
-
-
-
-
-    public void testhelp(){
-        mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnImage(0);
-        mySolo.clickOnMenuItem("Help");
         mySolo.goBack();
     }
 
@@ -56,21 +55,36 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.goBack();
 
     }
+    */
 
-public void testnext(){
-    mySolo.waitForActivity("MainAvtivity");
-    //mySolo.clickOnMenuItem("favourite");
-    mySolo.scrollToSide(Solo.RIGHT);
-    mySolo.sleep(600);
-}
+    public void testnext(){
+        mySolo.waitForActivity("MainAvtivity");
+        //mySolo.clickOnMenuItem("favourite");
+        mySolo.scrollToSide(Solo.RIGHT);
+        mySolo.sleep(600);
+    }
 
     public void testback(){
         mySolo.waitForActivity("MainActivity");
         mySolo.scrollToSide(Solo.RIGHT);
         mySolo.sleep(600);
         mySolo.scrollToSide(Solo.LEFT);
-        mySolo.sleep(6000);
-
+        mySolo.sleep(600);
     }
-    */
+
+    public void testhelp(){
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnImage(0);
+        mySolo.clickOnMenuItem("Help");
+        mySolo.goBack();
+    }
+
+    public void testlongclick() {
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickOnImage(2);
+        mySolo.sleep(1000);
+        mySolo.clickLongOnScreen(500, 750, 1500);
+        mySolo.goBack();
+    }
+
 }
