@@ -72,5 +72,5 @@ public void testnext(){
         mySolo.sleep(6000);
 
     }
-    */
+*/
 }

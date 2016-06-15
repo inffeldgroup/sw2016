@@ -17,16 +17,8 @@ import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
 public class PushUpNotification extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
-
-
-        Log.i("NextActivity", "startNotification");
-
-        // Sets an ID for the notification
         int mNotificationId = 101;
-
-        //Converts png icon to Bitmap so it can be used in .setLargeIcon
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
-        // Build Notification
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.icon_notifications)
@@ -40,17 +32,10 @@ public class PushUpNotification extends BroadcastReceiver {
                         .setWhen(System.currentTimeMillis())
                         .setAutoCancel(true);
 
-        // Create pending intent, mention the Activity which needs to be
-        //triggered when user clicks on notification(StopScript.class in this case)
-
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                 new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-
         mBuilder.setContentIntent(contentIntent);
-
-        // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-        // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
 
     }
