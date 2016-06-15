@@ -26,15 +26,13 @@
         android:foregroundGravity="left" />
     </android.support.v7.widget.Toolbar>
 
-    <TextView
-
-        android:singleLine="false"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textAlignment="center"
-        android:background="#ffffff"
-        android:textColor="#000000"
-        android:id="@+id/help_text" />
+    <ImageView
+        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:src="@drawable/help_screen"
+        android:padding="8dp"
+        android:layout_gravity="bottom"
+        android:foregroundGravity="bottom" />
 
 
 </LinearLayout>

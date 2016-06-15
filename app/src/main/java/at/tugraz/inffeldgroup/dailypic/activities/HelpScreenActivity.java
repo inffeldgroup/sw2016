@@ -36,7 +36,7 @@ public class HelpScreenActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        TextView htmlTextView = (TextView)findViewById(R.id.help_text);
-        htmlTextView.setText(Html.fromHtml(helpScreenText,null, null));
+        /*TextView htmlTextView = (TextView)findViewById(R.id.help_text);
+        htmlTextView.setText(Html.fromHtml(helpScreenText,null, null));*/
     }
 }

@@ -84,10 +84,7 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 	{
 		try {
 			database.execSQL(TABLE_CREATE_IMAGES);
-		}
-		catch (SQLException e) {
-			Log.e(TAG, "Creation of database failed.");
-		}
+		} finally {}
 	}
 	
 	/**
@@ -119,10 +116,10 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 	{
 		try {
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
-		}
+		} finally {} /*
 		catch (SQLException e) {
 			Log.e(TAG, "Upgrade to new database version failed.");
-		}
+		} */
 		onCreate(db);
 	}
 
@@ -162,7 +159,6 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 			//if any exceptions are triggered save the error message to cursor an return the arraylist
 			Cursor2.addRow(new Object[] { ""+sqlEx.getMessage() });
 			alc.set(1,Cursor2);
-			return alc;
 		} catch(Exception ex){
 
 			Log.d("printing exception", ex.getMessage());
@@ -170,8 +166,8 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 			//if any exceptions are triggered save the error message to cursor an return the arraylist
 			Cursor2.addRow(new Object[] { ""+ex.getMessage() });
 			alc.set(1,Cursor2);
-			return alc;
 		}
+        return alc;
 
 
 	}
