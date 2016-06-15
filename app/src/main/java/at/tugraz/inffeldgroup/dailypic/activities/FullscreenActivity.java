@@ -40,10 +40,8 @@ public class FullscreenActivity extends Activity {
             imgDisplay.setImage(ImageSource.uri(img));
 
         }
-        Button btnClose;
 
-        View iv = (View) imgDisplay;
-        iv.setOnLongClickListener(new View.OnLongClickListener() {
+        imgDisplay.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 ExifInterface exif = null;

@@ -1,5 +1,6 @@
 package at.tugraz.inffeldgroup.dailypic.uitest;
 
+import android.graphics.PointF;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.test.ActivityInstrumentationTestCase2;
@@ -53,6 +54,15 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.clickOnMenuItem("Share");
         mySolo.goBack();
     }
+
+    public void testDelete() {
+        mySolo.waitForActivity("MainActivity");
+        mySolo.clickLongOnScreen(50, 600, 3000);
+        mySolo.clickOnMenuItem("Delete");
+        mySolo.waitForDialogToOpen();
+        mySolo.clickOnButton("Yes");
+    }
+
     public void testnext(){
         mySolo.waitForActivity("MainActivity");
         mySolo.scrollToSide(Solo.RIGHT);
@@ -78,9 +88,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImage(2);
         mySolo.sleep(1000);
-        mySolo.clickLongOnScreen(500, 750, 1500);
+        mySolo.clickLongOnScreen(500, 750, 3000);
         mySolo.goBack();
     }
-
-
 }
