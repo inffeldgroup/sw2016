@@ -54,8 +54,10 @@ import at.tugraz.inffeldgroup.dailypic.util.DoubleClickListener;
 
 public class MainActivity extends AppCompatActivity {
     public static int NUMBER_OF_ITEMS = 6;
+    public static int NUMBER_OF_PRELOADITEMS = 12;
     public static int NUMBER_OF_ROWS = 2;
     public static int HELPER_NUMBER_OF_ITEMS = 4;
+    public static boolean FAV = false;
     private static final int ALPHA_HALF_VISIBLE = 127;
     private static final int ALPHA_FULL_VISIBLE = 255;
     private static final int MIN_DISTANCE = 150;
@@ -87,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new MyOnShakeListener());
-        ArrayList<UriWrapper> startUpPictures = imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this);
-        ArrayList<UriWrapper> nextPictures = imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this);
+        ArrayList<UriWrapper> startUpPictures = imageFetcher.getNextRandomImages(NUMBER_OF_PRELOADITEMS, this);
+        ArrayList<UriWrapper> nextPictures = imageFetcher.getNextRandomImages(NUMBER_OF_PRELOADITEMS, this);
         gridAdapter = new ImageGridViewAdapter(this, startUpPictures, nextPictures);
         gridAnimator=(ViewAnimator)findViewById(R.id.viewGridAnimator);
         {
@@ -99,9 +101,16 @@ public class MainActivity extends AppCompatActivity {
             gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
             gridView.setOnTouchListener(new MyOnTouchListener());
             setGridViewClickListener(gridView);
+            gridAdapter.shorten_list_items(NUMBER_OF_ITEMS);
+
             gridAdapter.notifyDataSetChanged();
             gridAnimator.addView(gridView);
         }
+        Animation in = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
+        Animation out = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
+        gridAnimator.setInAnimation(in);
+        gridAnimator.setOutAnimation(out);
+
         gridAnimator.setAnimateFirstView(true);
         initAdvertise();
     }
@@ -116,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.topbar_action_favourite:
+                MainActivity.FAV = true;
                 favButtonOnClick();
                 return true;
             case R.id.topbar_action_share:
@@ -184,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
                 gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
                 gridView.setOnTouchListener(new MyOnTouchListener());
                 setGridViewClickListener(gridView);
-                gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+                gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_PRELOADITEMS, this));
+                gridAdapter.shorten_list_items(NUMBER_OF_ITEMS);
                 gridAdapter.notifyDataSetChanged();
 
                 if (gridAnimator.getChildCount()==4)
@@ -260,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
         this.imageFetcher.deleteImages(del_map);
         this.imageFetcher.replaceDeletedImages(checked, gridAdapter, del_map, this);
         clearSelection();
+        gridAdapter.shorten_list_items(NUMBER_OF_ITEMS);
         gridAdapter.notifyDataSetChanged();
     }
 
@@ -268,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         if (this.imageFetcher.getNumberOfPichtures() == 0) {
             return;
         }
-
+        boolean history;
         clearSelection();
         {
             GridView gridView = new GridView(this);
@@ -278,26 +290,28 @@ public class MainActivity extends AppCompatActivity {
             gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
             gridView.setOnTouchListener(new MyOnTouchListener());
             setGridViewClickListener(gridView);
-            gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
-            if (gridAnimator.getChildCount()==4)
+            history = gridAdapter.setPreviousImages(imageFetcher.getNextRandomImages(NUMBER_OF_PRELOADITEMS, this));
+            gridAnimator.addView(gridView,0);
+        }
+        if(history)
+        {
+            Animation in = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+            Animation out = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
+            gridAnimator.setInAnimation(in);
+            gridAnimator.setOutAnimation(out);
+            gridAnimator.showPrevious();
+            if (gridAnimator.getChildCount()==5)
             {
-                gridAnimator.removeViewAt(3);
+                gridAnimator.removeViewAt(4);
             }
             else
             {
-                if (gridAnimator.getChildCount()==3)
+                if (gridAnimator.getChildCount()==4)
                 {
-                    gridAnimator.removeViewAt(2);
+                    gridAnimator.removeViewAt(3);
                 }
-                gridAnimator.addView(gridView);
             }
-
         }
-        Animation in = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-        Animation out = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
-        gridAnimator.setInAnimation(in);
-        gridAnimator.setOutAnimation(out);
-        gridAnimator.showPrevious();
     }
 
     private void favButtonOnClick() {
@@ -320,11 +334,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void nextButtonOnClick() {
         clearSelection();
-
-        /*if(numberofback!=2)
-        {
-            numberofback++;
-        }*/
         {
             GridView gridView = new GridView(this);
             gridView.setNumColumns(NUMBER_OF_ROWS);
@@ -333,7 +342,8 @@ public class MainActivity extends AppCompatActivity {
             gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
             gridView.setOnTouchListener(new MyOnTouchListener());
             setGridViewClickListener(gridView);
-            gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, this));
+            gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_PRELOADITEMS, this));
+            gridAdapter.shorten_list_items(NUMBER_OF_ITEMS);
             gridAdapter.notifyDataSetChanged();
             if (gridAnimator.getChildCount()==4)
             {
@@ -576,6 +586,10 @@ public class MainActivity extends AppCompatActivity {
                             //zoomin kleiner
                             if(NUMBER_OF_ROWS !=1)
                             {
+                                if (NUMBER_OF_ROWS == 2)
+                                {
+                                    NUMBER_OF_PRELOADITEMS = 6;
+                                }
                                 NUMBER_OF_ITEMS = NUMBER_OF_ITEMS - HELPER_NUMBER_OF_ITEMS;
                                 HELPER_NUMBER_OF_ITEMS = HELPER_NUMBER_OF_ITEMS-2;
                                 NUMBER_OF_ROWS--;
@@ -587,18 +601,26 @@ public class MainActivity extends AppCompatActivity {
                                     gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
                                     gridView.setOnTouchListener(new MyOnTouchListener());
                                     setGridViewClickListener(gridView);
-                                    gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, getApplicationContext()));
+                                    gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_PRELOADITEMS, getApplicationContext()));
+                                    gridAdapter.shorten_list_items(NUMBER_OF_ITEMS);
                                     gridAdapter.notifyDataSetChanged();
 
-                                    gridAnimator.removeAllViews();
+                                    switch (gridAnimator.getDisplayedChild())
+                                    {
+                                        case 1:gridAnimator.removeViewAt(0);
+                                            break;
+                                        case 2:gridAnimator.removeViewAt(0);
+                                            gridAnimator.removeViewAt(1);
+                                            break;
+                                    }
                                     gridAnimator.addView(gridView);
                                 }
-                                Animation in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_in_up);
-                                Animation out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_down);
+                                Animation in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_zoom_out);
+                                Animation out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.nothing);
                                 gridAnimator.setInAnimation(in);
                                 gridAnimator.setOutAnimation(out);
                                 gridAnimator.showNext();
-                                Toast.makeText(getApplicationContext(), "Zoomin", Toast.LENGTH_SHORT).show();
+                                gridAdapter.clearHistory();
                             }
 
                         }
@@ -607,10 +629,10 @@ public class MainActivity extends AppCompatActivity {
                             //zoomout größer
                             if(NUMBER_OF_ROWS !=3)
                             {
+                                NUMBER_OF_PRELOADITEMS = 12;
                                 HELPER_NUMBER_OF_ITEMS = HELPER_NUMBER_OF_ITEMS+2;
                                 NUMBER_OF_ITEMS = NUMBER_OF_ITEMS + HELPER_NUMBER_OF_ITEMS;
                                 NUMBER_OF_ROWS++;
-                                Toast.makeText(getApplicationContext(), "Zoomout", Toast.LENGTH_SHORT).show();
                                 {
                                     GridView gridView = new GridView(getApplicationContext());
                                     gridView.setNumColumns(NUMBER_OF_ROWS);
@@ -619,17 +641,25 @@ public class MainActivity extends AppCompatActivity {
                                     gridView.setOnItemLongClickListener(new MyOnItemLongClickListener());
                                     gridView.setOnTouchListener(new MyOnTouchListener());
                                     setGridViewClickListener(gridView);
-                                    gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_ITEMS, getApplicationContext()));
+                                    gridAdapter.setNextImages(imageFetcher.getNextRandomImages(NUMBER_OF_PRELOADITEMS, getApplicationContext()));
+                                    gridAdapter.shorten_list_items(NUMBER_OF_ITEMS);
                                     gridAdapter.notifyDataSetChanged();
-
-                                    gridAnimator.removeAllViews();
+                                    switch (gridAnimator.getDisplayedChild())
+                                    {
+                                        case 1:gridAnimator.removeViewAt(0);
+                                            break;
+                                        case 2:gridAnimator.removeViewAt(0);
+                                            gridAnimator.removeViewAt(1);
+                                            break;
+                                    }
                                     gridAnimator.addView(gridView);
                                 }
-                                Animation in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_in_down);
-                                Animation out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_up);
+                                Animation in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.nothing);
+                                Animation out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_zoom_in);
                                 gridAnimator.setInAnimation(in);
                                 gridAnimator.setOutAnimation(out);
                                 gridAnimator.showNext();
+                                gridAdapter.clearHistory();
 
 
                             }

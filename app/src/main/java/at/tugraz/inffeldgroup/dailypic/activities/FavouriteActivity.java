@@ -28,6 +28,7 @@ public class FavouriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
 
+
         topBar = (Toolbar) findViewById(R.id.act_fav_toolbar);
         topBar.setTitle(R.string.act_favourites_title);
         setSupportActionBar(topBar);
@@ -59,6 +60,12 @@ public class FavouriteActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        MainActivity.FAV = false;
+        finish();
+        return;
     }
 
     @Override
