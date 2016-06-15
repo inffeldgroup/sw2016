@@ -26,3 +26,6 @@ These classes have been tested to > 85% coverage, where the uncovered sections
 are consisting of special cases and catch blocks which should not be reached at 
 anytime, otherwise the app will be requested to shut down.
 
+Notes: Pinch-to-Zoom could not be tested because of the fact that the provided
+test framework function did not work.
+
