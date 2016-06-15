@@ -49,7 +49,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
     }
 
     public void testnext(){
-        mySolo.waitForActivity("MainAvtivity");
+        mySolo.waitForActivity("MainActivity");
         mySolo.scrollToSide(Solo.RIGHT);
         mySolo.sleep(600);
     }

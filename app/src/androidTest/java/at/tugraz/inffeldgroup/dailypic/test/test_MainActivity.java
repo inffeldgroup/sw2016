@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.UiThreadTest;
 import android.util.Log;
 
 import junit.framework.Assert;
@@ -136,13 +137,16 @@ public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActi
         }
 
     }
-
-    public void testHandleShakeEvent() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    @UiThreadTest
+    public void testHandleShakeEvent() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException, InstantiationException, InterruptedException {
         Method method = MainActivity.class.getDeclaredMethod("handleShakeEvent", Integer.TYPE);
         method.setAccessible(true);
         Activity mainActivity = new MainActivity();
-        method.invoke(mainActivity, 1);
-        //method.invoke(mainActivity, 5);
+        //Thread.sleep(10000);
+        method.invoke(this.getActivity(), 1);
+        method.invoke(this.getActivity(), 5);
+        //Thread.sleep(10000);
+
         assertTrue(true);
     }
 }
