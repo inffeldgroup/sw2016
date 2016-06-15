@@ -81,6 +81,7 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImage(0);
         mySolo.clickOnMenuItem("Help");
+        mySolo.waitForActivity("HelpScreenActivity");
         mySolo.goBack();
     }
 
