@@ -87,4 +87,5 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         mySolo.goBack();
     }
 
+
 }

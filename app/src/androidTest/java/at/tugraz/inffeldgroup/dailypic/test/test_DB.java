@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.media.Image;
 import android.net.Uri;
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 
 import junit.framework.Assert;
 
@@ -43,6 +44,7 @@ public class test_DB extends ActivityInstrumentationTestCase2<MainActivity> {
     public void testDatabaseGetAllFavourites() {
 
         DbDatasource test_db = DbDatasource.getInstance(getActivity());
+        int databaseSize = test_db.getAllFavorites().size();
         //Assert.assertTrue(test_db.getAllFavorites().isEmpty());
         ImageFetcher img_fetcher = new ImageFetcher(getActivity());
         ArrayList<UriWrapper> images = img_fetcher.getNextRandomImages(6, getActivity());
@@ -52,11 +54,9 @@ public class test_DB extends ActivityInstrumentationTestCase2<MainActivity> {
         images.get(0).setFavourite(true);
         test_db.update(images.get(0));
         ArrayList<UriWrapper> favs = test_db.getAllFavorites();
-        assertTrue(favs.contains(images.get(0)));
+        Assert.assertTrue(favs.contains(images.get(0)));
         test_db.delete(images.get(0));
-        Assert.assertTrue(test_db.getAllFavorites().isEmpty());
-
-
+        Assert.assertTrue(test_db.getAllFavorites().size() == databaseSize);
     }
 
     public void testGetData() {
