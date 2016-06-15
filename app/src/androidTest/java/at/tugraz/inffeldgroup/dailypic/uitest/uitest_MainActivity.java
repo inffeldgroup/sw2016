@@ -17,7 +17,6 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
         super(MainActivity.class);
     }
 
-    /*
     public void setUp() throws Exception {
         super.setUp();
         mySolo = new Solo(getInstrumentation(), getActivity());
@@ -34,43 +33,33 @@ public class uitest_MainActivity extends ActivityInstrumentationTestCase2<MainAc
     }
 
 
-
-
-    public void testhelp(){
+    public void testhelp() {
         mySolo.waitForActivity("MainActivity");
         mySolo.clickOnImage(0);
         mySolo.clickOnMenuItem("Help");
         mySolo.goBack();
     }
 
-    public void testdatabase(){
+    public void testShare() {
         mySolo.waitForActivity("MainActivity");
-        mySolo.clickOnImage(0);
-        mySolo.clickOnMenuItem("database");
-        mySolo.goBack();
-    }
-
-    public void testShare(){
-        mySolo.waitForActivity("MainActivity");
-       mySolo.clickOnMenuItem("Share");
+        mySolo.clickOnMenuItem("Share");
         mySolo.goBack();
 
     }
 
-public void testnext(){
-    mySolo.waitForActivity("MainAvtivity");
-    //mySolo.clickOnMenuItem("favourite");
-    mySolo.scrollToSide(Solo.RIGHT);
-    mySolo.sleep(600);
-}
+    public void testnext() {
+        mySolo.waitForActivity("MainAvtivity");
+        //mySolo.clickOnMenuItem("favourite");
+        mySolo.scrollToSide(Solo.RIGHT);
+        mySolo.sleep(600);
+    }
 
-    public void testback(){
+    public void testback() {
         mySolo.waitForActivity("MainActivity");
         mySolo.scrollToSide(Solo.RIGHT);
         mySolo.sleep(600);
         mySolo.scrollToSide(Solo.LEFT);
-        mySolo.sleep(6000);
-
+        mySolo.sleep(600);
     }
-*/
+
 }

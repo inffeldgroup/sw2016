@@ -16,6 +16,8 @@ import at.tugraz.inffeldgroup.dailypic.activities.MainActivity;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -133,5 +135,14 @@ public class test_MainActivity extends ActivityInstrumentationTestCase2<MainActi
             Assert.assertFalse(image_paths_04.equals(image_paths_02));
         }
 
+    }
+
+    public void testHandleShakeEvent() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = MainActivity.class.getDeclaredMethod("handleShakeEvent", Integer.TYPE);
+        method.setAccessible(true);
+        Activity mainActivity = new MainActivity();
+        method.invoke(mainActivity, 1);
+        //method.invoke(mainActivity, 5);
+        assertTrue(true);
     }
 }
