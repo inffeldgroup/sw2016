@@ -197,9 +197,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.topbar_action_help:
                 helpButtonOnClick();
                 return true;
-            case R.id.topbar_action_database:
+            /*case R.id.topbar_action_database:
                 databaseOnClick();
-                return true;
+                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
 

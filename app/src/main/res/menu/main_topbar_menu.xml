@@ -21,10 +21,11 @@
         android:id="@+id/topbar_action_help"
         android:title="@string/topbar_options_menu_item_help_title"
         app:showAsAction="never" />
-
+    <!--
     <item
         android:id="@+id/topbar_action_database"
         android:title="database"
         app:showAsAction="never" />
+    -->
 
 </menu>
