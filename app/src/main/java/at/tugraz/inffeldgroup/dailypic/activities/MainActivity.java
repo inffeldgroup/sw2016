@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
 
     private float x1, x2;
 
+    ShakeDetector getmShakeDetector() {
+        return this.mShakeDetector;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

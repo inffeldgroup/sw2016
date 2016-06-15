@@ -24,6 +24,8 @@ public class ImageFetcher extends Activity {
     private ArrayList<String> imgPaths;
     private String[] projection;
 
+    private boolean is_test_run;
+
     public ImageFetcher(Activity activity){
         this.activity = activity;
         this.projection = new String[]{MediaStore.Images.Media.DATA};
@@ -38,6 +40,24 @@ public class ImageFetcher extends Activity {
             }while(cursor.moveToNext());
         }
         cursor.close();
+    }
+
+    public ImageFetcher(Activity activity, boolean is_test){
+        this.activity = activity;
+        this.projection = new String[]{MediaStore.Images.Media.DATA};
+        this.imgPaths = new ArrayList<String>();
+
+        Cursor cursor = this.activity.getContentResolver().query(images, projection, "", null, "");
+        if(cursor.moveToFirst()){
+            int data_column = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+
+            do{
+                imgPaths.add(cursor.getString(data_column));
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        this.is_test_run = is_test;
     }
 
     public int getNumberOfPichtures() {
@@ -77,12 +97,23 @@ public class ImageFetcher extends Activity {
     public void deleteImages(Map<Integer, ViewHolder> vh) {
 
         StringBuilder error_deleted = new StringBuilder();
+        boolean toggle_test = this.is_test_run;
 
         for (Map.Entry<Integer, ViewHolder> kvp : vh.entrySet()) {
             ViewHolder v = kvp.getValue();
             File f = new File(v.uri.getPath());
             String f_name = f.getName() + " ";
-            boolean result = f.delete();
+            boolean result = false;
+            if (toggle_test == true) {
+                result = true;
+                toggle_test = false;
+            } else {
+                result = this.is_test_run ? false : f.delete();
+                if (this.is_test_run == true) {
+                    toggle_test = true;
+                }
+            }
+
             if (!result) {
                 error_deleted.append(f_name);
             }
